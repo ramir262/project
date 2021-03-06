@@ -44,24 +44,74 @@ public class PantherInspectProject extends Application
     SignupForm signupform = new SignupForm(this);
     
     static final String JDBC_DRIVER = "com.mysql.jdbc.Driver";  
-    static final String DB_URL = "jdbc:mysql://localhost/PantherInspect";
 
     //  Database credentials
     static final String USER = "root";
-    static final String PASS = "2367";
+    static final String PASS = "root";
 
-    public static final String UPLOAD_PATH = "//localhost/D$/Downloads/images/";
+    public static final String UPLOAD_PATH = "C://Users//allis//Pictures//";
+    
+    public static final String SETUP_FILE = "tables.sql";
 
     public Database db;
     public QueryProcessor qp;
     public Connection conn = null;
     
+    
+    private String setup() {
+        db = new Database();
+        String db_url = db.createURL("localhost","PantherInspect");
+        conn = db.createConnection(db_url,USER,PASS);
+        qp = new QueryProcessor(conn);
+        qp.createTables(SETUP_FILE);
+        return db_url;
+    }
+    
+    private void checkPassword(String email, String password) throws Exception {
+        ResultSet rs = qp.selectAccountHash(email);
+        rs.next();
+        String hashedPass = rs.getString(1);
+        if(BCrypt.checkpw(password, hashedPass)) {
+            System.out.println("Correct Password!");
+        } else {
+            System.out.println("Incorrect Password!");
+            Alert alert = new Alert(AlertType.ERROR);
+            alert.setTitle("Error");
+            alert.setHeaderText("An Error has Occurred.");
+            alert.setContentText("Your username or password was incorrect.");
+                    
+            alert.showAndWait();
+        }
+    }
+    
+    private Button createSigninButton(TextField emailField, PasswordField pwField) {
+        Button btn = new Button("Sign in");
+        btn.setOnAction((ActionEvent event) -> {
+            
+            System.out.println("signing in..");
+            try {
+                checkPassword(emailField.getText(),pwField.getText());
+            } catch (Exception e) {
+                System.out.println("Error: " + e.getMessage());
+            }
+        });
+        return btn;
+    }
+    
+    private Button createSignupButton(Stage primaryStage) {
+        Button SUbtn = new Button("Sign Up to get an Account! ");
+        SUbtn.setOnAction((ActionEvent e) -> {
+            
+            primaryStage.setScene(signupform.form(primaryStage));
+            
+        }); 
+        return SUbtn;
+    }
+    
     @Override
     public void start(Stage primaryStage) 
     {
-        Database db = new Database();
-        conn = db.createConnection(DB_URL,USER,PASS);
-        qp = new QueryProcessor(conn);
+        String db_url = setup();
         
         primaryStage.setTitle("PantherInspect");
         GridPane grid = new GridPane();
@@ -86,48 +136,16 @@ public class PantherInspectProject extends Application
         PasswordField pwBox = new PasswordField();
         grid.add(pwBox, 1, 2);
         
-        Button btn = new Button("Sign in");
-        btn.setOnAction((ActionEvent event) -> {
-            
-            System.out.println("signing in..");
-            try {
-                if(conn == null) {
-                    //STEP 3: Open a connection
-                    System.out.println("Connecting to a selected database...");
-                    conn = DriverManager.getConnection(DB_URL, USER, PASS);
-                    System.out.println("Connected database successfully...");
-                }
-                Statement stmt = conn.createStatement();
-                ResultSet rs = stmt.executeQuery(String.format("SELECT Hash FROM Account WHERE Email = '%s'",userTextField.getText()));
-                rs.next();
-                String hashedPass = rs.getString(1);
-                if(BCrypt.checkpw(pwBox.getText(), hashedPass)) {
-                    System.out.println("Correct Password!");
-                } else {
-                    System.out.println("Incorrect Password!");
-                    Alert alert = new Alert(AlertType.ERROR);
-                    alert.setTitle("Error");
-                    alert.setHeaderText("An Error has Occurred.");
-                    alert.setContentText("Your username or password was incorrect.");
-                    
-                    alert.showAndWait();
-                }
-            } catch (Exception e) {
-                System.out.println("Error: " + e.getMessage());
-            }
-        });
+        Button signinBtn = createSigninButton(userTextField,pwBox);
+        
         HBox hbBtn = new HBox(10);
         hbBtn.setAlignment(Pos.BOTTOM_RIGHT);
-        hbBtn.getChildren().add(btn);
+        hbBtn.getChildren().add(signinBtn);
         grid.add(hbBtn, 1, 4);
         
-        Button SUbtn = new Button("Sign Up to get an Account! ");
+        Button SUbtn = createSignupButton(primaryStage);
+        
         HBox suhbBtn = new HBox(10);
-        SUbtn.setOnAction((ActionEvent e) -> {
-            
-            primaryStage.setScene(signupform.form(primaryStage));
-            
-        }); 
         suhbBtn.setAlignment(Pos.BOTTOM_CENTER);
         suhbBtn.getChildren().add(SUbtn);
         grid.add(suhbBtn, 1, 8);
@@ -151,13 +169,6 @@ public class PantherInspectProject extends Application
      */
     public static void main(String[] args) {
         
-        
-        try {
-            //STEP 2: Register JDBC driver
-            Class.forName("com.mysql.cj.jdbc.Driver").newInstance();
-        } catch(Exception e) {
-            System.out.println("Exception caught: " + e.getMessage());
-        }
         launch(args);
     }
     
