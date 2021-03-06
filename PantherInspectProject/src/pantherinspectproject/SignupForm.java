@@ -29,6 +29,7 @@ import javafx.scene.layout.StackPane;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
 import javafx.stage.Stage;
+import pantherinspectproject.PantherInspectProject;
 
 /**
  *
@@ -36,7 +37,7 @@ import javafx.stage.Stage;
  */
 public class SignupForm {
     
-     FileChooser fileChooser = new FileChooser();
+    FileChooser fileChooser = new FileChooser();
    
     
     public Scene form(Stage primaryStage) 
@@ -104,9 +105,6 @@ public class SignupForm {
             dialog.setTitle("error");
             dialog.showAndWait();
         }
-      
-     
-   
        
       
       Button btn = new Button("Sign Up");
@@ -114,9 +112,6 @@ public class SignupForm {
       hbBtn.setAlignment(Pos.BOTTOM_RIGHT);
       hbBtn.getChildren().add(btn);
       signup.add(hbBtn,1,11);
-      
-       
-       
       
       return scene;
       

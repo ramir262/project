@@ -24,7 +24,7 @@ import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import pantherinspectproject.SignupForm;
-
+import pantherinspectproject.userHomePage;
 /**
  *
  * @author cindyramirez
@@ -32,6 +32,8 @@ import pantherinspectproject.SignupForm;
 public class PantherInspectProject extends Application 
 {
     SignupForm signupform = new SignupForm();
+    userHomePage userHome = new userHomePage();
+   
     
     @Override
     public void start(Stage primaryStage) 
@@ -61,6 +63,7 @@ public class PantherInspectProject extends Application
         
         Button btn = new Button("Sign in");
         HBox hbBtn = new HBox(10);
+        btn.setOnAction(e -> primaryStage.setScene(userHome.userpage(primaryStage)));
         hbBtn.setAlignment(Pos.BOTTOM_RIGHT);
         hbBtn.getChildren().add(btn);
         grid.add(hbBtn, 1, 4);
@@ -79,7 +82,7 @@ public class PantherInspectProject extends Application
         grid.add(actiontarget, 1, 6);
         
         
-        Scene scene = new Scene(grid, 300, 275);
+        Scene scene = new Scene(grid, 400, 450);
         primaryStage.setScene(scene);
         primaryStage.show();
     }
