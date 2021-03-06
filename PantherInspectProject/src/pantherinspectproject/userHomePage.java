@@ -27,14 +27,18 @@ import pantherinspectproject.PantherInspectProject;
 import pantherinspectproject.SettingsPage;
 import pantherinspectproject.profileSettings;
 import pantherinspectproject.AccountSettings;
+import pantherinspectproject.searchCoursePage;
 /**
  *
  * @author cindyramirez
  */
+
 public class userHomePage 
 {
     SettingsPage settings = new SettingsPage();
     profileSettings profilesetting = new profileSettings();
+    searchCoursePage searchCourse = new searchCoursePage();
+    
     public Scene userpage(Stage primaryStage)
     {
       primaryStage.setTitle("User Home Page ");
@@ -57,9 +61,10 @@ public class userHomePage
       
       Button searchButton = new Button("Search");
       HBox hsearchbox = new HBox(searchButton);
+      searchButton.setOnAction(e -> primaryStage.setScene(searchCourse.toSearchCourse(primaryStage)));
+      hsearchbox.setAlignment(Pos.BOTTOM_RIGHT);
       homePage.add(hsearchbox, 2, 1);
-      
-      
+       
       
       //============ Rate Course Label ====================
       Label rateCourseLabel = new Label("Rate a Chapman Course:");
@@ -71,6 +76,9 @@ public class userHomePage
       HBox hRatebox = new HBox(rateButton);
       homePage.add(hRatebox, 2, 2);
       //=========================================
+      
+     
+      
       
       Button settingsButton = new Button("Settings");
       HBox hbox = new HBox(settingsButton);
