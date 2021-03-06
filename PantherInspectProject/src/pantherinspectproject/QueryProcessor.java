@@ -1,3 +1,4 @@
+
 package pantherinspectproject;
 
 import java.io.BufferedReader;
@@ -18,6 +19,7 @@ public class QueryProcessor {
 	String INSERT = "INSERT INTO %s ( %s ) VALUES ( %s );";
 	String SELECT = "SELECT %s FROM %s %s ;";
 	String UPDATE = "UPDATE %s SET %s %s ;";
+	String DELETE = "DELETE FROM %s %s;";
 	
 	String WHERE = "WHERE %s";
 	String MAX = "MAX( %s )";
@@ -130,6 +132,28 @@ public class QueryProcessor {
 		String values = "?, ?, ?";
 		String[] instance = new String[] {accountId, username, picture};
 		boolean success = insert(tableName, columns, values, instance);
+		return success;
+	}
+	/*
+	------------------------------------------------------------------------------------------
+	Delete Account Information
+	------------------------------------------------------------------------------------------
+	*/
+
+	/*
+	-------------------------------
+	function: deleteAccount
+	-------------------------------
+	purpose:
+		delete values from account table
+	return:
+		boolean success or failure
+	*/
+	public boolean deleteAccount(String accountId) {
+		String tableName = "Account";
+		String where = String.format(this.WHERE, "AccountId=?");
+		String[] instance = new String[] {accountId};
+		boolean success = delete(tableName, instance,where);
 		return success;
 	}
 	/*
@@ -252,7 +276,25 @@ public class QueryProcessor {
 		ResultSet rs = select(desired,tables,where,instance);
 		return rs;
 	}
+	/*
+	-------------------------------
+	function: selectProfileDisplay
+	-------------------------------
+	purpose:
+		select values corresponding to profile display
+		select values from account and profile (join tables)
+	return:
+		ResultSet
+	*/
 	
+	public ResultSet selectAccountHash(String email) {
+		String desired = "Hash";
+		String tables = "Account";
+		String where = String.format(this.WHERE, "Email=?");
+		String[] instance = new String[] {email};
+		ResultSet rs = select(desired,tables,where,instance);
+		return rs;
+	}
 
 	/*
 	------------------------------------------------------------------------------------------
@@ -311,6 +353,60 @@ public class QueryProcessor {
 		String values = "?, ?, ?";
 		String[] instance = new String[] {classId, courseId, professorId};
 		boolean success = insert(tableName, columns, values, instance);
+		return success;
+	}
+	/*
+	------------------------------------------------------------------------------------------
+	Delete Course Information
+	------------------------------------------------------------------------------------------
+	*/
+
+	/*
+	-------------------------------
+	function: deleteCourse
+	-------------------------------
+	purpose:
+		delete values from course table
+	return:
+		boolean success or failure
+	*/
+	public boolean deleteCourse(String courseId) {
+		String tableName = "Course";
+		String where = String.format(this.WHERE, "CourseId=?");
+		String[] instance = new String[] {courseId};
+		boolean success = delete(tableName, instance,where);
+		return success;
+	}
+	/*
+	-------------------------------
+	function: deleteProfessor
+	-------------------------------
+	purpose:
+		delete values from professor table
+	return:
+		boolean success or failure
+	*/
+	public boolean deleteProfessor(String profId) {
+		String tableName = "Professor";
+		String where = String.format(this.WHERE, "ProfessorId=?");
+		String[] instance = new String[] {profId};
+		boolean success = delete(tableName, instance,where);
+		return success;
+	}
+	/*
+	-------------------------------
+	function: deleteClass
+	-------------------------------
+	purpose:
+		delete values from class table
+	return:
+		boolean success or failure
+	*/
+	public boolean deleteClass(String classId) {
+		String tableName = "Class";
+		String where = String.format(this.WHERE, "ClassId=?");
+		String[] instance = new String[] {classId};
+		boolean success = delete(tableName, instance,where);
 		return success;
 	}
 	/*
@@ -528,6 +624,28 @@ public class QueryProcessor {
 	}
 	/*
 	------------------------------------------------------------------------------------------
+	Delete Review Information
+	------------------------------------------------------------------------------------------
+	*/
+
+	/*
+	-------------------------------
+	function: deleteReview
+	-------------------------------
+	purpose:
+		delete values from review table
+	return:
+		boolean success or failure
+	*/
+	public boolean deleteReview(String reviewId) {
+		String tableName = "Review";
+		String where = String.format(this.WHERE, "ReviewId=?");
+		String[] instance = new String[] {reviewId} ;
+		boolean success = delete(tableName, instance,where);
+		return success;
+	}
+	/*
+	------------------------------------------------------------------------------------------
 	Update Review Information
 	------------------------------------------------------------------------------------------
 	*/
@@ -732,6 +850,27 @@ public class QueryProcessor {
 	*/
 	private boolean insert(String tableName, String columns, String values, String[] instance) {
 		String query = String.format(this.INSERT,tableName,columns,values);
+		PreparedStatement stmt = prepare(query, instance);
+		boolean success = executeUpdate(stmt);
+		return success;
+	}
+	/*
+	-------------------------------
+	function: delete
+	-------------------------------
+	params:
+		String tableName: name of table we wish to delete from
+		String[] instance: array of values to delete
+		String where: all conditions which must be true (empty string if none)
+	purpose:
+		format delete query
+		create prepared statement
+		execute
+	return:
+		boolean success or failure
+	*/
+	private boolean delete(String tableName, String[] instance,String where) {
+		String query = String.format(this.DELETE,tableName,where);
 		PreparedStatement stmt = prepare(query, instance);
 		boolean success = executeUpdate(stmt);
 		return success;
