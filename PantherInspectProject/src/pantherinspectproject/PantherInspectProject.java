@@ -39,7 +39,7 @@ import pantherinspectproject.Time;
  *
  * @author cindyramirez
  */
-public class PantherInspectProject extends Application 
+public class PantherInspectProject extends Application
 {
     SignupForm signupform = new SignupForm(this);
     
@@ -67,13 +67,20 @@ public class PantherInspectProject extends Application
 		String db_url
 	*/
     private String setupDB() {
+        //setup database
         db = new Database();
         String db_url = db.createURL("localhost","PantherInspect");
         conn = db.createConnection(db_url,USER,PASS);
         qp = new QueryProcessor(conn);
-        qp.createTables(SETUP_FILE);
+        
+        //run create tables via thread
+        //TODO: run only at start
+        Thread thr = new Thread(() -> qp.createTables(SETUP_FILE));
+        thr.start();
+        
         return db_url;
     }
+    
     /*
 	-------------------------------
 	function: checkPassword
@@ -85,20 +92,26 @@ public class PantherInspectProject extends Application
                 check entered password against existing hash
                 generate alert if password does not match
 	*/
-    private void checkPassword(String email, String password) throws Exception {
-        ResultSet rs = qp.selectAccountHash(email);
-        rs.next();
-        String hashedPass = rs.getString(1);
-        if(BCrypt.checkpw(password, hashedPass)) {
-            System.out.println("Correct Password!");
-        } else {
-            System.out.println("Incorrect Password!");
-            Alert alert = new Alert(AlertType.ERROR);
-            alert.setTitle("Error");
-            alert.setHeaderText("An Error has Occurred.");
-            alert.setContentText("Your username or password was incorrect.");
-                    
-            alert.showAndWait();
+    private void checkPassword(String email, String password) {
+        try {
+                
+            ResultSet rs = qp.selectAccountHash(email);
+            rs.next();
+            String hashedPass = rs.getString(1);
+            if(BCrypt.checkpw(password, hashedPass)) {
+                System.out.println("Correct Password!");
+            } else {
+                System.out.println("Incorrect Password!");
+                Alert alert = new Alert(AlertType.ERROR);
+                alert.setTitle("Error");
+                alert.setHeaderText("An Error has Occurred.");
+                alert.setContentText("Your username or password was incorrect.");
+
+                alert.showAndWait();
+            }
+        }
+        catch (Exception e) {
+            System.out.println("Error: " + e.getMessage());
         }
     }
     
@@ -121,11 +134,11 @@ public class PantherInspectProject extends Application
         btn.setOnAction((ActionEvent event) -> {
             
             System.out.println("signing in..");
-            try {
-                checkPassword(emailField.getText(),pwField.getText());
-            } catch (Exception e) {
-                System.out.println("Error: " + e.getMessage());
-            }
+            
+            //run check password as thread
+            Thread thr = new Thread(() -> checkPassword(emailField.getText(),pwField.getText()));
+            thr.start();
+            
         });
         return btn;
     }
@@ -268,6 +281,8 @@ public class PantherInspectProject extends Application
         //complete setup
         setupScene(primaryStage,grid);
     }
+    
+    
     
     
 
