@@ -78,7 +78,7 @@ public class SignupForm {
         hbBtn.getChildren().add(btn);
         return hbBtn;
     }
-    
+ 
     /*
 	-------------------------------
 	function: createSignupButton
@@ -94,28 +94,23 @@ public class SignupForm {
 		HBox
 	*/
     private Button createSignupButton(Stage primaryStage, TextField email, PasswordField pwBox, TextField username, TextField gradyear, TextField gradsemester) {
-    Button btn = new Button("Sign Up");
+        Button btn = new Button("Sign Up");
         btn.setOnAction((ActionEvent event) -> {
+            //run account creation
         try {
             String aid = master.qp.getAccountId(email.getText());
             System.out.println(aid);
             if (aid.equals("0")) {
-                    aid = master.qp.getUniqueId("accountid", "Account");
-                    String passwd = pwBox.getText();
-                    String salt = BCrypt.gensalt(10);
-                    String hash = BCrypt.hashpw(passwd, salt);
-                    master.qp.insertAccount(aid, email.getText(), hash);
-                    master.qp.insertProfile(aid, username.getText(), "empty");
-                    //TODO: set gradstatus to yes/no option
-                    master.qp.insertGraduation(aid, gradyear.getText(), gradsemester.getText(), "0");
+                createSignupEvent(email.getText(),username.getText(),pwBox.getText(),gradyear.getText(),gradsemester.getText());
+                
+                //return to initial scene
+                master.start(primaryStage);
             }
             else {
                 //TODO: setup alert for user interface
                 System.out.println("This email is already taken.  Please attempt to reset your password.");
             }
             
-            //return to initial scene
-            master.start(primaryStage);
         } catch(Exception e) {
             System.out.println("Error: " + e.getMessage());
         }
@@ -123,6 +118,28 @@ public class SignupForm {
         });
         return btn;
     }
+    
+     /*
+	-------------------------------
+	function: createSignupEvent
+	-------------------------------
+        params: text entries
+            String email, username, passwd, gradyear, gradsemester
+	purpose:
+                hash password
+		insert new values in database
+	*/
+    private void createSignupEvent(String email, String username, String passwd, String gradyear, String gradsemester) {
+        String aid = master.qp.getUniqueId("accountid", "Account");
+        String salt = BCrypt.gensalt(10);
+        String hash = BCrypt.hashpw(passwd, salt);
+        master.qp.insertAccount(aid, email, hash);
+        //TODO: set photo location
+        master.qp.insertProfile(aid, username, "empty");
+        //TODO: set gradstatus to yes/no option
+        master.qp.insertGraduation(aid, gradyear, gradsemester, "0");
+    }
+    
      /*
 	-------------------------------
 	function: setupPicture
