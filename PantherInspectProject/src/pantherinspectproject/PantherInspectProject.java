@@ -43,8 +43,6 @@ public class PantherInspectProject extends Application
 {
     SignupForm signupform = new SignupForm(this);
     
-    static final String JDBC_DRIVER = "com.mysql.jdbc.Driver";  
-
     //  Database credentials
     static final String USER = "root";
     static final String PASS = "root";
@@ -57,8 +55,18 @@ public class PantherInspectProject extends Application
     public QueryProcessor qp;
     public Connection conn = null;
     
-    
-    private String setup() {
+    /*
+	-------------------------------
+	function: setupDB
+	-------------------------------
+	purpose:
+		set up database connection
+                set up query processor
+                generate tables if they don't yet exist
+	return:
+		String db_url
+	*/
+    private String setupDB() {
         db = new Database();
         String db_url = db.createURL("localhost","PantherInspect");
         conn = db.createConnection(db_url,USER,PASS);
@@ -66,7 +74,17 @@ public class PantherInspectProject extends Application
         qp.createTables(SETUP_FILE);
         return db_url;
     }
-    
+    /*
+	-------------------------------
+	function: checkPassword
+	-------------------------------
+        params:
+            String email, password (from textfield and passwordfield)
+        purpose:
+		if email exists in accounts, retrieve hash
+                check entered password against existing hash
+                generate alert if password does not match
+	*/
     private void checkPassword(String email, String password) throws Exception {
         ResultSet rs = qp.selectAccountHash(email);
         rs.next();
@@ -84,6 +102,20 @@ public class PantherInspectProject extends Application
         }
     }
     
+    /*
+	-------------------------------
+	function: createSigninButton
+	-------------------------------
+        params: entry fields where strings are collected at time of button click
+                TextField emailField
+                PasswordField pwField
+	purpose:
+                create button with action:
+                    check if email and password exist in database
+                    catch errors
+	return:
+		Button
+	*/
     private Button createSigninButton(TextField emailField, PasswordField pwField) {
         Button btn = new Button("Sign in");
         btn.setOnAction((ActionEvent event) -> {
@@ -98,6 +130,18 @@ public class PantherInspectProject extends Application
         return btn;
     }
     
+     /*
+	-------------------------------
+	function: createSignupButton
+	-------------------------------
+        params: 
+                Stage primaryStage
+	purpose:
+		create signup button with action:
+                    open signup form
+	return:
+		Button
+	*/
     private Button createSignupButton(Stage primaryStage) {
         Button SUbtn = new Button("Sign Up to get an Account! ");
         SUbtn.setOnAction((ActionEvent e) -> {
@@ -107,59 +151,122 @@ public class PantherInspectProject extends Application
         }); 
         return SUbtn;
     }
-    
-    @Override
-    public void start(Stage primaryStage) 
-    {
-        String db_url = setup();
-        
-        primaryStage.setTitle("PantherInspect");
+    /*
+	-------------------------------
+	function: createGrid
+	-------------------------------
+	purpose:
+		create grid for GUI
+	return:
+		GridPane
+	*/
+    private HBox createBox(Button btn, Pos position) {
+        HBox hbBtn = new HBox(10);
+        hbBtn.setAlignment(position);
+        hbBtn.getChildren().add(btn);
+        return hbBtn;
+    }
+    /*
+	-------------------------------
+	function: createGrid
+	-------------------------------
+	purpose:
+		create grid for GUI
+	return:
+		GridPane
+	*/
+    private GridPane createGrid() {
         GridPane grid = new GridPane();
         grid.setAlignment(Pos.CENTER);
         grid.setHgap(10);
         grid.setVgap(10);
         grid.setPadding(new Insets(25, 25, 25, 25));
-        
-        Text scenetitle = new Text("PantherInspect Login");
+        return grid;
+    }
+    /*
+	-------------------------------
+	function: createTitle
+	-------------------------------
+        params:
+                Stage primaryStage
+                String appTitle
+        purpose:
+		create title for GUI
+	return:
+		GridPane
+	*/
+    private Text createTitle(Stage primaryStage, String appTitle) {
+        primaryStage.setTitle(appTitle);
+        Text scenetitle = new Text(String.format("%s Login",appTitle));
         scenetitle.setFont(Font.font("Tahoma", FontWeight.NORMAL, 20));
+        return scenetitle;
+    }
+    
+    /*
+	-------------------------------
+	function: setupScene
+	-------------------------------
+        params:
+                Stage primaryStage
+                GridPane grid
+        purpose:
+		create title for GUI
+	return:
+		GridPane
+	*/
+    private void setupScene(Stage primaryStage, GridPane grid) {
+        Scene scene = new Scene(grid, 300, 275);
+        primaryStage.setScene(scene);
+        primaryStage.show();
+    }
+    
+    @Override
+    public void start(Stage primaryStage) 
+    {
+        //set up database and query processor
+        String db_url = setupDB();
+        
+        //set up GUI
+        GridPane grid = createGrid();
+        
+        //create title
+        Text scenetitle = createTitle(primaryStage,"PantherInspect");
         grid.add(scenetitle, 0, 0, 2, 1);
 
+        //create email entry
         Label userName = new Label("Email:");
         grid.add(userName, 0, 1);
 
         TextField userTextField = new TextField();
         grid.add(userTextField, 1, 1);
 
+        //create password entry
         Label pw = new Label("Password:");
         grid.add(pw, 0, 2);
 
         PasswordField pwBox = new PasswordField();
         grid.add(pwBox, 1, 2);
         
+        //create signin button
         Button signinBtn = createSigninButton(userTextField,pwBox);
-        
-        HBox hbBtn = new HBox(10);
-        hbBtn.setAlignment(Pos.BOTTOM_RIGHT);
-        hbBtn.getChildren().add(signinBtn);
+        HBox hbBtn = createBox(signinBtn,Pos.BOTTOM_RIGHT);
         grid.add(hbBtn, 1, 4);
         
+        //create signup button
         Button SUbtn = createSignupButton(primaryStage);
-        
-        HBox suhbBtn = new HBox(10);
-        suhbBtn.setAlignment(Pos.BOTTOM_CENTER);
-        suhbBtn.getChildren().add(SUbtn);
+        HBox suhbBtn = createBox(SUbtn,Pos.BOTTOM_CENTER);
         grid.add(suhbBtn, 1, 8);
         
+        //forgot password label
+        //TODO: forgot password button + logic
         Label forgotPassword = new Label("Forgot Password?");
         grid.add(forgotPassword, 0, 4);
         
         final Text actiontarget = new Text();
         grid.add(actiontarget, 1, 6);
         
-        
-        Scene scene = new Scene(grid, 300, 275);
-        primaryStage.setScene(scene);
-        primaryStage.show();
+        //complete setup
+        setupScene(primaryStage,grid);
     }
     
     
