@@ -106,7 +106,7 @@ public class PantherInspectProject extends Application
                 String hashedPass = rs.getString(1);
                 if(BCrypt.checkpw(pwBox.getText(), hashedPass)) {
                     System.out.println("Correct Password!");
-                    primaryStage.setScene(userHome.userpage(primaryStage))
+                    primaryStage.setScene(userHome.userpage(primaryStage));
                 } else {
                     System.out.println("Incorrect Password!");
                     Alert alert = new Alert(AlertType.ERROR);
