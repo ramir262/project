@@ -5,7 +5,8 @@
  */
 package pantherinspectproject;
 
-
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -22,6 +23,7 @@ import javafx.scene.control.Dialog;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
+import javafx.scene.control.CheckBox;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
@@ -40,6 +42,8 @@ public class SignupForm {
 
     PantherInspectProject master;
      FileChooser fileChooser = new FileChooser();
+     
+    String profileImagePath = "";
 
      public SignupForm(PantherInspectProject master) {
          this.master = master;
@@ -84,41 +88,23 @@ public class SignupForm {
       signup.add(gradyear, 1,4);
 
 
-      Label gradStatus = new Label("Graduation Status: ");
+      Label gradStatus = new Label("Graduated: ");
       signup.add(gradStatus,0,5);
-      TextField gradstatus = new TextField();
+      CheckBox gradstatus = new CheckBox();
       signup.add(gradstatus, 1,5);
 
+      ImageView imageView = new ImageView();
 
-
-
-       try
-        {
-
-            FileInputStream stream = new FileInputStream(master.UPLOAD_PATH + "profile.jpg");
-            Image imagestream = new Image(stream);
-            ImageView imageView = new ImageView(imagestream);
-
-            Label picture = new Label("Picture: ");
-            Button btnimage = new Button("Upload Profile Picture");
-            HBox picBtn = new HBox(8);
-            btnimage.setOnAction((event) ->
-            {    // lambda expression
-                   image(primaryStage);
-                });
-            signup.add(picBtn, 1, 5);
-            picBtn.getChildren().addAll(picture, btnimage, imageView);
-
-        } catch (FileNotFoundException ex) {
-            Logger.getLogger(SignupForm.class.getName()).log(Level.SEVERE, null, ex);
-            Dialog<String> dialog = new Dialog<String>();
-            //Setting the title
-            dialog.setTitle("error");
-            dialog.showAndWait();
-        }
-
-
-
+        Label picture = new Label("Picture: ");
+        Button btnimage = new Button("Upload Profile Picture");
+        HBox picBtn = new HBox(8);
+        btnimage.setOnAction((event) ->
+        {    // lambda expression
+               profileImagePath = image(primaryStage, imageView);
+               System.out.println(profileImagePath);
+            });
+        signup.add(picBtn, 1, 6);
+        picBtn.getChildren().addAll(picture, btnimage, imageView);
 
 
       Button btn = new Button("Sign Up");
@@ -134,9 +120,23 @@ public class SignupForm {
                     String passwd = pwBox.getText();
                     String salt = BCrypt.gensalt(10);
                     String hash = BCrypt.hashpw(passwd, salt);
+                    
+                    String imgPath;
+                    if(!profileImagePath.equals("")) {
+                        File source = new File(profileImagePath);
+                        String targetPath = master.UPLOAD_PATH + "profile.jpg";
+                        File target = new File(targetPath);
+                        Files.copy(source.toPath(), target.toPath(), StandardCopyOption.REPLACE_EXISTING);
+                        imgPath = targetPath;
+                    } else {
+                        imgPath = "empty";
+                    }
+
+                    int isGrad = gradstatus.isSelected() ? 1 : 0;
+                    
                     master.qp.insertAccount(aid, email.getText(), hash);
-                    master.qp.insertProfile(aid, username.getText(), "empty");
-                    master.qp.insertGraduation(aid, gradyear.getText(), gradsemester.getText(), "0");
+                    master.qp.insertProfile(aid, username.getText(), imgPath);
+                    master.qp.insertGraduation(aid, gradyear.getText(), gradsemester.getText(), String.valueOf(isGrad));
             }
 
             //return to initial scene
@@ -156,13 +156,31 @@ public class SignupForm {
 
 
     }
-      public void image(Stage primaryStage)
+      public String image(Stage primaryStage, ImageView imageView)
       {
-           fileChooser.setTitle("Upload Picture");
-           fileChooser.getExtensionFilters().addAll(
-           new ExtensionFilter("Image Files", "*.png", "*.jpg"));
-           File selectedFile = fileChooser.showOpenDialog(primaryStage);
+            fileChooser.setTitle("Upload Picture");
+            fileChooser.getExtensionFilters().addAll(
+            new ExtensionFilter("Image Files", "*.png", "*.jpg"));
+            File selectedFile = fileChooser.showOpenDialog(primaryStage);
 
+            String selectedFilePath = selectedFile.getPath();
+            
+            try
+            {
+
+                FileInputStream stream = new FileInputStream(selectedFilePath);
+                Image imagestream = new Image(stream);
+                imageView.setImage(imagestream);
+
+
+            } catch (FileNotFoundException ex) {
+                Logger.getLogger(SignupForm.class.getName()).log(Level.SEVERE, null, ex);
+                Dialog<String> dialog = new Dialog<String>();
+                //Setting the title
+                dialog.setTitle("error");
+                dialog.showAndWait();
+            }
+            return selectedFilePath;
       }
 
 }
