@@ -30,84 +30,85 @@ import javafx.scene.layout.StackPane;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
 import javafx.stage.Stage;
+import pantherinspectproject.PantherInspectProject;
 
 /**
  *
  * @author cindyramirez
  */
 public class SignupForm {
-    
+
     PantherInspectProject master;
      FileChooser fileChooser = new FileChooser();
-     
+
      public SignupForm(PantherInspectProject master) {
          this.master = master;
      }
-   
-    
-    public Scene form(Stage primaryStage) 
+
+
+    public Scene form(Stage primaryStage)
     {
-      
-        
+
+
       GridPane signup = new GridPane();
       signup.setAlignment(Pos.CENTER);
       signup.setHgap(15);
       signup.setVgap(15);
       signup.setGridLinesVisible(false);
-      
+
       Scene scene = new Scene(signup, 800, 800); //object to return
-      
+
       Label userName = new Label("Username: ");
       signup.add(userName,0,0);
       TextField username = new TextField();
       signup.add(username, 1, 0);
-      
+
       Label Email = new Label("Email: ");
       signup.add(Email,0,1);
       TextField email = new TextField();
       signup.add(email, 1,1);
-      
+
       Label Password = new Label("Password: ");
       signup.add(Password,0,2);
       PasswordField pwBox = new PasswordField();
       signup.add(pwBox, 1,2);
-      
+
       Label gradSemester = new Label("Graduation Semester: ");
       signup.add(gradSemester,0,3);
       TextField gradsemester = new TextField();
       signup.add(gradsemester, 1,3);
-      
+
       Label gradYear = new Label("Graduation Year: ");
       signup.add(gradYear,0,4);
       TextField gradyear = new TextField();
       signup.add(gradyear, 1,4);
-      
-      
+
+
       Label gradStatus = new Label("Graduation Status: ");
       signup.add(gradStatus,0,5);
       TextField gradstatus = new TextField();
       signup.add(gradstatus, 1,5);
-      
-      
-      
-      
+
+
+
+
        try
         {
-            
+
             FileInputStream stream = new FileInputStream(master.UPLOAD_PATH + "profile.jpg");
             Image imagestream = new Image(stream);
             ImageView imageView = new ImageView(imagestream);
-            
+
             Label picture = new Label("Picture: ");
             Button btnimage = new Button("Upload Profile Picture");
             HBox picBtn = new HBox(8);
-            btnimage.setOnAction((event) -> 
+            btnimage.setOnAction((event) ->
             {    // lambda expression
                    image(primaryStage);
                 });
             signup.add(picBtn, 1, 5);
             picBtn.getChildren().addAll(picture, btnimage, imageView);
-            
+
         } catch (FileNotFoundException ex) {
             Logger.getLogger(SignupForm.class.getName()).log(Level.SEVERE, null, ex);
             Dialog<String> dialog = new Dialog<String>();
@@ -115,11 +116,11 @@ public class SignupForm {
             dialog.setTitle("error");
             dialog.showAndWait();
         }
-      
-     
-   
-       
-      
+
+
+
+
+
       Button btn = new Button("Sign Up");
       HBox hbBtn = new HBox(10);
       hbBtn.setAlignment(Pos.BOTTOM_RIGHT);
@@ -137,31 +138,31 @@ public class SignupForm {
                     master.qp.insertProfile(aid, username.getText(), "empty");
                     master.qp.insertGraduation(aid, gradyear.getText(), gradsemester.getText(), "0");
             }
-            
+
             //return to initial scene
             master.start(primaryStage);
         } catch(Exception e) {
             System.out.println("Error: " + e.getMessage());
         }
-        
-      });
-      
-       
-       
-      
-      return scene;
-      
 
-   
-      
+      });
+
+
+
+
+      return scene;
+
+
+
+
     }
       public void image(Stage primaryStage)
       {
            fileChooser.setTitle("Upload Picture");
            fileChooser.getExtensionFilters().addAll(
            new ExtensionFilter("Image Files", "*.png", "*.jpg"));
-           File selectedFile = fileChooser.showOpenDialog(primaryStage);   
-           
+           File selectedFile = fileChooser.showOpenDialog(primaryStage);
+
       }
-    
+
 }

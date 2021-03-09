@@ -30,6 +30,7 @@ import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import pantherinspectproject.SignupForm;
+import pantherinspectproject.userHomePage;
 import pantherinspectproject.QueryProcessor;
 import pantherinspectproject.Database;
 import pantherinspectproject.Time;
@@ -39,11 +40,13 @@ import pantherinspectproject.Time;
  *
  * @author cindyramirez
  */
-public class PantherInspectProject extends Application 
+public class PantherInspectProject extends Application
 {
     SignupForm signupform = new SignupForm(this);
-    
-    static final String JDBC_DRIVER = "com.mysql.jdbc.Driver";  
+    userHomePage userHome = new userHomePage();
+    forgotPassword toReset = new forgotPassword();
+
+    static final String JDBC_DRIVER = "com.mysql.jdbc.Driver";
     static final String DB_URL = "jdbc:mysql://localhost/PantherInspect";
 
     //  Database credentials
@@ -55,21 +58,21 @@ public class PantherInspectProject extends Application
     public Database db;
     public QueryProcessor qp;
     public Connection conn = null;
-    
+
     @Override
-    public void start(Stage primaryStage) 
+    public void start(Stage primaryStage)
     {
         Database db = new Database();
         conn = db.createConnection(DB_URL,USER,PASS);
         qp = new QueryProcessor(conn);
-        
+
         primaryStage.setTitle("PantherInspect");
         GridPane grid = new GridPane();
         grid.setAlignment(Pos.CENTER);
         grid.setHgap(10);
         grid.setVgap(10);
         grid.setPadding(new Insets(25, 25, 25, 25));
-        
+
         Text scenetitle = new Text("PantherInspect Login");
         scenetitle.setFont(Font.font("Tahoma", FontWeight.NORMAL, 20));
         grid.add(scenetitle, 0, 0, 2, 1);
@@ -85,10 +88,10 @@ public class PantherInspectProject extends Application
 
         PasswordField pwBox = new PasswordField();
         grid.add(pwBox, 1, 2);
-        
+
         Button btn = new Button("Sign in");
         btn.setOnAction((ActionEvent event) -> {
-            
+
             System.out.println("signing in..");
             try {
                 if(conn == null) {
@@ -103,13 +106,14 @@ public class PantherInspectProject extends Application
                 String hashedPass = rs.getString(1);
                 if(BCrypt.checkpw(pwBox.getText(), hashedPass)) {
                     System.out.println("Correct Password!");
+                    primaryStage.setScene(userHome.userpage(primaryStage))
                 } else {
                     System.out.println("Incorrect Password!");
                     Alert alert = new Alert(AlertType.ERROR);
                     alert.setTitle("Error");
                     alert.setHeaderText("An Error has Occurred.");
                     alert.setContentText("Your username or password was incorrect.");
-                    
+
                     alert.showAndWait();
                 }
             } catch (Exception e) {
@@ -120,38 +124,43 @@ public class PantherInspectProject extends Application
         hbBtn.setAlignment(Pos.BOTTOM_RIGHT);
         hbBtn.getChildren().add(btn);
         grid.add(hbBtn, 1, 4);
-        
+
         Button SUbtn = new Button("Sign Up to get an Account! ");
         HBox suhbBtn = new HBox(10);
         SUbtn.setOnAction((ActionEvent e) -> {
-            
+
             primaryStage.setScene(signupform.form(primaryStage));
-            
-        }); 
+
+        });
         suhbBtn.setAlignment(Pos.BOTTOM_CENTER);
         suhbBtn.getChildren().add(SUbtn);
         grid.add(suhbBtn, 1, 8);
-        
-        Label forgotPassword = new Label("Forgot Password?");
-        grid.add(forgotPassword, 0, 4);
-        
+
+        Button forgotPassword = new Button("Forgot Password?");
+        HBox forgotPasswordHB = new HBox(10);
+
+        forgotPassword.setOnAction(e -> primaryStage.setScene(toReset.toResetPassword(primaryStage)));
+        forgotPasswordHB.setAlignment(Pos.BOTTOM_CENTER);
+        forgotPasswordHB.getChildren().add(forgotPassword);
+        grid.add(forgotPasswordHB, 0, 4);
+
         final Text actiontarget = new Text();
         grid.add(actiontarget, 1, 6);
-        
-        
+
+
         Scene scene = new Scene(grid, 300, 275);
         primaryStage.setScene(scene);
         primaryStage.show();
     }
-    
-    
+
+
 
     /**
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        
-        
+
+
         try {
             //STEP 2: Register JDBC driver
             Class.forName("com.mysql.cj.jdbc.Driver").newInstance();
@@ -160,5 +169,5 @@ public class PantherInspectProject extends Application
         }
         launch(args);
     }
-    
+
 }
