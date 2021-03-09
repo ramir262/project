@@ -66,19 +66,19 @@ public class PantherInspectProject extends Application
 	return:
 		String db_url
 	*/
-    private String setupDB() {
-        //setup database
-        db = new Database();
-        String db_url = db.createURL("localhost","PantherInspect");
-        conn = db.createConnection(db_url,USER,PASS);
-        qp = new QueryProcessor(conn);
-        
-        //run create tables via thread
-        //TODO: run only at start
-        Thread thr = new Thread(() -> qp.createTables(SETUP_FILE));
-        thr.start();
-        
-        return db_url;
+    private void setupDB() {
+        if (conn == null) {
+            //setup database
+            db = new Database();
+            String db_url = db.createURL("localhost","PantherInspect");
+            conn = db.createConnection(db_url,USER,PASS);
+            qp = new QueryProcessor(conn);
+
+            //run create tables via thread
+            //TODO: run only at start
+            Thread thr = new Thread(() -> qp.createTables(SETUP_FILE));
+            thr.start();
+        }
     }
     
     /*
@@ -237,7 +237,7 @@ public class PantherInspectProject extends Application
     public void start(Stage primaryStage) 
     {
         //set up database and query processor
-        String db_url = setupDB();
+        setupDB();
         
         //set up GUI
         GridPane grid = createGrid();
