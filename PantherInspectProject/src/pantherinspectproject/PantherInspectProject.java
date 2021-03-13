@@ -8,7 +8,10 @@ package pantherinspectproject;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -50,6 +53,7 @@ public class PantherInspectProject extends Application
     public static final String UPLOAD_PATH = "C://Users//allis//Pictures//";
     
     public static final String SETUP_FILE = "tables.sql";
+    public static final String COURSE_FILE = "courses.sql";
 
     public Database db;
     public QueryProcessor qp;
@@ -63,8 +67,6 @@ public class PantherInspectProject extends Application
 		set up database connection
                 set up query processor
                 generate tables if they don't yet exist
-	return:
-		String db_url
 	*/
     private void setupDB() {
         if (conn == null) {
@@ -75,9 +77,40 @@ public class PantherInspectProject extends Application
             qp = new QueryProcessor(conn);
 
             //run create tables via thread
-            //TODO: run only at start
-            Thread thr = new Thread(() -> qp.createTables(SETUP_FILE));
+            Thread thr = new Thread(() -> runSQL());
             thr.start();
+        }
+    }
+    
+      /*
+	-------------------------------
+	function: runSQL
+	-------------------------------
+	purpose:
+		setup tables
+                add demo data
+	*/
+    private void runSQL() {
+        qp.createTables(SETUP_FILE);
+        
+        /*generate demo info*/
+        
+        //generate classes
+        int count = qp.selectTableCount("Course");
+        if (count == 0) {
+            qp.createTables(COURSE_FILE);
+        }
+        
+        //demo for Cindy
+        ResultSet rs = qp.selectCourseBySubject("Computer Science");
+        try {
+            while (rs.next()) {
+                System.out.print("Course Number: " + rs.getString(1) + ", ");
+                System.out.println("Course Name: " + rs.getString(2));
+                
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(PantherInspectProject.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
     
