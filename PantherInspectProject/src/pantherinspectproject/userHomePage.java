@@ -12,6 +12,8 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.ChoiceBox;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
@@ -19,6 +21,7 @@ import static javafx.scene.input.KeyCode.H;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
@@ -37,8 +40,9 @@ public class userHomePage
 {
     SettingsPage settings = new SettingsPage();
     profileSettings profilesetting = new profileSettings();
-    searchCoursePage searchCourse = new searchCoursePage();
+    searchCoursePage searchCourse = new searchCoursePage(this);
     
+    public String selectedCourse = "";
     public Scene userpage(Stage primaryStage)
     {
       primaryStage.setTitle("User Home Page ");
@@ -48,22 +52,36 @@ public class userHomePage
       homePage.setVgap(15);
       homePage.setGridLinesVisible(false);
       
-      Label label = new Label("Welcome");
-      homePage.add(label, 0,0);
+
       
       Scene scene = new Scene(homePage, 800, 800); 
       
       //=========== Search Course Label ============
-      Label searchCourseLabel = new Label("Search for a Chapman Course:");
-      homePage.add(searchCourseLabel, 0, 1);
-      TextField searchCourseField = new TextField();
-      homePage.add(searchCourseField, 1, 1);
+      Label searchCourseLabel = new Label("Search a Chapman Subject:");
+      homePage.add(searchCourseLabel, 0, 0);
+      
+      ComboBox comboBox = new ComboBox();
+      comboBox.getItems().add("Computer Science");
+      comboBox.getItems().add("Software Engineeing");
+      comboBox.getItems().add("Data Analytics");
+      homePage.add(comboBox, 1,0);
       
       Button searchButton = new Button("Search");
       HBox hsearchbox = new HBox(searchButton);
+     
+      comboBox.setOnAction((event) -> {
       searchButton.setOnAction(e -> primaryStage.setScene(searchCourse.toSearchCourse(primaryStage)));
+      int selectedIndex = comboBox.getSelectionModel().getSelectedIndex();
+      Object selectedItem = comboBox.getSelectionModel().getSelectedItem();
+      if(selectedItem != null)
+      {
+          selectedCourse = selectedItem.toString();
+      }
+      });
+      
+      
       hsearchbox.setAlignment(Pos.BOTTOM_RIGHT);
-      homePage.add(hsearchbox, 2, 1);
+      homePage.add(hsearchbox, 2, 0);
        
       
       //============ Rate Course Label ====================
