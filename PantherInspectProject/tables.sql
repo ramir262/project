@@ -28,6 +28,8 @@ CREATE TABLE IF NOT EXISTS Graduation (
 
 CREATE TABLE IF NOT EXISTS Course (
 	CourseId int,
+	Subject varchar(30),
+	CourseNum int,
 	CName varchar(40),
 	PRIMARY KEY(CourseId)
 ) ;
