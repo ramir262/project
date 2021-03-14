@@ -24,7 +24,7 @@ public class Database {
 	
 	public Connection createConnection(String url, String user, String password) {
 		try {
-			Class.forName(JDBC_DRIVER);
+		    Class.forName(JDBC_DRIVER);
 			
 		    System.out.println("Connecting to database...");
 		    
