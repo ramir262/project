@@ -44,7 +44,7 @@ public class PantherInspectProject extends Application
 {
     SignupForm signupform = new SignupForm(this);
     userHomePage userHome = new userHomePage();
-    forgotPassword toReset = new forgotPassword();
+    forgotPassword toReset = new forgotPassword(this);
 
     static final String JDBC_DRIVER = "com.mysql.jdbc.Driver";
     static final String DB_URL = "jdbc:mysql://localhost/PantherInspect";
@@ -289,7 +289,12 @@ public class PantherInspectProject extends Application
 
         //forgot password label
         //TODO: forgot password button + logic
-        Label forgotPassword = new Label("Forgot Password?");
+        Button forgotPassword = new Button("Forgot Password?");
+        forgotPassword.setOnAction((ActionEvent e) -> {
+
+            primaryStage.setScene(toReset.toResetPassword(primaryStage));
+
+        });
         grid.add(forgotPassword, 0, 4);
 
         final Text actiontarget = new Text();

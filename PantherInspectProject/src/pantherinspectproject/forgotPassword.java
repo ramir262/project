@@ -23,12 +23,18 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
+import pantherinspectproject.PantherInspectProject;
 /**
  *
  * @author cindyramirez
  */
 public class forgotPassword 
 {
+    PantherInspectProject master;
+    public forgotPassword(PantherInspectProject master) {
+         this.master = master;
+     }
+    
     public Scene toResetPassword(Stage primaryStage)
     {
       primaryStage.setTitle("Reset password ");
