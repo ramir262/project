@@ -101,7 +101,7 @@ public class PantherInspectProject extends Application
                 check entered password against existing hash
                 generate alert if password does not match
 	*/
-    private void checkPassword(String email, String password) {
+    private Boolean checkPassword(String email, String password) {
         try {
 
             ResultSet rs = qp.selectAccountHash(email);
@@ -109,6 +109,7 @@ public class PantherInspectProject extends Application
             String hashedPass = rs.getString(1);
             if(BCrypt.checkpw(password, hashedPass)) {
                 System.out.println("Correct Password!");
+                return true;
             } else {
                 System.out.println("Incorrect Password!");
                 Alert alert = new Alert(AlertType.ERROR);
@@ -117,11 +118,13 @@ public class PantherInspectProject extends Application
                 alert.setContentText("Your username or password was incorrect.");
 
                 alert.showAndWait();
+                return false;
             }
         }
         catch (Exception e) {
             System.out.println("Error: " + e.getMessage());
         }
+        return false;
     }
 
     /*
@@ -138,15 +141,20 @@ public class PantherInspectProject extends Application
 	return:
 		Button
 	*/
-    private Button createSigninButton(TextField emailField, PasswordField pwField) {
+    private Button createSigninButton(TextField emailField, PasswordField pwField, Stage primaryStage) {
         Button btn = new Button("Sign in");
         btn.setOnAction((ActionEvent event) -> {
 
             System.out.println("signing in..");
 
+            //temp fix: not running this in a thread as it should be locking and should freeze gui
             //run check password as thread
-            Thread thr = new Thread(() -> checkPassword(emailField.getText(),pwField.getText()));
-            thr.start();
+            //Thread thr = new Thread(() -> checkPassword(emailField.getText(),pwField.getText()));
+            //thr.start();
+            Boolean check = checkPassword(emailField.getText(),pwField.getText());
+            if(check) {
+                primaryStage.setScene(userHome.userpage(primaryStage));
+            }
 
         });
         return btn;
@@ -270,7 +278,7 @@ public class PantherInspectProject extends Application
         grid.add(pwBox, 1, 2);
 
         //create signin button
-        Button signinBtn = createSigninButton(userTextField,pwBox);
+        Button signinBtn = createSigninButton(userTextField,pwBox,primaryStage);
         HBox hbBtn = createBox(signinBtn,Pos.BOTTOM_RIGHT);
         grid.add(hbBtn, 1, 4);
 
