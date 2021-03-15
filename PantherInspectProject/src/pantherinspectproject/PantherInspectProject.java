@@ -5,6 +5,7 @@
  */
 package pantherinspectproject;
 
+import com.sun.javafx.application.LauncherImpl;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -33,6 +34,7 @@ import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import pantherinspectproject.SignupForm;
+import pantherinspectproject.userHomePage;
 import pantherinspectproject.QueryProcessor;
 import pantherinspectproject.Database;
 import pantherinspectproject.Time;
@@ -46,20 +48,23 @@ public class PantherInspectProject extends Application
 {
     SignupForm signupform = new SignupForm(this);
     //CoursePage coursePage = new CoursePage(this);
-    
+    userHomePage userHome = new userHomePage();
+    forgotPassword toReset = new forgotPassword();
+
+
     //  Database credentials
     static final String USER = "root";
-    static final String PASS = "root";
+    static final String PASS = "root";//"2367";
 
-    public static final String UPLOAD_PATH = "C://Users//allis//Pictures//";
-    
+    public static final String UPLOAD_PATH = "C://Users//allis//Pictures//";//"//localhost/D$/Downloads/images/";
+
     public static final String SETUP_FILE = "tables.sql";
     public static final String COURSE_FILE = "courses.sql";
 
     public Database db;
     public QueryProcessor qp;
     public Connection conn = null;
-    
+
     /*
 	-------------------------------
 	function: setupDB
@@ -82,7 +87,7 @@ public class PantherInspectProject extends Application
             thr.start();
         }
     }
-    
+
       /*
 	-------------------------------
 	function: runSQL
@@ -93,22 +98,22 @@ public class PantherInspectProject extends Application
 	*/
     private void runSQL() {
         qp.createTables(SETUP_FILE);
-        
+
         /*generate demo info*/
-        
+
         //generate classes
         int count = qp.selectTableCount("Course");
         if (count == 0) {
             qp.createTables(COURSE_FILE);
         }
-        
+
         //demo for Cindy
         ResultSet rs = qp.selectCourseBySubject("Computer Science");
         try {
             while (rs.next()) {
                 System.out.print("Course Number: " + rs.getString(1) + ", ");
                 System.out.println("Course Name: " + rs.getString(2));
-                
+
             }
         } catch (SQLException ex) {
             Logger.getLogger(PantherInspectProject.class.getName()).log(Level.SEVERE, null, ex);
@@ -117,13 +122,13 @@ public class PantherInspectProject extends Application
         try {
             while (rs2.next()) {
                 System.out.println("Subject: " + rs2.getString(1));
-                
+
             }
         } catch (SQLException ex) {
             Logger.getLogger(PantherInspectProject.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
+
     /*
 	-------------------------------
 	function: checkPassword
@@ -135,14 +140,15 @@ public class PantherInspectProject extends Application
                 check entered password against existing hash
                 generate alert if password does not match
 	*/
-    private void checkPassword(String email, String password) {
+    private Boolean checkPassword(String email, String password) {
         try {
-                
+
             ResultSet rs = qp.selectAccountHash(email);
             rs.next();
             String hashedPass = rs.getString(1);
             if(BCrypt.checkpw(password, hashedPass)) {
                 System.out.println("Correct Password!");
+                return true;
             } else {
                 System.out.println("Incorrect Password!");
                 Alert alert = new Alert(AlertType.ERROR);
@@ -151,13 +157,15 @@ public class PantherInspectProject extends Application
                 alert.setContentText("Your username or password was incorrect.");
 
                 alert.showAndWait();
+                return false;
             }
         }
         catch (Exception e) {
             System.out.println("Error: " + e.getMessage());
         }
+        return false;
     }
-    
+
     /*
 	-------------------------------
 	function: createSigninButton
@@ -172,25 +180,30 @@ public class PantherInspectProject extends Application
 	return:
 		Button
 	*/
-    private Button createSigninButton(TextField emailField, PasswordField pwField) {
+    private Button createSigninButton(TextField emailField, PasswordField pwField, Stage primaryStage) {
         Button btn = new Button("Sign in");
         btn.setOnAction((ActionEvent event) -> {
-            
+
             System.out.println("signing in..");
-            
+
+            //temp fix: not running this in a thread as it should be locking and should freeze gui
             //run check password as thread
-            Thread thr = new Thread(() -> checkPassword(emailField.getText(),pwField.getText()));
-            thr.start();
-            
+            //Thread thr = new Thread(() -> checkPassword(emailField.getText(),pwField.getText()));
+            //thr.start();
+            Boolean check = checkPassword(emailField.getText(),pwField.getText());
+            if(check) {
+                primaryStage.setScene(userHome.userpage(primaryStage));
+            }
+
         });
         return btn;
     }
-    
+
      /*
 	-------------------------------
 	function: createSignupButton
 	-------------------------------
-        params: 
+        params:
                 Stage primaryStage
 	purpose:
 		create signup button with action:
@@ -201,10 +214,10 @@ public class PantherInspectProject extends Application
     private Button createSignupButton(Stage primaryStage) {
         Button SUbtn = new Button("Sign Up to get an Account! ");
         SUbtn.setOnAction((ActionEvent e) -> {
-            
+
             primaryStage.setScene(signupform.form(primaryStage));
-            
-        }); 
+
+        });
         return SUbtn;
     }
     /*
@@ -257,7 +270,7 @@ public class PantherInspectProject extends Application
         scenetitle.setFont(Font.font("Tahoma", FontWeight.NORMAL, 20));
         return scenetitle;
     }
-    
+
     /*
 	-------------------------------
 	function: setupScene
@@ -276,15 +289,16 @@ public class PantherInspectProject extends Application
         primaryStage.show();
     }
     
+
     @Override
-    public void start(Stage primaryStage) 
+    public void start(Stage primaryStage)
     {
         //set up database and query processor
         setupDB();
-        
+
         //set up GUI
         GridPane grid = createGrid();
-        
+
         //create title
         Text scenetitle = createTitle(primaryStage,"PantherInspect");
         grid.add(scenetitle, 0, 0, 2, 1);
@@ -302,39 +316,34 @@ public class PantherInspectProject extends Application
 
         PasswordField pwBox = new PasswordField();
         grid.add(pwBox, 1, 2);
-        
+
         //create signin button
-        Button signinBtn = createSigninButton(userTextField,pwBox);
+        Button signinBtn = createSigninButton(userTextField,pwBox,primaryStage);
         HBox hbBtn = createBox(signinBtn,Pos.BOTTOM_RIGHT);
         grid.add(hbBtn, 1, 4);
-        
+
         //create signup button
         Button SUbtn = createSignupButton(primaryStage);
         HBox suhbBtn = createBox(SUbtn,Pos.BOTTOM_CENTER);
         grid.add(suhbBtn, 1, 8);
-        
+
         //forgot password label
         //TODO: forgot password button + logic
         Label forgotPassword = new Label("Forgot Password?");
         grid.add(forgotPassword, 0, 4);
-        
+
         final Text actiontarget = new Text();
         grid.add(actiontarget, 1, 6);
-        
+
         //complete setup
         setupScene(primaryStage,grid);
     }
-    
-    
-    
-    
 
-    /**
-     * @param args the command line arguments
-     */
+
+
     public static void main(String[] args) {
-        
-        launch(args);
-    }
-    
+      LauncherImpl.launchApplication(PantherInspectProject.class, SplashScreenLoader.class, args);
+   }
+
+
 }

@@ -136,6 +136,24 @@ public class QueryProcessor {
 		boolean success = insert(tableName, columns, values, instance);
 		return success;
 	}
+        
+        /*
+	-------------------------------
+	function: insertSecurity
+	-------------------------------
+	purpose:
+		insert values into security table
+	return:
+		boolean success or failure
+	*/
+	public boolean insertSecurity(String accountId, String questionId, String answer) {
+		String tableName = "Security";
+		String columns = "AccountId, Email, Hash";
+		String values = "?, ?, ?";
+		String[] instance = new String[] {accountId, questionId, answer};
+		boolean success = insert(tableName, columns, values, instance);
+		return success;
+	}
 	/*
 	------------------------------------------------------------------------------------------
 	Delete Account Information
@@ -214,6 +232,25 @@ public class QueryProcessor {
 		boolean success = update(tableName, columns, instance,where);
 		return success;
 	}
+        
+        /*
+	-------------------------------
+	function: updateSecurity
+	-------------------------------
+	purpose:
+		update answer in security table
+	return:
+		boolean success or failure
+	*/
+	public boolean updateSecurity(String accountId, String questionId, String answer) {
+		String tableName = "Security";
+		String columns = "Answer=?";
+                String[] wheres = new String[] {"AccountId=?","QuestionId=?"};
+		String where = String.format(this.WHERE, String.join(this.AND,wheres));
+		String[] instance = new String[] {answer, accountId, questionId};
+		boolean success = update(tableName, columns, instance,where);
+		return success;
+	}
 	
 	/*
 	------------------------------------------------------------------------------------------
@@ -286,7 +323,7 @@ public class QueryProcessor {
 		select values corresponding to profile display
 		select values from account and profile (join tables)
 	return:
-		ResultSet
+		ResultSet (hash)
 	*/
 	
 	public ResultSet selectAccountHash(String email) {
@@ -295,6 +332,27 @@ public class QueryProcessor {
 		String where = String.format(this.WHERE, "Email=?");
 		String[] instance = new String[] {email};
 		ResultSet rs = select(desired,tables,where,instance);
+		return rs;
+	}
+        /*
+	-------------------------------
+	function: selectSecurity
+	-------------------------------
+	purpose:
+		select security answer
+	return:
+		ResultSet (hash)
+	*/
+	
+	public ResultSet selectSecurityAnswer(String accountId, String questionId) {
+		String desired = "Hash";
+                String[] tableNames = new String[] {"Security","Questions"};
+		String tables = String.join(this.NATURAL_JOIN,tableNames);
+                String[] wheres = new String[]{"accountId=?","questionId=?"};
+		String where = String.format(this.WHERE, String.join(this.AND, wheres));
+		String[] instance = new String[] {accountId, questionId};
+		ResultSet rs = select(desired,tables,where,instance);
+                
 		return rs;
 	}
 
