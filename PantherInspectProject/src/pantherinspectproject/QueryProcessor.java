@@ -22,6 +22,7 @@ public class QueryProcessor {
 	String DELETE = "DELETE FROM %s %s;";
 	
 	String WHERE = "WHERE %s";
+        String DISTINCT = "DISTINCT %s";
 	String MAX = "MAX( %s )";
 	String AVG = "AVG( %s )";
         String COUNT = "COUNT( %s ) " ;
@@ -544,6 +545,26 @@ public class QueryProcessor {
 		ResultSet rs = select(columns,tables,where,instances);
 		return rs;
 	}
+        
+        /*
+	-------------------------------
+	function: selectSubjects
+	-------------------------------
+	purpose:
+		get all subjects
+	return:
+		ResultSet : subject
+	*/
+	public ResultSet selectSubjects() {
+		String columns = String.format(this.DISTINCT,"subject");
+		String tables = "Course";
+		String where = "";
+		String[] instances = new String[] {};
+
+                ResultSet rs = select(columns,tables,where,instances);
+		return rs;
+	}
+        
         /*
 	-------------------------------
 	function: selectCourseBySubject
