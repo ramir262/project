@@ -45,6 +45,7 @@ import pantherinspectproject.Time;
 public class PantherInspectProject extends Application
 {
     SignupForm signupform = new SignupForm(this);
+    //CoursePage coursePage = new CoursePage(this);
     
     //  Database credentials
     static final String USER = "root";
@@ -107,6 +108,15 @@ public class PantherInspectProject extends Application
             while (rs.next()) {
                 System.out.print("Course Number: " + rs.getString(1) + ", ");
                 System.out.println("Course Name: " + rs.getString(2));
+                
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(PantherInspectProject.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        ResultSet rs2 = qp.selectSubjects();
+        try {
+            while (rs2.next()) {
+                System.out.println("Subject: " + rs2.getString(1));
                 
             }
         } catch (SQLException ex) {
