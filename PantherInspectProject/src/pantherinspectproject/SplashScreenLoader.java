@@ -20,17 +20,27 @@ import javafx.stage.Stage;
  * @author allis
  */
 public class SplashScreenLoader extends Preloader {
-    private Stage splashScreen;
-
+    public static Stage splashScreen;
+    
     @Override
     public void start(Stage stage) throws Exception {
         splashScreen = stage;
-        splashScreen.setScene(createScene());
+        splashScreen.setScene(createSplash());
         splashScreen.show();
-
     }
-
-    public Scene createScene() throws FileNotFoundException {
+    /*
+	-------------------------------
+	function: createSplash
+	-------------------------------
+        params:
+                Stage primaryStage
+                GridPane grid
+        purpose:
+		create title for GUI
+	return:
+		GridPane
+    */
+    public Scene createSplash() throws FileNotFoundException {
         //creating the image object
         InputStream stream = new FileInputStream("SplashScreen.png");
         Image image = new Image(stream);
@@ -50,12 +60,5 @@ public class SplashScreenLoader extends Preloader {
         return scene;
     }
 
-    @Override
-    public void handleApplicationNotification(PreloaderNotification notification) {
-        //TODO: fix error where it does not get notification to hide
-        if (notification instanceof StateChangeNotification) {
-            splashScreen.hide();
-        }
-        
-    }
+    
 }
