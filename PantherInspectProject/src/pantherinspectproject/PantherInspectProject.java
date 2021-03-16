@@ -330,8 +330,13 @@ public class PantherInspectProject extends Application
 
         //forgot password label
         //TODO: forgot password button + logic
-        Label forgotPassword = new Label("Forgot Password?");
-        grid.add(forgotPassword, 0, 4);
+        Button forgotPassword = new Button("Forgot Password?");
+         HBox forgotPasswordHB = new HBox(10);
+
+         forgotPassword.setOnAction(e -> primaryStage.setScene(toReset.toResetPassword(primaryStage))); 
+         forgotPasswordHB.setAlignment(Pos.BOTTOM_CENTER);
+         forgotPasswordHB.getChildren().add(forgotPassword);
+         grid.add(forgotPasswordHB, 0, 4);
 
         final Text actiontarget = new Text();
         grid.add(actiontarget, 1, 6);
