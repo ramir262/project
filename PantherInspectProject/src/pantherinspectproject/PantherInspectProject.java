@@ -6,6 +6,10 @@
 package pantherinspectproject;
 
 import com.sun.javafx.application.LauncherImpl;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -25,6 +29,8 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import static javafx.scene.input.KeyCode.H;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
@@ -51,11 +57,10 @@ public class PantherInspectProject extends Application
     userHomePage userHome = new userHomePage();
     forgotPassword toReset = new forgotPassword();
 
-
     //  Database credentials
     static final String USER = "root";
-    static final String PASS = "2367";
-
+    static final String PASS = "root";//"2367";
+    
     public static final String UPLOAD_PATH = "//localhost/D$/Downloads/images/";
 
     public static final String SETUP_FILE = "tables.sql";
@@ -287,9 +292,9 @@ public class PantherInspectProject extends Application
         Scene scene = new Scene(grid, 300, 275);
         primaryStage.setScene(scene);
         primaryStage.show();
+        SplashScreenLoader.splashScreen.hide();
     }
     
-
     @Override
     public void start(Stage primaryStage)
     {
