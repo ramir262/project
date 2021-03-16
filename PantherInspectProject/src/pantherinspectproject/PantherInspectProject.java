@@ -293,6 +293,7 @@ public class PantherInspectProject extends Application
     @Override
     public void start(Stage primaryStage)
     {
+        
         //set up database and query processor
         setupDB();
 

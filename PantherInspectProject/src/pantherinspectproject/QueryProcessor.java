@@ -345,7 +345,7 @@ public class QueryProcessor {
 	*/
 	
 	public ResultSet selectSecurityAnswer(String accountId, String questionId) {
-		String desired = "Hash";
+		String desired = "Question,Hash";
                 String[] tableNames = new String[] {"Security","Questions"};
 		String tables = String.join(this.NATURAL_JOIN,tableNames);
                 String[] wheres = new String[]{"accountId=?","questionId=?"};
