@@ -44,7 +44,7 @@ public class userHomePage
 {
     SettingsPage settings = new SettingsPage();
     profileSettings profilesetting = new profileSettings();
-    searchCoursePage searchCourse = new searchCoursePage(this);
+    searchCoursePage searchCourse;
     
     public String selectedCourse = "";
     private PantherInspectProject master;
@@ -69,22 +69,24 @@ public class userHomePage
       Label searchCourseLabel = new Label("Search a Chapman Subject:");
       homePage.add(searchCourseLabel, 0, 0);
       
-      ComboBox comboBox = addClasses();
-      homePage.add(comboBox, 1,0);
-      
       Button searchButton = new Button("Search");
       HBox hsearchbox = new HBox(searchButton);
      
+      ComboBox comboBox = addClasses();
+      
       comboBox.setOnAction((event) -> {
-      searchButton.setOnAction(e -> primaryStage.setScene(searchCourse.toSearchCourse(primaryStage)));
-      int selectedIndex = comboBox.getSelectionModel().getSelectedIndex();
-      Object selectedItem = comboBox.getSelectionModel().getSelectedItem();
-      if(selectedItem != null)
-      {
-          selectedCourse = selectedItem.toString();
-      }
+            int selectedIndex = comboBox.getSelectionModel().getSelectedIndex();
+            Object selectedItem = comboBox.getSelectionModel().getSelectedItem();
+            if(selectedItem != null)
+            {
+                selectedCourse = selectedItem.toString();
+                this.searchCourse = new searchCoursePage(this.master,this.selectedCourse);
+                searchButton.setOnAction(e -> primaryStage.setScene(this.searchCourse.toSearchCourse(primaryStage)));
+            
+            }
       });
       
+      homePage.add(comboBox, 1,0);
       
       hsearchbox.setAlignment(Pos.BOTTOM_RIGHT);
       homePage.add(hsearchbox, 2, 0);
@@ -121,7 +123,7 @@ public class userHomePage
     ----------------------------
     params:
     purpose:
-        call all classes in database
+        call all distinct course subjects in database
         dynamically generate combo box items
     return:
         ComboBox: contains all classes
