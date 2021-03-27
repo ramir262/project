@@ -14,6 +14,22 @@ VALUES
 	(3,"Software Engineering", 310, "Software Design");
 
 INSERT INTO
+	Course (CourseId,Subject,CourseNum, CName)
+VALUES
+	(4,"Computer Science", 402, "Compiler Construction");
+
+INSERT INTO
+	Course (CourseId,Subject,CourseNum, CName)
+VALUES
+	(5,"Computer Science", 330, "Digital Logic I");
+
+INSERT INTO
+	Course (CourseId,Subject,CourseNum, CName)
+VALUES
+	(6,"Computer Science", 408, "Database Management");
+
+
+INSERT INTO
 	Professor (ProfessorId,PName)
 VALUES
 	(1,"Nicholas LaHaye");
