@@ -112,26 +112,6 @@ public class PantherInspectProject extends Application
             qp.createTables(COURSE_FILE);
         }
 
-        //demo for Cindy
-        ResultSet rs = qp.selectCourseBySubject("Computer Science");
-        try {
-            while (rs.next()) {
-                System.out.print("Course Number: " + rs.getString(1) + ", ");
-                System.out.println("Course Name: " + rs.getString(2));
-
-            }
-        } catch (SQLException ex) {
-            Logger.getLogger(PantherInspectProject.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        ResultSet rs2 = qp.selectSubjects();
-        try {
-            while (rs2.next()) {
-                System.out.println("Subject: " + rs2.getString(1));
-
-            }
-        } catch (SQLException ex) {
-            Logger.getLogger(PantherInspectProject.class.getName()).log(Level.SEVERE, null, ex);
-        }
     }
 
     /*
