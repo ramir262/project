@@ -54,7 +54,7 @@ public class PantherInspectProject extends Application
 {
     SignupForm signupform = new SignupForm(this);
     //CoursePage coursePage = new CoursePage(this);
-    userHomePage userHome = new userHomePage();
+    userHomePage userHome = new userHomePage(this);
     forgotPassword toReset = new forgotPassword();
 
     //  Database credentials

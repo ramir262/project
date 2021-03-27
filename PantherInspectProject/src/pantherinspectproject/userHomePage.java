@@ -5,6 +5,10 @@
  */
 package pantherinspectproject;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -43,6 +47,11 @@ public class userHomePage
     searchCoursePage searchCourse = new searchCoursePage(this);
     
     public String selectedCourse = "";
+    private PantherInspectProject master;
+    
+    public userHomePage(PantherInspectProject master) {
+         this.master = master;
+     }
     public Scene userpage(Stage primaryStage)
     {
       primaryStage.setTitle("User Home Page ");
@@ -60,10 +69,7 @@ public class userHomePage
       Label searchCourseLabel = new Label("Search a Chapman Subject:");
       homePage.add(searchCourseLabel, 0, 0);
       
-      ComboBox comboBox = new ComboBox();
-      comboBox.getItems().add("Computer Science");
-      comboBox.getItems().add("Software Engineeing");
-      comboBox.getItems().add("Data Analytics");
+      ComboBox comboBox = addClasses();
       homePage.add(comboBox, 1,0);
       
       Button searchButton = new Button("Search");
@@ -109,5 +115,31 @@ public class userHomePage
      
     }
     
+    /* 
+    ---------------------------
+    function: addClasses
+    ----------------------------
+    params:
+    purpose:
+        call all classes in database
+        dynamically generate combo box items
+    return:
+        ComboBox: contains all classes
     
+    */
+    private ComboBox addClasses() {
+        ResultSet rs = this.master.qp.selectSubjects();
+        
+        ComboBox comboBox = new ComboBox();
+        
+        try {
+            while(rs.next()) {
+                comboBox.getItems().add(rs.getString(1));
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(userHomePage.class.getName()).log(Level.SEVERE, null, ex);
+        }
+      
+        return comboBox;
+    }
 }
