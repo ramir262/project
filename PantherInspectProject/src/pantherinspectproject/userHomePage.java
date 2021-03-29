@@ -35,9 +35,15 @@ import pantherinspectproject.searchCoursePage;
 
 public class userHomePage 
 {
-    SettingsPage settings = new SettingsPage();
-    profileSettings profilesetting = new profileSettings();
+    SettingsPage settings;
+    profileSettings profilesetting;
     searchCoursePage searchCourse = new searchCoursePage();
+    PantherInspectProject master;
+    public userHomePage(PantherInspectProject master) {
+        this.profilesetting = new profileSettings(master,settings);
+        this.settings = new SettingsPage(master,this);
+         this.master = master;
+     }
     
     public Scene userpage(Stage primaryStage)
     {

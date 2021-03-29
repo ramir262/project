@@ -962,12 +962,14 @@ public class QueryProcessor {
 	private boolean executeUpdate(PreparedStatement stmt) {
 		try {
 			int i = stmt.executeUpdate();
+                        System.out.println("HERE");
 			this.conn.commit();
 			if (i > 0) {
 				return true;
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
+                        System.out.println(e.getMessage());
 		}
 		return false;
 	}

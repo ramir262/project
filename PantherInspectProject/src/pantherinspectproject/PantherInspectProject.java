@@ -43,7 +43,7 @@ import pantherinspectproject.Time;
 public class PantherInspectProject extends Application
 {
     SignupForm signupform = new SignupForm(this);
-    userHomePage userHome = new userHomePage();
+    userHomePage userHome = new userHomePage(this);
     forgotPassword toReset = new forgotPassword(this);
 
     static final String JDBC_DRIVER = "com.mysql.jdbc.Driver";
@@ -56,10 +56,27 @@ public class PantherInspectProject extends Application
     public static final String UPLOAD_PATH = "//localhost/D$/Downloads/images/";
 
     public static final String SETUP_FILE = "tables.sql";
+    
+    //Signed in user info
+    private String userEmail;
+    private String accountId;
 
     public Database db;
     public QueryProcessor qp;
     public Connection conn = null;
+    
+    public void setAccountId(String id) {
+        accountId = id;
+    }
+    public String getAccountId() {
+        return accountId;
+    }
+    public void setUserEmail(String email) {
+        userEmail = email;
+    }
+    public String getUserEmail() {
+        return userEmail;
+    }
 
     /*
 	-------------------------------
@@ -108,6 +125,9 @@ public class PantherInspectProject extends Application
             rs.next();
             String hashedPass = rs.getString(1);
             if(BCrypt.checkpw(password, hashedPass)) {
+                //Create session
+                userEmail = email;
+                accountId = qp.getAccountId(userEmail);
                 System.out.println("Correct Password!");
                 return true;
             } else {

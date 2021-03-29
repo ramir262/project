@@ -157,7 +157,6 @@ public class SignupForm {
         master.qp.insertAccount(aid, email, hash);
         master.qp.insertProfile(aid, username, imgPath);
         master.qp.insertGraduation(aid, gradyear, gradsemester, String.valueOf(isGrad));
-
       } catch(Exception e) {
           System.out.println("Error: " + e.getMessage());
       }
