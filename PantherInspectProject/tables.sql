@@ -28,6 +28,8 @@ CREATE TABLE IF NOT EXISTS Graduation (
 
 CREATE TABLE IF NOT EXISTS Course (
 	CourseId int,
+	Subject varchar(30),
+	CourseNum int,
 	CName varchar(40),
 	PRIMARY KEY(CourseId)
 ) ;
@@ -81,3 +83,28 @@ CREATE TABLE IF NOT EXISTS Post (
 	FOREIGN KEY(ClassId) REFERENCES Class(ClassId) ON DELETE CASCADE,
 	PRIMARY KEY(ReviewId)
 ) ;
+
+CREATE TABLE IF NOT EXISTS Security (
+	AccountId int,
+	QuestionId int,
+	Hash varchar(100),
+	FOREIGN KEY(AccountId) REFERENCES Account(AccountId) ON DELETE CASCADE,
+	FOREIGN KEY(QuestionId) REFERENCES Questions(QuestionId) ON DELETE CASCADE,
+	PRIMARY KEY(AccountId, QuestionId)
+) ;
+
+INSERT INTO
+	Questions (QuestionId, Question)
+VALUES
+	(1, "What is your mother's maiden name?")
+ON DUPLICATE KEY UPDATE Question = VALUES (Question);
+INSERT INTO
+	Questions (QuestionId, Question)
+VALUES
+	(2, "What is the name of your first pet?")
+ON DUPLICATE KEY UPDATE Question = VALUES (Question);;
+INSERT INTO
+	Questions (QuestionId, Question)
+VALUES
+	(3, "What was your favorite childhood TV show?")
+ON DUPLICATE KEY UPDATE Question = VALUES (Question);

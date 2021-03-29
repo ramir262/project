@@ -5,10 +5,14 @@
  */
 package pantherinspectproject;
 
+import com.sun.javafx.application.LauncherImpl;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -46,8 +50,6 @@ public class PantherInspectProject extends Application
     userHomePage userHome = new userHomePage(this);
     forgotPassword toReset = new forgotPassword(this);
 
-    static final String JDBC_DRIVER = "com.mysql.jdbc.Driver";
-    static final String DB_URL = "jdbc:mysql://localhost/PantherInspect";
 
     //  Database credentials
     static final String USER = "root";
@@ -56,15 +58,16 @@ public class PantherInspectProject extends Application
     public static final String UPLOAD_PATH = "//localhost/D$/Downloads/images/";
 
     public static final String SETUP_FILE = "tables.sql";
-    
+
     //Signed in user info
     private String userEmail;
     private String accountId;
+    public static final String COURSE_FILE = "courses.sql";
 
     public Database db;
     public QueryProcessor qp;
     public Connection conn = null;
-    
+
     public void setAccountId(String id) {
         accountId = id;
     }
@@ -86,25 +89,60 @@ public class PantherInspectProject extends Application
 		set up database connection
                 set up query processor
                 generate tables if they don't yet exist
-	return:
-		String db_url
 	*/
-    private String setupDB() {
-        //setup database
-        db = new Database();
-        String db_url = db.createURL("localhost","PantherInspect");
-        conn = db.createConnection(db_url,USER,PASS);
-        qp = new QueryProcessor(conn);
+    private void setupDB() {
+        if (conn == null) {
+            //setup database
+            db = new Database();
+            String db_url = db.createURL("localhost","PantherInspect");
+            conn = db.createConnection(db_url,USER,PASS);
+            qp = new QueryProcessor(conn);
 
-        //run create tables via thread
-        
-        //TODO: Should only run if database is not setup, not necessarily at start
-        
-        //TODO: run only at start
-        //Thread thr = new Thread(() -> qp.createTables(SETUP_FILE));
-        //thr.start();
+            //run create tables via thread
+            Thread thr = new Thread(() -> runSQL());
+            thr.start();
+        }
+    }
 
-        return db_url;
+      /*
+	-------------------------------
+	function: runSQL
+	-------------------------------
+	purpose:
+		setup tables
+                add demo data
+	*/
+    private void runSQL() {
+        qp.createTables(SETUP_FILE);
+
+        /*generate demo info*/
+
+        //generate classes
+        int count = qp.selectTableCount("Course");
+        if (count == 0) {
+            qp.createTables(COURSE_FILE);
+        }
+
+        //demo for Cindy
+        ResultSet rs = qp.selectCourseBySubject("Computer Science");
+        try {
+            while (rs.next()) {
+                System.out.print("Course Number: " + rs.getString(1) + ", ");
+                System.out.println("Course Name: " + rs.getString(2));
+
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(PantherInspectProject.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        ResultSet rs2 = qp.selectSubjects();
+        try {
+            while (rs2.next()) {
+                System.out.println("Subject: " + rs2.getString(1));
+
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(PantherInspectProject.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     /*
@@ -270,11 +308,12 @@ public class PantherInspectProject extends Application
         primaryStage.show();
     }
 
+
     @Override
     public void start(Stage primaryStage)
     {
         //set up database and query processor
-        String db_url = setupDB();
+        setupDB();
 
         //set up GUI
         GridPane grid = createGrid();
@@ -326,21 +365,9 @@ public class PantherInspectProject extends Application
 
 
 
-
-
-    /**
-     * @param args the command line arguments
-     */
     public static void main(String[] args) {
+      LauncherImpl.launchApplication(PantherInspectProject.class, SplashScreenLoader.class, args);
+   }
 
-
-        try {
-            //STEP 2: Register JDBC driver
-            Class.forName("com.mysql.cj.jdbc.Driver").newInstance();
-        } catch(Exception e) {
-            System.out.println("Exception caught: " + e.getMessage());
-        }
-        launch(args);
-    }
 
 }

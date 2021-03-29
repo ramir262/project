@@ -22,8 +22,10 @@ public class QueryProcessor {
 	String DELETE = "DELETE FROM %s %s;";
 	
 	String WHERE = "WHERE %s";
+        String DISTINCT = "DISTINCT %s";
 	String MAX = "MAX( %s )";
 	String AVG = "AVG( %s )";
+        String COUNT = "COUNT( %s ) " ;
 	String NATURAL_JOIN = " NATURAL JOIN ";
 	String AND = " AND ";
 	String COMMA = ", ";
@@ -134,6 +136,24 @@ public class QueryProcessor {
 		boolean success = insert(tableName, columns, values, instance);
 		return success;
 	}
+        
+        /*
+	-------------------------------
+	function: insertSecurity
+	-------------------------------
+	purpose:
+		insert values into security table
+	return:
+		boolean success or failure
+	*/
+	public boolean insertSecurity(String accountId, String questionId, String answer) {
+		String tableName = "Security";
+		String columns = "AccountId, Email, Hash";
+		String values = "?, ?, ?";
+		String[] instance = new String[] {accountId, questionId, answer};
+		boolean success = insert(tableName, columns, values, instance);
+		return success;
+	}
 	/*
 	------------------------------------------------------------------------------------------
 	Delete Account Information
@@ -212,6 +232,25 @@ public class QueryProcessor {
 		boolean success = update(tableName, columns, instance,where);
 		return success;
 	}
+        
+        /*
+	-------------------------------
+	function: updateSecurity
+	-------------------------------
+	purpose:
+		update answer in security table
+	return:
+		boolean success or failure
+	*/
+	public boolean updateSecurity(String accountId, String questionId, String answer) {
+		String tableName = "Security";
+		String columns = "Answer=?";
+                String[] wheres = new String[] {"AccountId=?","QuestionId=?"};
+		String where = String.format(this.WHERE, String.join(this.AND,wheres));
+		String[] instance = new String[] {answer, accountId, questionId};
+		boolean success = update(tableName, columns, instance,where);
+		return success;
+	}
 	
 	/*
 	------------------------------------------------------------------------------------------
@@ -284,7 +323,7 @@ public class QueryProcessor {
 		select values corresponding to profile display
 		select values from account and profile (join tables)
 	return:
-		ResultSet
+		ResultSet (hash)
 	*/
 	
 	public ResultSet selectAccountHash(String email) {
@@ -295,13 +334,33 @@ public class QueryProcessor {
 		ResultSet rs = select(desired,tables,where,instance);
 		return rs;
 	}
+        /*
+	-------------------------------
+	function: selectSecurity
+	-------------------------------
+	purpose:
+		select security answer
+	return:
+		ResultSet (hash)
+	*/
+	
+	public ResultSet selectSecurityAnswer(String accountId, String questionId) {
+		String desired = "Hash";
+                String[] tableNames = new String[] {"Security","Questions"};
+		String tables = String.join(this.NATURAL_JOIN,tableNames);
+                String[] wheres = new String[]{"accountId=?","questionId=?"};
+		String where = String.format(this.WHERE, String.join(this.AND, wheres));
+		String[] instance = new String[] {accountId, questionId};
+		ResultSet rs = select(desired,tables,where,instance);
+                
+		return rs;
+	}
 
 	/*
 	------------------------------------------------------------------------------------------
 	Insert Course Information
 	------------------------------------------------------------------------------------------
 	*/
-
 	/*
 	-------------------------------
 	function: insertCourse
@@ -311,11 +370,11 @@ public class QueryProcessor {
 	return:
 		boolean success or failure
 	*/
-	public boolean insertCourse(String courseId, String courseName) {
+	public boolean insertCourse(String courseId, String subject, String courseNum, String courseName) {
 		String tableName = "Course";
-		String columns = "CourseId, CName";
+		String columns = "CourseId, Subject, CourseNum, CName";
 		String values = "?, ?";
-		String[] instance = new String[] {courseId, courseName};
+		String[] instance = new String[] {courseId, subject, courseNum, courseName};
 		boolean success = insert(tableName, columns, values, instance);
 		return success;
 	}
@@ -423,11 +482,11 @@ public class QueryProcessor {
 	return:
 		boolean success or failure
 	*/
-	public boolean updateCourse(String courseId, String courseName) {
+	public boolean updateCourse(String courseId, String subject, String courseNum, String courseName) {
 		String tableName = "Course";
-		String columns = "CName=?";
+		String columns = "Subject=?, CourseNum=?, CName=?";
 		String where = String.format(this.WHERE, "CourseId=?");
-		String[] instance = new String[] {courseName, courseId};
+		String[] instance = new String[] {courseName, subject, courseNum, courseId};
 		boolean success = update(tableName, columns, instance,where);
 		return success;
 	}
@@ -535,13 +594,51 @@ public class QueryProcessor {
 		ResultSet : classid, cname, professorid, pname
 	*/
 	public ResultSet selectCourseProfessors(String courseId) {
-		String columns = "classid,cname,professorid,pname";
+		String columns = "classid,subject,coursenum,cname,professorid,pname";
 		String[] tableNames = new String[] {"Course","Professor","Class"};
 		String tables = String.join(this.NATURAL_JOIN, tableNames);
 		String where = String.format(this.WHERE,"courseid=?");
 		String[] instances = new String[] {courseId};
 		//SELECT classid,cname,professorid,pname FROM course NATURAL JOIN class NATURAL JOIN professor WHERE courseId=?
 		ResultSet rs = select(columns,tables,where,instances);
+		return rs;
+	}
+        
+        /*
+	-------------------------------
+	function: selectSubjects
+	-------------------------------
+	purpose:
+		get all subjects
+	return:
+		ResultSet : subject
+	*/
+	public ResultSet selectSubjects() {
+		String columns = String.format(this.DISTINCT,"subject");
+		String tables = "Course";
+		String where = "";
+		String[] instances = new String[] {};
+
+                ResultSet rs = select(columns,tables,where,instances);
+		return rs;
+	}
+        
+        /*
+	-------------------------------
+	function: selectCourseBySubject
+	-------------------------------
+	purpose:
+		get all classes from a subject
+	return:
+		ResultSet : courseNum, cname
+	*/
+	public ResultSet selectCourseBySubject(String subject) {
+		String columns = "courseNum, cname";
+		String tables = "Course";
+		String where = String.format(this.WHERE,"subject=?");
+		String[] instances = new String[] {subject};
+
+                ResultSet rs = select(columns,tables,where,instances);
 		return rs;
 	}
 
@@ -830,6 +927,27 @@ public class QueryProcessor {
 			e.printStackTrace();
 		}
 		return Integer.toString(id);
+	}
+        
+          /*
+	-------------------------------
+	function: selectTableCount
+	-------------------------------
+        params:
+                String tableName
+        purpose:
+		get count of table instances
+	return:
+                int : count
+	*/
+	public int selectTableCount(String tableName) {
+		String columns = String.format(this.COUNT,"*");
+		String[] instance = new String[] {};
+                
+                String num = getId(columns,tableName,"",instance);
+                
+                
+		return Integer.parseInt(num);
 	}
 
 	/*

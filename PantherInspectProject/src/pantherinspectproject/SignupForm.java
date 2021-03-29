@@ -104,10 +104,9 @@ public class SignupForm {
             //run account creation
         try {
             String aid = master.qp.getAccountId(email.getText());
-            System.out.println(aid);
             if (aid.equals("0")) {
-                createSignupEvent(email.getText(),username.getText(),pwBox.getText(),gradyear.getText(),gradsemester.getText(),gradstatus.isSelected());
-
+                Thread thr = new Thread(() -> createSignupEvent(email.getText(),username.getText(),pwBox.getText(),gradyear.getText(),gradsemester.getText(),gradstatus.isSelected()));
+								thr.start();
                 //return to initial scene
                 master.start(primaryStage);
             }
