@@ -25,6 +25,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.control.CheckBox;
+import javafx.scene.control.ComboBox;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
@@ -247,33 +248,45 @@ public class SignupForm {
       signup.add(Password,0,2);
       PasswordField pwBox = new PasswordField();
       signup.add(pwBox, 1,2);
+      
+      //security question
+      Label securityQuestionLabel = new Label("Security Question: ");
+      signup.add(securityQuestionLabel,0,3);
+      ComboBox questions = new ComboBox();
+      signup.add(questions,1,3);
+      
+      //security answer
+      Label securityAnswerLabel = new Label("Answer: ");
+      signup.add(securityAnswerLabel,0,4);
+      TextField securityAnswer = new TextField();
+      signup.add(securityAnswer,1,4);
 
       //create grad semester entry
       Label gradSemester = new Label("Graduation Semester: ");
-      signup.add(gradSemester,0,3);
+      signup.add(gradSemester,0,5);
       TextField gradsemester = new TextField();
-      signup.add(gradsemester, 1,3);
+      signup.add(gradsemester, 1,5);
 
       //create grad year entry
       Label gradYear = new Label("Graduation Year: ");
-      signup.add(gradYear,0,4);
+      signup.add(gradYear,0,6);
       TextField gradyear = new TextField();
-      signup.add(gradyear, 1,4);
+      signup.add(gradyear, 1,6);
 
 
       Label gradStatus = new Label("Graduated: ");
-      signup.add(gradStatus,0,5);
+      signup.add(gradStatus,0,7);
       CheckBox gradstatus = new CheckBox();
-      signup.add(gradstatus, 1,5);
+      signup.add(gradstatus, 1,7);
 
       //create picture for profile photo entry
       HBox picBtn = setupPicture(primaryStage);
-      signup.add(picBtn, 1, 6);
+      signup.add(picBtn, 1, 8);
 
       //create signup functionality
       Button btn = createSignupButton(primaryStage, email, pwBox, username, gradyear, gradsemester, gradstatus);
       HBox hbBtn = createBox(btn);
-      signup.add(hbBtn,1,11);
+      signup.add(hbBtn,1,13);
 
 
       Scene scene = new Scene(signup, 800, 800); //object to return

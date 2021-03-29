@@ -40,7 +40,7 @@ public class userHomePage
 {
     SettingsPage settings;
     profileSettings profilesetting;
-    searchCoursePage searchCourse = new searchCoursePage();
+    searchCoursePage searchCourse = new searchCoursePage(this);
     PantherInspectProject master;
     public userHomePage(PantherInspectProject master) {
         this.profilesetting = new profileSettings(master,settings);
