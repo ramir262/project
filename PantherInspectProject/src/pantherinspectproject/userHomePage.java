@@ -41,6 +41,7 @@ public class userHomePage
     SettingsPage settings = new SettingsPage();
     profileSettings profilesetting = new profileSettings();
     searchCoursePage searchCourse = new searchCoursePage(this);
+    rateCoursePage rate = new rateCoursePage();
     
     public String selectedCourse = "";
     public Scene userpage(Stage primaryStage)
@@ -85,13 +86,14 @@ public class userHomePage
        
       
       //============ Rate Course Label ====================
-      Label rateCourseLabel = new Label("Rate a Chapman Course:");
-      homePage.add(rateCourseLabel, 0, 2);
-      TextField rateCourseField = new TextField();
-      homePage.add(rateCourseField, 1, 2);
+      //Label rateCourseLabel = new Label("Rate a Chapman Course:");
+      //homePage.add(rateCourseLabel, 0, 2);
+      //TextField rateCourseField = new TextField();
+      //homePage.add(rateCourseField, 1, 2);
       
-      Button rateButton = new Button("Search");
+      Button rateButton = new Button("Rate a Chapman Course");
       HBox hRatebox = new HBox(rateButton);
+      rateButton.setOnAction(e -> primaryStage.setScene(rate.rateCourse(primaryStage)));
       homePage.add(hRatebox, 2, 2);
       //=========================================
       

@@ -38,18 +38,30 @@ public class forgotPassword
       resetPassword.setVgap(15);
       resetPassword.setGridLinesVisible(false);
       
-      Label label = new Label("Enter email to reset password:");
-      resetPassword.add(label, 0,4);
+      Label question1 = new Label("What was your mothers maiden name? ");
+      resetPassword.add(question1, 0 ,4);
+      TextField answerQuestion1 = new TextField();
+      resetPassword.add(answerQuestion1, 1, 4);
       
-      TextField emailtoResetpassword = new TextField();
-      resetPassword.add(emailtoResetpassword, 1, 4);
+      Label question2 = new Label("What was the name of your first pet? ");
+      resetPassword.add(question2, 0, 5);
+      TextField answerQuestion2 = new TextField();
+      resetPassword.add(answerQuestion2, 1, 5);
+      
+      Label question3 = new Label("What was your favorite childhood TV show? ");
+      resetPassword.add(question3, 0, 6);
+      TextField answerQuestion3 = new TextField();
+      resetPassword.add(answerQuestion3, 1, 6);
+      
+      
+      
       
       Button resetButton = new Button("reset password");
       HBox hbBtn = new HBox(10);
       //resetButton.setOnAction(e -> primaryStage.setScene(userHome.userpage(primaryStage)));
       hbBtn.setAlignment(Pos.BOTTOM_RIGHT);
       hbBtn.getChildren().add(resetButton);
-      resetPassword.add(hbBtn, 1, 6);
+      resetPassword.add(hbBtn, 1, 8);
       
       Scene scene = new Scene(resetPassword, 800, 800); 
       
