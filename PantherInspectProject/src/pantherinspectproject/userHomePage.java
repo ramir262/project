@@ -47,15 +47,15 @@ public class userHomePage
     public String selectedCourse = "";
     PantherInspectProject master;
     searchCoursePage searchCourse = new searchCoursePage(master,selectedCourse);
-    
+
     public userHomePage(PantherInspectProject master) {
         this.profilesetting = new profileSettings(master,settings);
         this.settings = new SettingsPage(master,this);
          this.master = master;
      }
 
-    
- 
+
+
     public Scene userpage(Stage primaryStage)
     {
       primaryStage.setTitle("User Home Page ");
@@ -119,6 +119,34 @@ public class userHomePage
 
       return scene;
 
+    }
+
+    /*
+    ---------------------------
+    function: addClasses
+    ----------------------------
+    params:
+    purpose:
+        call all distinct course subjects in database
+        dynamically generate combo box items
+    return:
+        ComboBox: contains all classes
+
+    */
+    private ComboBox addClasses() {
+        ResultSet rs = this.master.qp.selectSubjects();
+
+        ComboBox comboBox = new ComboBox();
+
+        try {
+            while(rs.next()) {
+                comboBox.getItems().add(rs.getString(1));
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(userHomePage.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        return comboBox;
     }
 
     /*
