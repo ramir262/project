@@ -53,22 +53,38 @@ import pantherinspectproject.Time;
 public class PantherInspectProject extends Application
 {
     SignupForm signupform = new SignupForm(this);
-    //CoursePage coursePage = new CoursePage(this);
     userHomePage userHome = new userHomePage(this);
-    forgotPassword toReset = new forgotPassword();
+    forgotPassword toReset = new forgotPassword(this);
 
     //  Database credentials
     static final String USER = "root";
     static final String PASS = "2367";
-    
+
     public static final String UPLOAD_PATH = "//localhost/D$/Downloads/images/";
 
     public static final String SETUP_FILE = "tables.sql";
+
+    //Signed in user info
+    private String userEmail;
+    private String accountId;
     public static final String COURSE_FILE = "courses.sql";
 
     public Database db;
     public QueryProcessor qp;
     public Connection conn = null;
+
+    public void setAccountId(String id) {
+        accountId = id;
+    }
+    public String getAccountId() {
+        return accountId;
+    }
+    public void setUserEmail(String email) {
+        userEmail = email;
+    }
+    public String getUserEmail() {
+        return userEmail;
+    }
 
     /*
 	-------------------------------
@@ -132,6 +148,9 @@ public class PantherInspectProject extends Application
             rs.next();
             String hashedPass = rs.getString(1);
             if(BCrypt.checkpw(password, hashedPass)) {
+                //Create session
+                userEmail = email;
+                accountId = qp.getAccountId(userEmail);
                 System.out.println("Correct Password!");
                 return true;
             } else {
@@ -274,11 +293,11 @@ public class PantherInspectProject extends Application
         primaryStage.show();
         SplashScreenLoader.splashScreen.hide();
     }
-    
+
     @Override
     public void start(Stage primaryStage)
     {
-        
+
         //set up database and query processor
         setupDB();
 
@@ -316,12 +335,12 @@ public class PantherInspectProject extends Application
         //forgot password label
         //TODO: forgot password button + logic
         Button forgotPassword = new Button("Forgot Password?");
-         HBox forgotPasswordHB = new HBox(10);
+        forgotPassword.setOnAction((ActionEvent e) -> {
 
-         forgotPassword.setOnAction(e -> primaryStage.setScene(toReset.toResetPassword(primaryStage))); 
-         forgotPasswordHB.setAlignment(Pos.BOTTOM_CENTER);
-         forgotPasswordHB.getChildren().add(forgotPassword);
-         grid.add(forgotPasswordHB, 0, 4);
+            primaryStage.setScene(toReset.toResetPassword(primaryStage));
+
+        });
+        grid.add(forgotPassword, 0, 4);
 
         final Text actiontarget = new Text();
         grid.add(actiontarget, 1, 6);

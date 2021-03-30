@@ -16,6 +16,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import static javafx.scene.input.KeyCode.H;
+import javafx.scene.control.CheckBox;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
@@ -25,14 +26,19 @@ import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import pantherinspectproject.SettingsPage;
 import pantherinspectproject.userHomePage;
-//import pantherinspectproject.PantherInspectProject;
+import pantherinspectproject.PantherInspectProject;
 /**
  *
  * @author cindyramirez
  */
 public class profileSettings 
 {
-    userHomePage toUserPage;
+    SettingsPage settingsPage;
+    PantherInspectProject master;
+    public profileSettings(PantherInspectProject master, SettingsPage settingsPage) {
+         this.master = master;
+         this.settingsPage = settingsPage;
+     }
     
     
     public Scene editProfile(Stage primaryStage)
@@ -63,20 +69,35 @@ public class profileSettings
       
       Label eGradStatus = new Label("Edit graduation status: ");
       editprofileSettings.add(eGradStatus,0,3);
-      TextField editGradStatus = new TextField();
+      CheckBox editGradStatus = new CheckBox();
       editprofileSettings.add(editGradStatus, 1,3);
       
       // Cancel Button - user home page error 
       Button cancelButton = new Button("Cancel");
       HBox cancelChangesHB = new HBox(cancelButton);
       //========== error on line 72 =================
-      cancelButton.setOnAction(e -> primaryStage.setScene(toUserPage.userpage(primaryStage)));
+      cancelButton.setOnAction(e -> primaryStage.setScene(settingsPage.settingsPage(primaryStage)));
       //cancelChangesHB.setAlignment(Pos.BOTTOM_RIGHT);
       //cancelChangesHB.getChildren().add(cancelButton);
       editprofileSettings.add(cancelChangesHB, 0, 4);
       
       // Save Changes Button 
       Button saveChangesButton = new Button("Save Changes");
+      saveChangesButton.setOnAction((ActionEvent e) -> {
+            try {
+                String accountId = master.getAccountId();
+                String year = editGradYear.getText();
+                String semester = editGradSemester.getText();
+                int status = editGradStatus.isSelected()  ? 1 : 0;
+
+                Boolean success = master.qp.updateGraduation(accountId, year, semester, String.valueOf(status));
+                System.out.println(success);
+                primaryStage.setScene(settingsPage.settingsPage(primaryStage));
+            } catch (Exception exception) {
+                System.out.println("Error: " + exception);
+            }
+
+        });
       HBox saveChangesHB = new HBox(10);
       saveChangesHB.setAlignment(Pos.BOTTOM_RIGHT);
       saveChangesHB.getChildren().add(saveChangesButton);

@@ -40,18 +40,22 @@ import pantherinspectproject.searchCoursePage;
  * @author cindyramirez
  */
 
-public class userHomePage 
+public class userHomePage
 {
-    SettingsPage settings = new SettingsPage();
-    profileSettings profilesetting = new profileSettings();
-    searchCoursePage searchCourse;
-    
+    SettingsPage settings;
+    profileSettings profilesetting;
     public String selectedCourse = "";
-    private PantherInspectProject master;
-    
+    PantherInspectProject master;
+    searchCoursePage searchCourse = new searchCoursePage(master,selectedCourse);
+
     public userHomePage(PantherInspectProject master) {
+        this.profilesetting = new profileSettings(master,settings);
+        this.settings = new SettingsPage(master,this);
          this.master = master;
      }
+
+
+
     public Scene userpage(Stage primaryStage)
     {
       primaryStage.setTitle("User Home Page ");
@@ -60,20 +64,20 @@ public class userHomePage
       homePage.setHgap(15);
       homePage.setVgap(15);
       homePage.setGridLinesVisible(false);
-      
 
-      
-      Scene scene = new Scene(homePage, 800, 800); 
-      
+
+
+      Scene scene = new Scene(homePage, 800, 800);
+
       //=========== Search Course Label ============
       Label searchCourseLabel = new Label("Search a Chapman Subject:");
       homePage.add(searchCourseLabel, 0, 0);
-      
+
       Button searchButton = new Button("Search");
       HBox hsearchbox = new HBox(searchButton);
-     
+
       ComboBox comboBox = addClasses();
-      
+
       comboBox.setOnAction((event) -> {
             int selectedIndex = comboBox.getSelectionModel().getSelectedIndex();
             Object selectedItem = comboBox.getSelectionModel().getSelectedItem();
@@ -82,42 +86,42 @@ public class userHomePage
                 selectedCourse = selectedItem.toString();
                 this.searchCourse = new searchCoursePage(this.master,this.selectedCourse);
                 searchButton.setOnAction(e -> primaryStage.setScene(this.searchCourse.toSearchCourse(primaryStage)));
-            
+
             }
       });
-      
+
       homePage.add(comboBox, 1,0);
-      
+
       hsearchbox.setAlignment(Pos.BOTTOM_RIGHT);
       homePage.add(hsearchbox, 2, 0);
-       
-      
+
+
       //============ Rate Course Label ====================
       Label rateCourseLabel = new Label("Rate a Chapman Course:");
       homePage.add(rateCourseLabel, 0, 2);
       TextField rateCourseField = new TextField();
       homePage.add(rateCourseField, 1, 2);
-      
+
       Button rateButton = new Button("Search");
       HBox hRatebox = new HBox(rateButton);
       homePage.add(hRatebox, 2, 2);
       //=========================================
-      
-     
-      
-      
+
+
+
+
       Button settingsButton = new Button("Settings");
       HBox hbox = new HBox(settingsButton);
       settingsButton.setOnAction(e -> primaryStage.setScene(settings.settingsPage(primaryStage)));
       homePage.add(hbox, 0, 10);
-      
-  
-      
+
+
+
       return scene;
-     
+
     }
-    
-    /* 
+
+    /*
     ---------------------------
     function: addClasses
     ----------------------------
@@ -127,13 +131,13 @@ public class userHomePage
         dynamically generate combo box items
     return:
         ComboBox: contains all classes
-    
+
     */
     private ComboBox addClasses() {
         ResultSet rs = this.master.qp.selectSubjects();
-        
+
         ComboBox comboBox = new ComboBox();
-        
+
         try {
             while(rs.next()) {
                 comboBox.getItems().add(rs.getString(1));
@@ -141,7 +145,8 @@ public class userHomePage
         } catch (SQLException ex) {
             Logger.getLogger(userHomePage.class.getName()).log(Level.SEVERE, null, ex);
         }
-      
+
         return comboBox;
     }
+
 }

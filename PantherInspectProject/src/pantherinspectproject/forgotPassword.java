@@ -23,12 +23,18 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
+import pantherinspectproject.PantherInspectProject;
 /**
  *
  * @author cindyramirez
  */
 public class forgotPassword 
 {
+    PantherInspectProject master;
+    public forgotPassword(PantherInspectProject master) {
+         this.master = master;
+     }
+    
     public Scene toResetPassword(Stage primaryStage)
     {
       primaryStage.setTitle("Reset password ");
@@ -44,9 +50,59 @@ public class forgotPassword
       TextField emailtoResetpassword = new TextField();
       resetPassword.add(emailtoResetpassword, 1, 4);
       
+
+      
       Button resetButton = new Button("reset password");
       HBox hbBtn = new HBox(10);
-      //resetButton.setOnAction(e -> primaryStage.setScene(userHome.userpage(primaryStage)));
+      
+      
+      //get security question
+        Label securityQuestion = new Label("*Filler security question*");
+        securityQuestion.setVisible(false);
+        resetPassword.add(securityQuestion,0,7);
+
+        TextField securityAnswer = new TextField();
+        securityAnswer.setVisible(false);
+        resetPassword.add(securityAnswer,1,7);
+
+        Button submitQuestion = new Button("Submit");
+        submitQuestion.setVisible(false);
+        resetPassword.add(submitQuestion,1,8);
+        
+        Label newPasswordLabel = new Label("New Password");
+        newPasswordLabel.setVisible(false);
+        resetPassword.add(newPasswordLabel,0,9);
+        
+        TextField newPassword = new TextField();
+        newPassword.setVisible(false);
+        resetPassword.add(newPassword,1,9);
+        
+        Button changePassword = new Button("Reset Password");
+        changePassword.setVisible(false);
+        resetPassword.add(changePassword, 1, 10);
+      
+      
+        resetButton.setOnAction((ActionEvent e) -> {
+
+            securityQuestion.setVisible(true);
+            securityAnswer.setVisible(true);
+            submitQuestion.setVisible(true);
+
+        });
+        
+        submitQuestion.setOnAction((ActionEvent e) -> {
+        
+            newPasswordLabel.setVisible(true);
+            newPassword.setVisible(true);
+            changePassword.setVisible(true);
+            
+        });
+        
+        changePassword.setOnAction((ActionEvent e) -> {
+        
+            master.start(primaryStage);
+            
+        });
       hbBtn.setAlignment(Pos.BOTTOM_RIGHT);
       hbBtn.getChildren().add(resetButton);
       resetPassword.add(hbBtn, 1, 6);
