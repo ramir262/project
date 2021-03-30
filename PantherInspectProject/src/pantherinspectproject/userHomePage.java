@@ -5,6 +5,10 @@
  */
 package pantherinspectproject;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -40,15 +44,18 @@ public class userHomePage
 {
     SettingsPage settings;
     profileSettings profilesetting;
-    searchCoursePage searchCourse = new searchCoursePage(this);
+    public String selectedCourse = "";
     PantherInspectProject master;
+    searchCoursePage searchCourse = new searchCoursePage(master,selectedCourse);
+    
     public userHomePage(PantherInspectProject master) {
         this.profilesetting = new profileSettings(master,settings);
         this.settings = new SettingsPage(master,this);
          this.master = master;
      }
 
-    public String selectedCourse = "";
+    
+ 
     public Scene userpage(Stage primaryStage)
     {
       primaryStage.setTitle("User Home Page ");
@@ -66,25 +73,24 @@ public class userHomePage
       Label searchCourseLabel = new Label("Search a Chapman Subject:");
       homePage.add(searchCourseLabel, 0, 0);
 
-      ComboBox comboBox = new ComboBox();
-      comboBox.getItems().add("Computer Science");
-      comboBox.getItems().add("Software Engineeing");
-      comboBox.getItems().add("Data Analytics");
-      homePage.add(comboBox, 1,0);
-
       Button searchButton = new Button("Search");
       HBox hsearchbox = new HBox(searchButton);
 
+      ComboBox comboBox = addClasses();
+
       comboBox.setOnAction((event) -> {
-      searchButton.setOnAction(e -> primaryStage.setScene(searchCourse.toSearchCourse(primaryStage)));
-      int selectedIndex = comboBox.getSelectionModel().getSelectedIndex();
-      Object selectedItem = comboBox.getSelectionModel().getSelectedItem();
-      if(selectedItem != null)
-      {
-          selectedCourse = selectedItem.toString();
-      }
+            int selectedIndex = comboBox.getSelectionModel().getSelectedIndex();
+            Object selectedItem = comboBox.getSelectionModel().getSelectedItem();
+            if(selectedItem != null)
+            {
+                selectedCourse = selectedItem.toString();
+                this.searchCourse = new searchCoursePage(this.master,this.selectedCourse);
+                searchButton.setOnAction(e -> primaryStage.setScene(this.searchCourse.toSearchCourse(primaryStage)));
+
+            }
       });
 
+      homePage.add(comboBox, 1,0);
 
       hsearchbox.setAlignment(Pos.BOTTOM_RIGHT);
       homePage.add(hsearchbox, 2, 0);
@@ -115,5 +121,31 @@ public class userHomePage
 
     }
 
+    /*
+    ---------------------------
+    function: addClasses
+    ----------------------------
+    params:
+    purpose:
+        call all distinct course subjects in database
+        dynamically generate combo box items
+    return:
+        ComboBox: contains all classes
 
+    */
+    private ComboBox addClasses() {
+        ResultSet rs = this.master.qp.selectSubjects();
+
+        ComboBox comboBox = new ComboBox();
+
+        try {
+            while(rs.next()) {
+                comboBox.getItems().add(rs.getString(1));
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(userHomePage.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        return comboBox;
+    }
 }

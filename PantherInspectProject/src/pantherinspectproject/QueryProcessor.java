@@ -21,8 +21,9 @@ public class QueryProcessor {
 	String UPDATE = "UPDATE %s SET %s %s ;";
 	String DELETE = "DELETE FROM %s %s;";
 	
-	String WHERE = "WHERE %s";
+	String WHERE = "WHERE %s ";
         String DISTINCT = "DISTINCT %s";
+        String ORDER_BY = "ORDER BY %s ASC";
 	String MAX = "MAX( %s )";
 	String AVG = "AVG( %s )";
         String COUNT = "COUNT( %s ) " ;
@@ -345,7 +346,7 @@ public class QueryProcessor {
 	*/
 	
 	public ResultSet selectSecurityAnswer(String accountId, String questionId) {
-		String desired = "Hash";
+		String desired = "Question,Hash";
                 String[] tableNames = new String[] {"Security","Questions"};
 		String tables = String.join(this.NATURAL_JOIN,tableNames);
                 String[] wheres = new String[]{"accountId=?","questionId=?"};
@@ -627,18 +628,24 @@ public class QueryProcessor {
 	-------------------------------
 	function: selectCourseBySubject
 	-------------------------------
+        params:
+                String subject : class subject
+                String order : column which we order by, ascending order
+                        choose "courseNum" or "cName"
 	purpose:
 		get all classes from a subject
 	return:
 		ResultSet : courseNum, cname
 	*/
-	public ResultSet selectCourseBySubject(String subject) {
+	public ResultSet selectCourseBySubject(String subject, String order) {
 		String columns = "courseNum, cname";
 		String tables = "Course";
+                String order_by = String.format(this.ORDER_BY,order);
 		String where = String.format(this.WHERE,"subject=?");
+                String tail = where + order_by;
 		String[] instances = new String[] {subject};
 
-                ResultSet rs = select(columns,tables,where,instances);
+                ResultSet rs = select(columns,tables,tail,instances);
 		return rs;
 	}
 
@@ -1022,7 +1029,9 @@ public class QueryProcessor {
 	params:
 		String columns: stringified list of attribute names separated by ", "
 		String tables: stringified list of tables separated by "NATURAL JOIN"
-		String where: all conditions which must be true (empty string if none)
+		String tail: 
+                    where : all conditions which must be true (empty string if none)
+                    order_by : column order
 		String[] instance: array of values to insert
 	purpose:
 		format selection query
@@ -1031,8 +1040,8 @@ public class QueryProcessor {
 	return:
 		ResultSet
 	*/
-	private ResultSet select(String columns, String tables, String where, String[] instance) {
-		String query = String.format(this.SELECT, columns, tables, where);
+	private ResultSet select(String columns, String tables, String tail, String[] instance) {
+		String query = String.format(this.SELECT, columns, tables, tail);
 		PreparedStatement stmt = prepare(query, instance);
 		ResultSet rs = executeSelection(stmt);
 		return rs;

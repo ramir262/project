@@ -6,6 +6,10 @@
 package pantherinspectproject;
 
 import com.sun.javafx.application.LauncherImpl;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -25,6 +29,8 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import static javafx.scene.input.KeyCode.H;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
@@ -49,7 +55,6 @@ public class PantherInspectProject extends Application
     SignupForm signupform = new SignupForm(this);
     userHomePage userHome = new userHomePage(this);
     forgotPassword toReset = new forgotPassword(this);
-
 
     //  Database credentials
     static final String USER = "root";
@@ -123,26 +128,6 @@ public class PantherInspectProject extends Application
             qp.createTables(COURSE_FILE);
         }
 
-        //demo for Cindy
-        ResultSet rs = qp.selectCourseBySubject("Computer Science");
-        try {
-            while (rs.next()) {
-                System.out.print("Course Number: " + rs.getString(1) + ", ");
-                System.out.println("Course Name: " + rs.getString(2));
-
-            }
-        } catch (SQLException ex) {
-            Logger.getLogger(PantherInspectProject.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        ResultSet rs2 = qp.selectSubjects();
-        try {
-            while (rs2.next()) {
-                System.out.println("Subject: " + rs2.getString(1));
-
-            }
-        } catch (SQLException ex) {
-            Logger.getLogger(PantherInspectProject.class.getName()).log(Level.SEVERE, null, ex);
-        }
     }
 
     /*
@@ -306,12 +291,13 @@ public class PantherInspectProject extends Application
         Scene scene = new Scene(grid, 300, 275);
         primaryStage.setScene(scene);
         primaryStage.show();
+        SplashScreenLoader.splashScreen.hide();
     }
-
 
     @Override
     public void start(Stage primaryStage)
     {
+
         //set up database and query processor
         setupDB();
 
