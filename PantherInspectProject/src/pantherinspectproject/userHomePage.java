@@ -149,31 +149,4 @@ public class userHomePage
         return comboBox;
     }
 
-    /*
-    ---------------------------
-    function: addClasses
-    ----------------------------
-    params:
-    purpose:
-        call all distinct course subjects in database
-        dynamically generate combo box items
-    return:
-        ComboBox: contains all classes
-
-    */
-    private ComboBox addClasses() {
-        ResultSet rs = this.master.qp.selectSubjects();
-
-        ComboBox comboBox = new ComboBox();
-
-        try {
-            while(rs.next()) {
-                comboBox.getItems().add(rs.getString(1));
-            }
-        } catch (SQLException ex) {
-            Logger.getLogger(userHomePage.class.getName()).log(Level.SEVERE, null, ex);
-        }
-
-        return comboBox;
-    }
 }
