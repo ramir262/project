@@ -174,7 +174,6 @@ public class searchCoursePage
            //if selection made:
            //   delete buttons
            //   replace with new order
-            int selectedIndex = comboBox.getSelectionModel().getSelectedIndex();
             Object selectedItem = comboBox.getSelectionModel().getSelectedItem();
             if(selectedItem.equals("Course Number"))
             {

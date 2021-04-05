@@ -797,6 +797,51 @@ public class QueryProcessor {
 	Select Review Information
 	------------------------------------------------------------------------------------------
 	*/
+       
+        /*
+	-------------------------------
+	function: selectPost
+	-------------------------------
+        params:
+                courseId, order
+	purpose:
+		select post, to be combined with questions and responses via reviewId
+	return:
+		ResultSet (reviewId, accountId, cName, pName, stars, creation, edit)
+	*/
+	
+	public ResultSet selectPost(String courseId, String order) {
+		String desired = "reviewId,accountId,cName,pName,stars,creation,edit";
+		String[] tableNames = new String[] {"Review","Post","Class","Course","Professor"};
+		String tables = String.join(this.NATURAL_JOIN, tableNames);
+                String order_by = String.format(this.ORDER_BY,order);		
+		String where = String.format(this.WHERE, "CourseId=?");
+                String tail = where + order_by;
+		String[] instance = new String[] {courseId};
+		ResultSet rs = select(desired,tables,where,instance);
+		return rs;
+	}
+        /*
+	-------------------------------
+	function: selectReviewQuestions
+	-------------------------------
+        params:
+                reviewId,
+	purpose:
+		select questions and answers, to be combined with post through reviewId
+	return:
+		ResultSet
+	*/
+	
+	public ResultSet selectReviewQuestions(String reviewId) {
+		String desired = "question,response";
+		String[] tableNames = new String[] {"Post","Questions","Responses"};
+		String tables = String.join(this.NATURAL_JOIN, tableNames);		
+		String where = String.format(this.WHERE, "ReviewId=?");
+		String[] instance = new String[] {reviewId};
+		ResultSet rs = select(desired,tables,where,instance);
+		return rs;
+	}
 	/*
 	-------------------------------
 	function: selectAvgOfCourse

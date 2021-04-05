@@ -59,12 +59,14 @@ public class PantherInspectProject extends Application
 
     //  Database credentials
     static final String USER = "root";
-    static final String PASS = "2367";
+    static final String PASS = "root";//"2367";
     
     public static final String UPLOAD_PATH = "//localhost/D$/Downloads/images/";
 
     public static final String SETUP_FILE = "tables.sql";
     public static final String COURSE_FILE = "courses.sql";
+    public static final String POST_FILE = "posts.sql";
+    
 
     public Database db;
     public QueryProcessor qp;
@@ -106,10 +108,35 @@ public class PantherInspectProject extends Application
 
         /*generate demo info*/
 
-        //generate classes
+        //generate classes and posts
         int count = qp.selectTableCount("Course");
         if (count == 0) {
             qp.createTables(COURSE_FILE);
+            qp.createTables(POST_FILE);
+        }
+        
+        ResultSet rs = qp.selectPost("1", "ReviewId");
+        
+        try {
+            while(rs.next()) {
+                //ResultSet (reviewId, accountId, cName, pName, stars, creation, edit)
+                System.out.print("ReviewId: " + rs.getString(1) + ", ");
+                System.out.print("AccountId: " + rs.getString(2) + ", ");
+                System.out.print("Class Name: " + rs.getString(3) + ", ");
+                System.out.print("Professor Name: " + rs.getString(4) + ", ");
+                System.out.print("Stars: " + rs.getString(5) + ", ");
+                System.out.print("Creation: " + rs.getString(6) + ", ");
+                System.out.println("Edit: " + rs.getString(7));
+                
+                
+                ResultSet rs2 = qp.selectReviewQuestions(rs.getString(1));
+                while(rs2.next()) {
+                    System.out.print("Question: " + rs2.getString(1) + ", ");
+                    System.out.println("Response: " + rs2.getString(2));
+                }
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(PantherInspectProject.class.getName()).log(Level.SEVERE, null, ex);
         }
 
     }
