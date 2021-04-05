@@ -149,7 +149,7 @@ public class QueryProcessor {
 	*/
 	public boolean insertSecurity(String accountId, String questionId, String answer) {
 		String tableName = "Security";
-		String columns = "AccountId, Email, Hash";
+		String columns = "AccountId, QuestionId, Hash";
 		String values = "?, ?, ?";
 		String[] instance = new String[] {accountId, questionId, answer};
 		boolean success = insert(tableName, columns, values, instance);
@@ -646,6 +646,25 @@ public class QueryProcessor {
 		String[] instances = new String[] {subject};
 
                 ResultSet rs = select(columns,tables,tail,instances);
+		return rs;
+	}
+        
+         /*
+	-------------------------------
+	function: selectQuestions
+	-------------------------------
+	purpose:
+		get all security questions
+	return:
+		ResultSet : questions
+	*/
+	public ResultSet selectQuestions() {
+		String columns = String.format(this.DISTINCT,"Question");
+		String tables = "Questions";
+		String where = "";
+		String[] instances = new String[] {};
+
+                ResultSet rs = select(columns,tables,where,instances);
 		return rs;
 	}
 

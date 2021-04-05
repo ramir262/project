@@ -11,6 +11,8 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.application.Application;
@@ -99,14 +101,15 @@ public class SignupForm {
 	return:
 		HBox
 	*/
-    private Button createSignupButton(Stage primaryStage, TextField email, PasswordField pwBox, TextField username, TextField gradyear, TextField gradsemester, CheckBox gradstatus) {
+    private Button createSignupButton(Stage primaryStage, TextField email, PasswordField pwBox, TextField username, TextField gradyear, TextField gradsemester, CheckBox gradstatus, ComboBox questions, TextField answer) {
         Button btn = new Button("Sign Up");
         btn.setOnAction((ActionEvent event) -> {
             //run account creation
         try {
             String aid = master.qp.getAccountId(email.getText());
             if (aid.equals("0")) {
-                Thread thr = new Thread(() -> createSignupEvent(email.getText(),username.getText(),pwBox.getText(),gradyear.getText(),gradsemester.getText(),gradstatus.isSelected()));
+                int questionId = questions.getSelectionModel().getSelectedIndex() + 1;
+                Thread thr = new Thread(() -> createSignupEvent(email.getText(),username.getText(),pwBox.getText(),gradyear.getText(),gradsemester.getText(),gradstatus.isSelected(),questionId,answer.getText()));
 								thr.start();
                 //return to initial scene
                 master.start(primaryStage);
@@ -134,11 +137,19 @@ public class SignupForm {
                 hash password
 		insert new values in database
 	*/
-    private void createSignupEvent(String email, String username, String passwd, String gradyear, String gradsemester, Boolean gradstatus) {
+    private void createSignupEvent(String email, String username, String passwd, String gradyear, String gradsemester, Boolean gradstatus, int securityQuestionId, String securityQuestionAnswer) {
       try {
         String aid = master.qp.getUniqueId("accountid", "Account");
         String salt = BCrypt.gensalt(10);
         String hash = BCrypt.hashpw(passwd, salt);
+        
+        String[] splitAnswer = securityQuestionAnswer.split("\\W+");
+        String result = new String();
+          for (int i = 0; i < splitAnswer.length; i++) {
+              result += splitAnswer[i];
+          }
+          result = result.toLowerCase();
+        String hashedSecurityAnswer = BCrypt.hashpw(result, salt);
 
         String imgPath;
         if(!profileImagePath.equals("")) {
@@ -157,6 +168,7 @@ public class SignupForm {
         master.qp.insertAccount(aid, email, hash);
         master.qp.insertProfile(aid, username, imgPath);
         master.qp.insertGraduation(aid, gradyear, gradsemester, String.valueOf(isGrad));
+        master.qp.insertSecurity(aid, Integer.toString(securityQuestionId), hashedSecurityAnswer);
       } catch(Exception e) {
           System.out.println("Error: " + e.getMessage());
       }
@@ -252,7 +264,8 @@ public class SignupForm {
       //security question
       Label securityQuestionLabel = new Label("Security Question: ");
       signup.add(securityQuestionLabel,0,3);
-      ComboBox questions = new ComboBox();
+      ComboBox questions = addQuestions();
+      questions.getSelectionModel().selectFirst();
       signup.add(questions,1,3);
       
       //security answer
@@ -284,7 +297,7 @@ public class SignupForm {
       signup.add(picBtn, 1, 8);
 
       //create signup functionality
-      Button btn = createSignupButton(primaryStage, email, pwBox, username, gradyear, gradsemester, gradstatus);
+      Button btn = createSignupButton(primaryStage, email, pwBox, username, gradyear, gradsemester, gradstatus ,questions, securityAnswer);
       HBox hbBtn = createBox(btn);
       signup.add(hbBtn,1,13);
 
@@ -292,6 +305,22 @@ public class SignupForm {
       Scene scene = new Scene(signup, 800, 800); //object to return
       return scene;
 
+    }
+    
+    private ComboBox addQuestions() {
+        ResultSet rs = this.master.qp.selectQuestions();
+
+        ComboBox comboBox = new ComboBox();
+
+        try {
+            while(rs.next()) {
+                comboBox.getItems().add(rs.getString(1));
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(userHomePage.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        return comboBox;
     }
 
 

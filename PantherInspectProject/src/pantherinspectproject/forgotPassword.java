@@ -5,6 +5,10 @@
  */
 package pantherinspectproject;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -12,6 +16,7 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
@@ -112,5 +117,20 @@ public class forgotPassword
       return scene;
     }
     
+    private ComboBox addQuestions() {
+        ResultSet rs = this.master.qp.selectQuestions();
+
+        ComboBox comboBox = new ComboBox();
+
+        try {
+            while(rs.next()) {
+                comboBox.getItems().add(rs.getString(1));
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(userHomePage.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        return comboBox;
+    }
     
 }
