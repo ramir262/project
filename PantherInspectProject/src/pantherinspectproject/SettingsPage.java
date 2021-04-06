@@ -32,8 +32,15 @@ import pantherinspectproject.AccountSettings;
  */
 public class SettingsPage 
 {
-    profileSettings editProfileSetting = new profileSettings();
+    profileSettings editProfileSetting;
     AccountSettings accountSetting = new AccountSettings();
+    PantherInspectProject master;
+    userHomePage userHomePage;
+    public SettingsPage(PantherInspectProject master,userHomePage userHomePage) {
+        this.editProfileSetting = new profileSettings(master,this);
+         this.master = master;
+         this.userHomePage = userHomePage;
+     }
     
     public Scene settingsPage(Stage primaryStage)
     {

@@ -149,7 +149,7 @@ public class QueryProcessor {
 	*/
 	public boolean insertSecurity(String accountId, String questionId, String answer) {
 		String tableName = "Security";
-		String columns = "AccountId, Email, Hash";
+		String columns = "AccountId, QuestionId, Hash";
 		String values = "?, ?, ?";
 		String[] instance = new String[] {accountId, questionId, answer};
 		boolean success = insert(tableName, columns, values, instance);
@@ -352,6 +352,18 @@ public class QueryProcessor {
                 String[] wheres = new String[]{"accountId=?","questionId=?"};
 		String where = String.format(this.WHERE, String.join(this.AND, wheres));
 		String[] instance = new String[] {accountId, questionId};
+		ResultSet rs = select(desired,tables,where,instance);
+                
+		return rs;
+	}
+        
+        public ResultSet selectSecurityAnswer(String accountId) {
+		String desired = "Question,Hash";
+                String[] tableNames = new String[] {"Security","Questions"};
+		String tables = String.join(this.NATURAL_JOIN,tableNames);
+                String[] wheres = new String[]{"accountId=?"};
+		String where = String.format(this.WHERE, String.join(this.AND, wheres));
+		String[] instance = new String[] {accountId};
 		ResultSet rs = select(desired,tables,where,instance);
                 
 		return rs;
@@ -646,6 +658,25 @@ public class QueryProcessor {
 		String[] instances = new String[] {subject};
 
                 ResultSet rs = select(columns,tables,tail,instances);
+		return rs;
+	}
+        
+         /*
+	-------------------------------
+	function: selectQuestions
+	-------------------------------
+	purpose:
+		get all security questions
+	return:
+		ResultSet : questions
+	*/
+	public ResultSet selectQuestions() {
+		String columns = String.format(this.DISTINCT,"Question");
+		String tables = "Questions";
+		String where = "";
+		String[] instances = new String[] {};
+
+                ResultSet rs = select(columns,tables,where,instances);
 		return rs;
 	}
 
@@ -1134,12 +1165,14 @@ public class QueryProcessor {
 	private boolean executeUpdate(PreparedStatement stmt) {
 		try {
 			int i = stmt.executeUpdate();
+                        System.out.println("HERE");
 			this.conn.commit();
 			if (i > 0) {
 				return true;
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
+                        System.out.println(e.getMessage());
 		}
 		return false;
 	}

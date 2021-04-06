@@ -22,7 +22,7 @@ import javafx.stage.StageStyle;
  */
 public class SplashScreenLoader extends Preloader {
     public static Stage splashScreen;
-    
+
     @Override
     public void start(Stage stage) throws Exception {
         splashScreen = stage;
@@ -55,12 +55,12 @@ public class SplashScreenLoader extends Preloader {
         imageView.setY(10);
         imageView.setFitWidth(575);
         imageView.setPreserveRatio(true);
-        
-        
+
+
         StackPane root = new StackPane(imageView);
         Scene scene = new Scene(root, 570, 125);
         return scene;
     }
 
-    
+
 }
