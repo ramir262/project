@@ -36,6 +36,7 @@ import pantherinspectproject.PantherInspectProject;
 public class forgotPassword 
 {
     PantherInspectProject master;
+    private String hash;
     public forgotPassword(PantherInspectProject master) {
          this.master = master;
      }
@@ -88,25 +89,61 @@ public class forgotPassword
       
       
         resetButton.setOnAction((ActionEvent e) -> {
+            int accountId = getAccountId(emailtoResetpassword.getText());
+            String question;
+            if(accountId > 0) {
+                System.out.println(accountId);
+                ResultSet rs = this.master.qp.selectSecurityAnswer(Integer.toString(accountId));
+                //String[] questions = new ComboBox();
 
-            securityQuestion.setVisible(true);
-            securityAnswer.setVisible(true);
-            submitQuestion.setVisible(true);
+                try {
+                    while(rs.next()) {
+                        //comboBox.getItems().add(rs.getString(1));
+                        question = rs.getString(1);
+                        hash = rs.getString(2); 
+                        securityQuestion.setText(question);
+                    }
+                } catch (SQLException ex) {
+                    Logger.getLogger(userHomePage.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                
+                securityQuestion.setVisible(true);
+                securityAnswer.setVisible(true);
+                submitQuestion.setVisible(true);
+            }
+            
 
         });
         
         submitQuestion.setOnAction((ActionEvent e) -> {
-        
-            newPasswordLabel.setVisible(true);
-            newPassword.setVisible(true);
-            changePassword.setVisible(true);
+            String answer = securityAnswer.getText();
+            String salt = BCrypt.gensalt(10);
+
+            String[] splitAnswer = answer.split("\\W+");
+            String result = new String();
+              for (int i = 0; i < splitAnswer.length; i++) {
+                  result += splitAnswer[i];
+              }
+            result = result.toLowerCase();
+            if(BCrypt.checkpw(result, hash)) {
+                newPasswordLabel.setVisible(true);
+                newPassword.setVisible(true);
+                changePassword.setVisible(true);
+            }
+            
             
         });
         
         changePassword.setOnAction((ActionEvent e) -> {
-        
+            int accountId = getAccountId(emailtoResetpassword.getText());
+            String passwd = newPassword.getText();
+            String salt = BCrypt.gensalt(10);
+            String hash = BCrypt.hashpw(passwd, salt);
+            Boolean succ = master.qp.updateAccount(Integer.toString(accountId),emailtoResetpassword.getText(),hash);
+            if(succ) {
             master.start(primaryStage);
-            
+            }
+
         });
       hbBtn.setAlignment(Pos.BOTTOM_RIGHT);
       hbBtn.getChildren().add(resetButton);
@@ -117,20 +154,29 @@ public class forgotPassword
       return scene;
     }
     
-    private ComboBox addQuestions() {
-        ResultSet rs = this.master.qp.selectQuestions();
-
-        ComboBox comboBox = new ComboBox();
+    private void getQuestion(int aid) {
+        //ResultSet rs = this.master.qp.selectQuestions();
+        ResultSet rs = this.master.qp.selectSecurityAnswer(Integer.toString(aid));
+        //String[] questions = new ComboBox();
 
         try {
             while(rs.next()) {
-                comboBox.getItems().add(rs.getString(1));
+                //comboBox.getItems().add(rs.getString(1));
+                System.out.println(rs.getString(1));
+                System.out.println(rs.getString(2));
+                System.out.println();
             }
         } catch (SQLException ex) {
             Logger.getLogger(userHomePage.class.getName()).log(Level.SEVERE, null, ex);
         }
 
-        return comboBox;
+        //return comboBox;
+    }
+    
+    private int getAccountId(String email) {
+        String id = this.master.qp.getAccountId(email);
+
+        return Integer.parseInt(id);
     }
     
 }

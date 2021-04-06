@@ -356,6 +356,18 @@ public class QueryProcessor {
                 
 		return rs;
 	}
+        
+        public ResultSet selectSecurityAnswer(String accountId) {
+		String desired = "Question,Hash";
+                String[] tableNames = new String[] {"Security","Questions"};
+		String tables = String.join(this.NATURAL_JOIN,tableNames);
+                String[] wheres = new String[]{"accountId=?"};
+		String where = String.format(this.WHERE, String.join(this.AND, wheres));
+		String[] instance = new String[] {accountId};
+		ResultSet rs = select(desired,tables,where,instance);
+                
+		return rs;
+	}
 
 	/*
 	------------------------------------------------------------------------------------------
