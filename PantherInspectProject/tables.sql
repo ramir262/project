@@ -102,9 +102,40 @@ INSERT INTO
 	Questions (QuestionId, Question)
 VALUES
 	(2, "What is the name of your first pet?")
-ON DUPLICATE KEY UPDATE Question = VALUES (Question);;
+ON DUPLICATE KEY UPDATE Question = VALUES (Question);
 INSERT INTO
 	Questions (QuestionId, Question)
 VALUES
 	(3, "What was your favorite childhood TV show?")
+ON DUPLICATE KEY UPDATE Question = VALUES (Question);
+
+INSERT INTO
+	Questions (QuestionId, Question)
+VALUES
+	(4, "How well did the lectures prepare you for the exams?")
+ON DUPLICATE KEY UPDATE Question = VALUES (Question);
+INSERT INTO
+	Questions (QuestionId, Question)
+VALUES
+	(5, "Were assignments beneficial to your learning?")
+ON DUPLICATE KEY UPDATE Question = VALUES (Question);
+INSERT INTO
+	Questions (QuestionId, Question)
+VALUES
+	(6, "What was the easiest aspect of this course?")
+ON DUPLICATE KEY UPDATE Question = VALUES (Question);
+INSERT INTO
+	Questions (QuestionId, Question)
+VALUES
+	(7, "What was the most challenging aspect of this course?")
+ON DUPLICATE KEY UPDATE Question = VALUES (Question);
+INSERT INTO
+	Questions (QuestionId, Question)
+VALUES
+	(8, "Did you learn as much as you expected from this course?")
+ON DUPLICATE KEY UPDATE Question = VALUES (Question);
+INSERT INTO
+	Questions (QuestionId, Question)
+VALUES
+	(9, "How could this course be improved?")
 ON DUPLICATE KEY UPDATE Question = VALUES (Question);
