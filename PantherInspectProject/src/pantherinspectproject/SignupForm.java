@@ -154,7 +154,7 @@ public class SignupForm {
         String imgPath;
         if(!profileImagePath.equals("")) {
             File source = new File(profileImagePath);
-            String targetPath = master.UPLOAD_PATH + "profile.jpg";
+            String targetPath = master.UPLOAD_PATH + aid + ".jpg";
             System.out.println(targetPath);
             File target = new File(targetPath);
             Files.copy(source.toPath(), target.toPath(), StandardCopyOption.REPLACE_EXISTING);
