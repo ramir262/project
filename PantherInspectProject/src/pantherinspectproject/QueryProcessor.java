@@ -602,7 +602,7 @@ public class QueryProcessor {
 	function: selectCourseProfessors
 	-------------------------------
 	purpose:
-		get all professors/classes of a course
+		get all courses of a professor
 	return:
 		ResultSet : classid, cname, professorid, pname
 	*/
@@ -647,10 +647,10 @@ public class QueryProcessor {
 	purpose:
 		get all classes from a subject
 	return:
-		ResultSet : courseNum, cname
+		ResultSet : courseNum, cname, courseId
 	*/
 	public ResultSet selectCourseBySubject(String subject, String order) {
-		String columns = "courseNum, cname";
+		String columns = "courseNum, cname, courseId";
 		String tables = "Course";
                 String order_by = String.format(this.ORDER_BY,order);
 		String where = String.format(this.WHERE,"subject=?");
@@ -663,17 +663,36 @@ public class QueryProcessor {
         
          /*
 	-------------------------------
-	function: selectQuestions
+	function: selectSecurityQuestions
 	-------------------------------
 	purpose:
 		get all security questions
 	return:
 		ResultSet : questions
 	*/
-	public ResultSet selectQuestions() {
-		String columns = String.format(this.DISTINCT,"Question");
+	public ResultSet selectSecurityQuestions() {
+		String columns = "Question";
 		String tables = "Questions";
-		String where = "";
+		String where = String.format(this.WHERE,"QuestionId <= 3");
+		String[] instances = new String[] {};
+
+                ResultSet rs = select(columns,tables,where,instances);
+		return rs;
+	}
+        
+         /*
+	-------------------------------
+	function: selectPostQuestions
+	-------------------------------
+	purpose:
+		get all post questions
+	return:
+		ResultSet : questions
+	*/
+	public ResultSet selectPostQuestions() {
+		String columns = "Question";
+		String tables = "Questions";
+		String where = String.format(this.WHERE,"QuestionId > 3");
 		String[] instances = new String[] {};
 
                 ResultSet rs = select(columns,tables,where,instances);

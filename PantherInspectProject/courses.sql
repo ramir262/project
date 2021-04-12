@@ -43,6 +43,15 @@ INSERT INTO
 	Professor (ProfessorId,PName)
 VALUES
 	(3,"Christopher Boyd");
+INSERT INTO
+	Professor (ProfessorId,PName)
+VALUES
+	(4,"Peiyo Zhao");
+
+INSERT INTO
+	Professor (ProfessorId,PName)
+VALUES
+	(5,"Erik Linstead");
 
 INSERT INTO
 	Class (ClassId,CourseId,ProfessorId)
@@ -68,3 +77,11 @@ INSERT INTO
 	Class (ClassId,CourseId,ProfessorId)
 VALUES
 	(5,3,2);
+INSERT INTO
+	Class (ClassId,CourseId,ProfessorId)
+VALUES
+	(6,5,4);
+INSERT INTO
+	Class (ClassId,CourseId,ProfessorId)
+VALUES
+	(6,6,5);

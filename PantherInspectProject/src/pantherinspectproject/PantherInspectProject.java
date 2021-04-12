@@ -58,7 +58,7 @@ public class PantherInspectProject extends Application
 
     //  Database credentials
     static final String USER = "root";
-    static final String PASS = "2367";
+    static final String PASS = "root";
 
     public static final String UPLOAD_PATH = "//localhost/D$/Downloads/images/";
 

@@ -139,3 +139,8 @@ INSERT INTO
 VALUES
 	(9, "How could this course be improved?")
 ON DUPLICATE KEY UPDATE Question = VALUES (Question);
+INSERT INTO
+  Questions (QuestionId,Question)
+VALUES
+	(10, "Any additional comments or concerns about the class?")
+ON DUPLICATE KEY UPDATE Question = VALUES (Question);

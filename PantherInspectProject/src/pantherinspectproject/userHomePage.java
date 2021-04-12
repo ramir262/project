@@ -44,6 +44,8 @@ public class userHomePage
 {
     SettingsPage settings;
     profileSettings profilesetting;
+    rateCoursePage rate;
+
     public String selectedCourse = "";
     PantherInspectProject master;
     searchCoursePage searchCourse = new searchCoursePage(master,selectedCourse);
@@ -51,7 +53,8 @@ public class userHomePage
     public userHomePage(PantherInspectProject master) {
         this.profilesetting = new profileSettings(master,settings);
         this.settings = new SettingsPage(master,this);
-         this.master = master;
+        this.master = master;
+        rate = new rateCoursePage(this.master);
      }
 
 
@@ -97,13 +100,14 @@ public class userHomePage
 
 
       //============ Rate Course Label ====================
-      Label rateCourseLabel = new Label("Rate a Chapman Course:");
-      homePage.add(rateCourseLabel, 0, 2);
-      TextField rateCourseField = new TextField();
-      homePage.add(rateCourseField, 1, 2);
+      //Label rateCourseLabel = new Label("Rate a Chapman Course:");
+      //homePage.add(rateCourseLabel, 0, 2);
+      //TextField rateCourseField = new TextField();
+      //homePage.add(rateCourseField, 1, 2);
 
-      Button rateButton = new Button("Search");
+      Button rateButton = new Button("Rate a Chapman Course");
       HBox hRatebox = new HBox(rateButton);
+      rateButton.setOnAction(e -> primaryStage.setScene(rate.rateCourse(primaryStage)));
       homePage.add(hRatebox, 2, 2);
       //=========================================
 

@@ -308,7 +308,7 @@ public class SignupForm {
     }
     
     private ComboBox addQuestions() {
-        ResultSet rs = this.master.qp.selectQuestions();
+        ResultSet rs = this.master.qp.selectSecurityQuestions();
 
         ComboBox comboBox = new ComboBox();
 
