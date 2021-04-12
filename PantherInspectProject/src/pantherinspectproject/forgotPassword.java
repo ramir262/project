@@ -20,6 +20,7 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
+import javafx.scene.control.PasswordField;
 import static javafx.scene.input.KeyCode.H;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
@@ -79,7 +80,7 @@ public class forgotPassword
         newPasswordLabel.setVisible(false);
         resetPassword.add(newPasswordLabel,0,9);
         
-        TextField newPassword = new TextField();
+        PasswordField newPassword = new PasswordField();
         newPassword.setVisible(false);
         resetPassword.add(newPassword,1,9);
         

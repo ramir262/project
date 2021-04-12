@@ -31,7 +31,9 @@ import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyCode;
 import static javafx.scene.input.KeyCode.H;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
@@ -44,6 +46,7 @@ import pantherinspectproject.userHomePage;
 import pantherinspectproject.QueryProcessor;
 import pantherinspectproject.Database;
 import pantherinspectproject.Time;
+import pantherinspectproject.Env;
 //import org.mindrot.jbcrypt.BCrypt;
 
 /**
@@ -55,20 +58,23 @@ public class PantherInspectProject extends Application
     SignupForm signupform = new SignupForm(this);
     userHomePage userHome = new userHomePage(this);
     forgotPassword toReset = new forgotPassword(this);
-
+    
+    // Environment variables
+    Env env;
+    
     //  Database credentials
-    static final String USER = "root";
-    static final String PASS = "2367";
+    String USER;
+    String PASS;
 
-    public static final String UPLOAD_PATH = "//localhost/D$/Downloads/images/";
+    public String UPLOAD_PATH;
 
-    public static final String SETUP_FILE = "tables.sql";
+    public String SETUP_FILE;
 
     //Signed in user info
     private String userEmail;
     private String accountId;
-    public static final String COURSE_FILE = "courses.sql";
-    public static final String POST_FILE = "posts.sql";
+    public String COURSE_FILE;
+    public String POST_FILE;
 
 
     public Database db;
@@ -86,6 +92,10 @@ public class PantherInspectProject extends Application
     }
     public String getUserEmail() {
         return userEmail;
+    }
+    
+    public void getEnvironmentVariables() {
+        env = new Env();
     }
 
     /*
@@ -324,6 +334,15 @@ public class PantherInspectProject extends Application
     @Override
     public void start(Stage primaryStage)
     {
+        //get environment variables
+        getEnvironmentVariables();
+        System.out.println(env.ToString());
+        USER = env.get("USER");
+        PASS = env.get("PASS");
+        UPLOAD_PATH = env.get("UPLOAD_PATH");
+        SETUP_FILE = env.get("SETUP_FILE");
+        COURSE_FILE = env.get("CORUSE_FILE");
+        POST_FILE = env.get("POST_FILE");
 
         //set up database and query processor
         setupDB();
@@ -347,6 +366,23 @@ public class PantherInspectProject extends Application
         grid.add(pw, 0, 2);
 
         PasswordField pwBox = new PasswordField();
+        pwBox.setOnKeyPressed(new EventHandler<KeyEvent>() {
+            @Override
+            public void handle(KeyEvent k) {
+                if(k.getCode().equals(KeyCode.ENTER)) {
+                    System.out.println("signing in..");
+
+                    //temp fix: not running this in a thread as it should be locking and should freeze gui
+                    //run check password as thread
+                    //Thread thr = new Thread(() -> checkPassword(emailField.getText(),pwField.getText()));
+                    //thr.start();
+                    Boolean check = checkPassword(userTextField.getText(),pwBox.getText());
+                    if(check) {
+                        primaryStage.setScene(userHome.userpage(primaryStage));
+                    }
+                }
+            }
+        });
         grid.add(pwBox, 1, 2);
 
         //create signin button
