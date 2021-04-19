@@ -24,6 +24,7 @@ import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import pantherinspectproject.SettingsPage;
 import pantherinspectproject.userHomePage;
+import javafx.scene.control.PasswordField;
 
 /**
  *
@@ -49,18 +50,18 @@ public class AccountSettings
       accountHome.setVgap(15);
       accountHome.setGridLinesVisible(false);
       
-       Text scenetitle = new Text("Change email and/or password ");
+       Text scenetitle = new Text("Change password ");
        scenetitle.setFont(Font.font("Tahoma", FontWeight.NORMAL, 20));
        accountHome.add(scenetitle, 0, 0, 2, 1);
       
-      Label changeEmailLabel = new Label("Change email");
+      /*Label changeEmailLabel = new Label("Change email");
       accountHome.add(changeEmailLabel, 0,1);
       TextField changeEmailField = new TextField();
-      accountHome.add(changeEmailField, 1,2);
+      accountHome.add(changeEmailField, 1,2);*/
       
       Label changePasswordLabel = new Label("Change password");
       accountHome.add(changePasswordLabel, 0,2);
-      TextField changePasswordField = new TextField();
+      PasswordField changePasswordField = new PasswordField();
       accountHome.add(changePasswordField, 1,1);
       
       // Add 1 button to submit changes; 1 to cancel (go back to userhome page?????)
@@ -71,7 +72,21 @@ public class AccountSettings
       
       Button accSettingsSaveButton = new Button("Save Changes");
       HBox saveChangesHB = new HBox(accSettingsSaveButton);
-      //accSettingsCancelButton.setOnAction(e -> primaryStage.setScene(toUserPage.userpage(primaryStage)));
+      accSettingsSaveButton.setOnAction((ActionEvent e) -> {
+            try {
+                String accountId = master.getAccountId();
+                String passwd = changePasswordField.getText();
+                String salt = BCrypt.gensalt(10);
+                String hash = BCrypt.hashpw(passwd, salt);
+
+                Boolean success = master.qp.updateAccount(accountId, master.getUserEmail(), hash);
+                System.out.println(success);
+                primaryStage.setScene(settingsPage.settingsPage(primaryStage));
+            } catch (Exception exception) {
+                System.out.println("Error: " + exception);
+            }
+
+        });
       accountHome.add(saveChangesHB, 1, 4);
       
       
