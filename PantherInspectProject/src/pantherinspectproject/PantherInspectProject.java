@@ -151,7 +151,7 @@ public class PantherInspectProject extends Application
             qp.createTables(POST_FILE);
         }
 
-        ResultSet rs = qp.selectPost("1", "ReviewId");
+        ResultSet rs = qp.selectPost("2", "ReviewId");
 
         try {
             while(rs.next()) {

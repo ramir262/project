@@ -690,7 +690,7 @@ public class QueryProcessor {
 		ResultSet : questions
 	*/
 	public ResultSet selectPostQuestions() {
-		String columns = "Question";
+		String columns = "QuestionId,Question";
 		String tables = "Questions";
 		String where = String.format(this.WHERE,"QuestionId > 3");
 		String[] instances = new String[] {};
@@ -716,7 +716,7 @@ public class QueryProcessor {
 	*/
 	public boolean insertQuestion(String questionId, String question) {
 		String tableName = "Questions";
-		String columns = "QuestionId, Question";
+		String columns = "Question";
 		String values = "?, ?";
 		String[] instance = new String[] {questionId, question};
 		boolean success = insert(tableName, columns, values, instance);
