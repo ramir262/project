@@ -186,7 +186,9 @@ public class SignupForm {
 	*/
     private HBox setupPicture(Stage primaryStage) {
         ImageView imageView = new ImageView();
-
+        imageView.setFitHeight(256);
+        imageView.setFitWidth(256);
+        imageView.setPreserveRatio(true);
         Label picture = new Label("Picture: ");
         Button btnimage = new Button("Upload Profile Picture");
         HBox picBtn = new HBox(8);
