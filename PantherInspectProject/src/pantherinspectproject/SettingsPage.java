@@ -33,11 +33,12 @@ import pantherinspectproject.AccountSettings;
 public class SettingsPage 
 {
     profileSettings editProfileSetting;
-    AccountSettings accountSetting = new AccountSettings();
+    AccountSettings accountSetting;
     PantherInspectProject master;
     userHomePage userHomePage;
     public SettingsPage(PantherInspectProject master,userHomePage userHomePage) {
         this.editProfileSetting = new profileSettings(master,this);
+        this.accountSetting = new AccountSettings(master,this);
          this.master = master;
          this.userHomePage = userHomePage;
      }
@@ -75,6 +76,15 @@ public class SettingsPage
       accSettingshbBtn.setAlignment(Pos.BOTTOM_RIGHT);
       accSettingshbBtn.getChildren().add(accountSettingsButton);
       settings.add(accSettingshbBtn,0,4);
+      
+      // Back Button
+      
+      Button backButton = new Button("Back");
+      HBox backButtonBox = new HBox(10);
+      backButton.setOnAction(e -> primaryStage.setScene(userHomePage.userpage(primaryStage)));
+      backButtonBox.setAlignment(Pos.BOTTOM_RIGHT);
+      backButtonBox.getChildren().add(backButton);
+      settings.add(backButtonBox,0,0);
       
       
     

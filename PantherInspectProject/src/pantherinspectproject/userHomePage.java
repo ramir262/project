@@ -48,13 +48,14 @@ public class userHomePage
 
     public String selectedCourse = "";
     PantherInspectProject master;
-    searchCoursePage searchCourse = new searchCoursePage(master,selectedCourse);
+    searchCoursePage searchCourse;
 
     public userHomePage(PantherInspectProject master) {
         this.profilesetting = new profileSettings(master,settings);
         this.settings = new SettingsPage(master,this);
         this.master = master;
-        rate = new rateCoursePage(this.master);
+        rate = new rateCoursePage(this.master,this);
+        this.searchCourse  = new searchCoursePage(master,selectedCourse,this);
      }
 
 
@@ -87,7 +88,7 @@ public class userHomePage
             if(selectedItem != null)
             {
                 selectedCourse = selectedItem.toString();
-                this.searchCourse = new searchCoursePage(this.master,this.selectedCourse);
+                this.searchCourse = new searchCoursePage(this.master,this.selectedCourse,this);
                 searchButton.setOnAction(e -> primaryStage.setScene(this.searchCourse.toSearchCourse(primaryStage)));
 
             }
