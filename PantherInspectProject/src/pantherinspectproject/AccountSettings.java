@@ -32,8 +32,13 @@ import pantherinspectproject.userHomePage;
 public class AccountSettings 
 {
     // ======== error =============
-    //userHomePage toUserPage = new userHomePage();
-    // userHomePage toUserPage;
+    SettingsPage settingsPage;
+    PantherInspectProject master;
+    
+    public AccountSettings(PantherInspectProject master, SettingsPage settingsPage) {
+        this.master = master;
+        this.settingsPage = settingsPage;
+    }
     
     public Scene accountPage(Stage primaryStage)
     {
@@ -61,7 +66,7 @@ public class AccountSettings
       // Add 1 button to submit changes; 1 to cancel (go back to userhome page?????)
       Button accSettingsCancelButton = new Button("Cancel");
       HBox cancelChangesHB = new HBox(accSettingsCancelButton);
-      //accSettingsCancelButton.setOnAction(e -> primaryStage.setScene(toUserPage.userpage(primaryStage)));
+      accSettingsCancelButton.setOnAction(e -> primaryStage.setScene(settingsPage.settingsPage(primaryStage)));
       accountHome.add(cancelChangesHB, 0, 4);
       
       Button accSettingsSaveButton = new Button("Save Changes");

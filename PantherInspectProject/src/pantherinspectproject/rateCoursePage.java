@@ -69,11 +69,12 @@ public class rateCoursePage
      Map<String,TextArea> responseMap;
      int starCount;
      String classId;
-     //userHomePage toUserHomePage = new userHomePage();
-     public rateCoursePage(PantherInspectProject master) {
+     userHomePage toUserHomePage;
+     public rateCoursePage(PantherInspectProject master, userHomePage userHomePage) {
         this.master = master;
         this.starCount = 0;
         this.classId = "0";
+        this.toUserHomePage = userHomePage;
      }
      
     
@@ -123,8 +124,9 @@ public class rateCoursePage
             HBox cancelHB = new HBox(10);
             ratePage.add(cancelPost, 0, 10);
             //====== workimg on this===============
-            /*
+            
             cancelPost.setOnAction(e -> primaryStage.setScene(toUserHomePage.userpage(primaryStage))); 
+            /*
             cancelHB.setAlignment(Pos.BOTTOM_CENTER);
             cancelHB.getChildren().add(cancelPost);
             ratePage.add(cancelHB, 3, 8);
