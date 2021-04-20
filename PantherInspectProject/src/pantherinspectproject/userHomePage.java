@@ -59,7 +59,7 @@ public class userHomePage
 
 
 
-    public Scene userpage(Stage primaryStage)
+    public Scene userpage(Stage primaryStage, PantherInspectProject toRootPage)
     {
       primaryStage.setTitle("User Home Page ");
       GridPane homePage = new GridPane();
@@ -107,7 +107,7 @@ public class userHomePage
 
       Button rateButton = new Button("Rate a Chapman Course");
       HBox hRatebox = new HBox(rateButton);
-      rateButton.setOnAction(e -> primaryStage.setScene(rate.rateCourse(primaryStage)));
+      rateButton.setOnAction(e -> primaryStage.setScene(rate.rateCourse(primaryStage, toRootPage, this)));
       homePage.add(hRatebox, 2, 2);
       //=========================================
 

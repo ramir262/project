@@ -65,13 +65,13 @@ public class rateCoursePage
      PantherInspectProject master;
      ComboBox comboBoxCourse;
      ComboBox comboBoxProfessor;
-     //userHomePage toUserHomePage = new userHomePage();
+     userHomePage toUserHomePage;
      public rateCoursePage(PantherInspectProject master) {
         this.master = master;
      }
      
     
-    public Scene rateCourse(Stage primaryStage) 
+    public Scene rateCourse(Stage primaryStage, PantherInspectProject toRootPage, userHomePage toUserRootPage) 
     {
         InputStream stream = null;
        
@@ -293,21 +293,21 @@ public class rateCoursePage
             HBox submitCourseHB = new HBox(10);
             //ratePage.add(sumbitCourseReview, 2, 8);
             
-            sumbitCourseReview.setOnAction(e -> primaryStage.setScene(toSubmit.submitReview(primaryStage))); 
+            sumbitCourseReview.setOnAction(e -> primaryStage.setScene(toSubmit.submitReview(primaryStage, toRootPage))); 
             submitCourseHB.getChildren().add(sumbitCourseReview);
-            ratePage.add(submitCourseHB, 0, 9);
+            ratePage.add(submitCourseHB, 0, 10);
 
             
             Button cancelPost = new Button("Cancel Post");
             HBox cancelHB = new HBox(10);
-            ratePage.add(cancelPost, 0, 10);
+            //ratePage.add(cancelPost, 0, 8);
             //====== workimg on this===============
-            /*
-            cancelPost.setOnAction(e -> primaryStage.setScene(toUserHomePage.userpage(primaryStage))); 
+            //toUserHomePage = toUserRootPage;
+            cancelPost.setOnAction(e -> primaryStage.setScene(toUserRootPage.userpage(primaryStage, toRootPage))); 
             cancelHB.setAlignment(Pos.BOTTOM_CENTER);
             cancelHB.getChildren().add(cancelPost);
-            ratePage.add(cancelHB, 3, 8);
-            */
+            ratePage.add(cancelHB, 0, 9);
+            
            
         } catch (FileNotFoundException ex) {
             Logger.getLogger(rateCoursePage.class.getName()).log(Level.SEVERE, null, ex);

@@ -48,6 +48,7 @@ import pantherinspectproject.Database;
 import pantherinspectproject.Time;
 import pantherinspectproject.Env;
 //import org.mindrot.jbcrypt.BCrypt;
+import pantherinspectproject.deletePost;
 
 /**
  *
@@ -58,6 +59,7 @@ public class PantherInspectProject extends Application
     SignupForm signupform = new SignupForm(this);
     userHomePage userHome = new userHomePage(this);
     forgotPassword toReset = new forgotPassword(this);
+    deletePost delete = new deletePost();
 
     // Environment variables
     Env env;
@@ -243,7 +245,7 @@ public class PantherInspectProject extends Application
             //thr.start();
             Boolean check = checkPassword(emailField.getText(),pwField.getText());
             if(check) {
-                primaryStage.setScene(userHome.userpage(primaryStage));
+                primaryStage.setScene(userHome.userpage(primaryStage, this));
             }
 
         });
@@ -366,7 +368,8 @@ public class PantherInspectProject extends Application
         //create password entry
         Label pw = new Label("Password:");
         grid.add(pw, 0, 2);
-
+        
+        PantherInspectProject panther = this;
         PasswordField pwBox = new PasswordField();
         pwBox.setOnKeyPressed(new EventHandler<KeyEvent>() {
             @Override
@@ -380,7 +383,7 @@ public class PantherInspectProject extends Application
                     //thr.start();
                     Boolean check = checkPassword(userTextField.getText(),pwBox.getText());
                     if(check) {
-                        primaryStage.setScene(userHome.userpage(primaryStage));
+                        primaryStage.setScene(userHome.userpage(primaryStage, panther));
                     }
                 }
             }
