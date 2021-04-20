@@ -42,15 +42,17 @@ public class searchCoursePage
 {
     PantherInspectProject master;
     displayCourseRatings courseRatings = new displayCourseRatings(this);
+    userHomePage toUserHomePage;
     
     List<HBox> buttonList = new ArrayList<>();
     String selectedCourse = "";
     String selectedOrder = "courseNum";
     
-    public searchCoursePage(PantherInspectProject master, String selectedCourse)
+    public searchCoursePage(PantherInspectProject master, String selectedCourse, userHomePage userHomePage)
     {
         this.master = master;
         this.selectedCourse = selectedCourse;
+        this.toUserHomePage = userHomePage;
     }
    public Scene toSearchCourse(Stage primaryStage)
     {
@@ -69,6 +71,15 @@ public class searchCoursePage
       coursesPage.add(orderLbl,1,1);
       ComboBox comboBox = addOrderComboBox(coursesPage,primaryStage);
       coursesPage.add(comboBox, 2, 1);
+      
+      // Back Button
+      
+      Button backButton = new Button("Back");
+      HBox backButtonBox = new HBox(10);
+      backButton.setOnAction(e -> primaryStage.setScene(toUserHomePage.userpage(primaryStage)));
+      backButtonBox.setAlignment(Pos.BOTTOM_RIGHT);
+      backButtonBox.getChildren().add(backButton);
+      coursesPage.add(backButtonBox,0,1);
       
       addClasses(coursesPage,primaryStage,"courseNum");
       ScrollPane scroll = addScrollPane(coursesPage);

@@ -153,7 +153,7 @@ public class PantherInspectProject extends Application
             qp.createTables(POST_FILE);
         }
 
-        ResultSet rs = qp.selectPost("1", "ReviewId");
+        ResultSet rs = qp.selectPost("2", "ReviewId");
 
         try {
             while(rs.next()) {
@@ -245,7 +245,7 @@ public class PantherInspectProject extends Application
             //thr.start();
             Boolean check = checkPassword(emailField.getText(),pwField.getText());
             if(check) {
-                primaryStage.setScene(userHome.userpage(primaryStage, this));
+                primaryStage.setScene(userHome.userpage(primaryStage));
             }
 
         });
@@ -369,7 +369,7 @@ public class PantherInspectProject extends Application
         Label pw = new Label("Password:");
         grid.add(pw, 0, 2);
         
-        PantherInspectProject panther = this;
+        //PantherInspectProject panther = this;
         PasswordField pwBox = new PasswordField();
         pwBox.setOnKeyPressed(new EventHandler<KeyEvent>() {
             @Override
@@ -383,7 +383,7 @@ public class PantherInspectProject extends Application
                     //thr.start();
                     Boolean check = checkPassword(userTextField.getText(),pwBox.getText());
                     if(check) {
-                        primaryStage.setScene(userHome.userpage(primaryStage, panther));
+                        primaryStage.setScene(userHome.userpage(primaryStage));
                     }
                 }
             }

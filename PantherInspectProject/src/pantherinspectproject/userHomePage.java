@@ -48,18 +48,19 @@ public class userHomePage
 
     public String selectedCourse = "";
     PantherInspectProject master;
-    searchCoursePage searchCourse = new searchCoursePage(master,selectedCourse);
+    searchCoursePage searchCourse;
 
     public userHomePage(PantherInspectProject master) {
         this.profilesetting = new profileSettings(master,settings);
         this.settings = new SettingsPage(master,this);
         this.master = master;
-        rate = new rateCoursePage(this.master);
+        rate = new rateCoursePage(this.master,this);
+        this.searchCourse  = new searchCoursePage(master,selectedCourse,this);
      }
 
 
 
-    public Scene userpage(Stage primaryStage, PantherInspectProject toRootPage)
+    public Scene userpage(Stage primaryStage)
     {
       primaryStage.setTitle("User Home Page ");
       GridPane homePage = new GridPane();
@@ -87,7 +88,7 @@ public class userHomePage
             if(selectedItem != null)
             {
                 selectedCourse = selectedItem.toString();
-                this.searchCourse = new searchCoursePage(this.master,this.selectedCourse);
+                this.searchCourse = new searchCoursePage(this.master,this.selectedCourse,this);
                 searchButton.setOnAction(e -> primaryStage.setScene(this.searchCourse.toSearchCourse(primaryStage)));
 
             }
@@ -107,7 +108,7 @@ public class userHomePage
 
       Button rateButton = new Button("Rate a Chapman Course");
       HBox hRatebox = new HBox(rateButton);
-      rateButton.setOnAction(e -> primaryStage.setScene(rate.rateCourse(primaryStage, toRootPage, this)));
+      rateButton.setOnAction(e -> primaryStage.setScene(rate.rateCourse(primaryStage)));
       homePage.add(hRatebox, 2, 2);
       //=========================================
 

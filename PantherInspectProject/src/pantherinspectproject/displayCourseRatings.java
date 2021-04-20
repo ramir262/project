@@ -7,7 +7,9 @@ package pantherinspectproject;
 
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
 
 /**
@@ -31,6 +33,14 @@ public class displayCourseRatings {
         displayCourse.setGridLinesVisible(false);
         Scene scene = new Scene(displayCourse, 800, 800); //object to return
         
+        // Back Button
+      
+      Button backButton = new Button("Back");
+      HBox backButtonBox = new HBox(10);
+      backButton.setOnAction(e -> primaryStage.setScene(master.toSearchCourse(primaryStage)));
+      backButtonBox.setAlignment(Pos.BOTTOM_RIGHT);
+      backButtonBox.getChildren().add(backButton);
+      displayCourse.add(backButtonBox,0,0);
         
         return scene;
     }

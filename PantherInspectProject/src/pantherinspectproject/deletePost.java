@@ -44,7 +44,7 @@ public class deletePost {
       
       Button backToHomePage = new Button("Home Page");
       HBox backToHomePageHB = new HBox(10);
-      backToHomePage.setOnAction(e -> primaryStage.setScene(user.userpage(primaryStage, toRootPage)));
+      backToHomePage.setOnAction(e -> primaryStage.setScene(user.userpage(primaryStage)));
       backToHomePageHB.setAlignment(Pos.CENTER);
       backToHomePageHB.getChildren().add(backToHomePage);
       deletepost.add(backToHomePage,2,2);

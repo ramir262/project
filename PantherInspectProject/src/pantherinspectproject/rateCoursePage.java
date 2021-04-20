@@ -4,7 +4,7 @@
  * and open the template in the editor.
  */
 package pantherinspectproject;
- 
+
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -49,33 +49,40 @@ import pantherinspectproject.userHomePage;
  *
  * @author cindyramirez
  */
-public class rateCoursePage 
+public class rateCoursePage
 {
-    // User Interface: Review: for upcoming sprint 
+    // User Interface: Review: for upcoming sprint
     /*
     - number of stars: combo box to select OR import of a star they click
-    - 1 demo question, difficulty of course; Label 
+    - 1 demo question, difficulty of course; Label
     - ------- with textField  (with limit of characters (200))
-    - import course from Page; dropdown of courses and professors 
-    
-    
+    - import course from Page; dropdown of courses and professors
+
+
     */
      boolean highlight = true;
      SubmitCourseReview toSubmit = new SubmitCourseReview();
      PantherInspectProject master;
      ComboBox comboBoxCourse;
      ComboBox comboBoxProfessor;
+     List<Button> starList;
+     Map<String,TextArea> responseMap;
+     int starCount;
+     String classId;
      userHomePage toUserHomePage;
-     public rateCoursePage(PantherInspectProject master) {
+     public rateCoursePage(PantherInspectProject master, userHomePage userHomePage) {
         this.master = master;
+        this.starCount = 0;
+        this.classId = "0";
+        this.toUserHomePage = userHomePage;
      }
-     
-    
-    public Scene rateCourse(Stage primaryStage, PantherInspectProject toRootPage, userHomePage toUserRootPage) 
+
+
+    public Scene rateCourse(Stage primaryStage)
     {
         InputStream stream = null;
-       
-     
+
+
             primaryStage.setTitle("Rate a Course ");
             //ScrollPane scrollPane = new ScrollPane();
             GridPane grid = new GridPane();
@@ -95,233 +102,42 @@ public class rateCoursePage
             Text settingsTitle = new Text("Rate a Chapman Course");
             settingsTitle.setFont(Font.font("Tahoma", FontWeight.NORMAL, 20));
             ratePage.add(settingsTitle, 0, 0, 2, 1);
-            
+
             //comboBox for subject, course, and professor
             createSubjectBox(ratePage);
-            
+
             //Would Recommend (star rating)
             System.out.println(System.getProperty("user.dir"));
-            try {
-                //============ stars ====================
-            stream = new FileInputStream("star.jpeg");
-            Image starsRate = new Image(stream);
-            
-            ImageView view1 = getImageView(starsRate, 50, 50, false);
-            ImageView view2 = getImageView(starsRate, 50, 50, false);
-            ImageView view3 = getImageView(starsRate, 50, 50, false);
-            ImageView view4 = getImageView(starsRate, 50, 50, false);
-            ImageView view5 = getImageView(starsRate, 50, 50, false);
-            
-            Button button = new Button();
-            Button button2 = new Button();
-            Button button3 = new Button();
-            Button button4 = new Button();
-            Button button5 = new Button();
-            
-            button.setGraphic(view1);
-            ratePage.add(button,1,4);
-            
-            button2.setGraphic(view2);
-            ratePage.add(button2,2,4);
-            
-            button3.setGraphic(view3);
-            ratePage.add(button3,3,4);
-            
-            button4.setGraphic(view4);
-            ratePage.add(button4,4,4);
-            
-            button5.setGraphic(view5);
-            ratePage.add(button5,5,4);
-            
-            Label label = new Label("Rate from 1 (low rating) to 5 (high rating): ");
-            ratePage.add(label,0,7);
-            HBox hbox = new HBox(button, button2, button3, button4, button5);
-            ratePage.add(hbox,0,8);
-            
-            List<Button> buttonList = new ArrayList();
-            buttonList.add(button);
-            buttonList.add(button2);
-            buttonList.add(button3);
-            buttonList.add(button4);
-            buttonList.add(button5);
-            
-            
-            //======== Highlight Stars Rating=================
-           
-            
-            
-                   button.setOnAction((ActionEvent e)-> {
-                   
-                    if(highlight == true)
-                    {
-                      button.setStyle("-fx-background-color: #ff0000");
-                      highlight = false;
-                    }
-                    
-                    else 
-                    {
-                     highlight = false;
-                     
-                        button2.setStyle("-fx-background-color: WHITESMOKE ");
-                        button3.setStyle("-fx-background-color: WHITESMOKE");
-                        button4.setStyle("-fx-background-color: WHITESMOKE");
-                        button5.setStyle("-fx-background-color: WHITESMOKE");    
-                    }
-                    
-                 });
-                   
-                   button2.setOnAction((ActionEvent e)-> {
-                   
-                    if(highlight == false)
-                    {
-                      button.setStyle("-fx-background-color: #ff0000");
-                      button2.setStyle("-fx-background-color: #ff0000");
-                      highlight = true;
-                    }
-                    
-                    else 
-                    {
-                     highlight = false;
-                     
-                        //button2.setStyle("-fx-background-color: WHITESMOKE ");
-                        button3.setStyle("-fx-background-color: WHITESMOKE");
-                        button4.setStyle("-fx-background-color: WHITESMOKE");
-                        button5.setStyle("-fx-background-color: WHITESMOKE");    
-                    }
-                    
-                 });
-                   
-                   button3.setOnAction((ActionEvent e)-> {
-                   
-                    if(highlight == false)
-                    {
-                      button.setStyle("-fx-background-color: #ff0000");
-                      button2.setStyle("-fx-background-color: #ff0000");
-                      button3.setStyle("-fx-background-color: #ff0000");
-                      highlight = true;
-                    }
-                    
-                    else 
-                    {
-                     highlight = false;
-                     
-                        //button2.setStyle("-fx-background-color: WHITESMOKE ");
-                        //button3.setStyle("-fx-background-color: WHITESMOKE");
-                        button4.setStyle("-fx-background-color: WHITESMOKE");
-                        button5.setStyle("-fx-background-color: WHITESMOKE");    
-                    }
-                    
-                 });
-                   
-                   button4.setOnAction((ActionEvent e)-> {
-                   
-                    if(highlight == false)
-                    {
-                      button.setStyle("-fx-background-color: #ff0000");
-                      button2.setStyle("-fx-background-color: #ff0000");
-                      button3.setStyle("-fx-background-color: #ff0000");
-                      button4.setStyle("-fx-background-color: #ff0000");
-                      highlight = true;
-                    }
-                    
-                    else 
-                    {
-                     highlight = false;
-                     
-                        //button2.setStyle("-fx-background-color: WHITESMOKE ");
-                        //button3.setStyle("-fx-background-color: WHITESMOKE");
-                        //button4.setStyle("-fx-background-color: WHITESMOKE");
-                        button.setStyle("-fx-background-color: WHITESMOKE");
-                        button2.setStyle("-fx-background-color: WHITESMOKE");
-                        button3.setStyle("-fx-background-color: WHITESMOKE");
-                        button4.setStyle("-fx-background-color: WHITESMOKE");
-                        button5.setStyle("-fx-background-color: WHITESMOKE");    
-                    }
-                    
-                 });
-                   
-                   button5.setOnAction((ActionEvent e)-> {
-                   
-                    if(highlight == false)
-                    {
-                      button.setStyle("-fx-background-color: #ff0000");
-                      button2.setStyle("-fx-background-color: #ff0000");
-                      button3.setStyle("-fx-background-color: #ff0000");
-                      button4.setStyle("-fx-background-color: #ff0000");
-                      button5.setStyle("-fx-background-color: #ff0000");
-                      highlight = true;
-                    }
-                    
-                    else 
-                    {
-                     highlight = false;
-                     button.setStyle("-fx-background-color: WHITESMOKE");
-                      button2.setStyle("-fx-background-color: WHITESMOKE");
-                      button3.setStyle("-fx-background-color: WHITESMOKE");
-                      button4.setStyle("-fx-background-color: WHITESMOKE");
-                      button5.setStyle("-fx-background-color: WHITESMOKE");
-                     
-                        
-                    }
-                    
-                 });
-                   
-                   
-                   
-                   
-                   
-                 
-          
-            
-            
-            //============= Questions ============
-            ResultSet rs = this.master.qp.selectPostQuestions();
-            int loc = 1;
-            GridPane qGrid = new GridPane();
-            try {
-                while (rs.next()) {
-                    createQuestion(qGrid,rs.getString(1),loc);
-                    loc = loc+2;
-                }
-            } catch (SQLException ex) {
-                Logger.getLogger(rateCoursePage.class.getName()).log(Level.SEVERE, null, ex);
-            }
+        try {
+            createStars(ratePage);
+
+            GridPane qGrid = createQuestions();
             ScrollPane scroll = addScrollPane(qGrid);
             grid.add(scroll, 2, 1);
-            
-            Button sumbitCourseReview = new Button("Submit Course Review");
-            HBox submitCourseHB = new HBox(10);
-            //ratePage.add(sumbitCourseReview, 2, 8);
-            
-            sumbitCourseReview.setOnAction(e -> primaryStage.setScene(toSubmit.submitReview(primaryStage, toRootPage))); 
-            submitCourseHB.getChildren().add(sumbitCourseReview);
-            ratePage.add(submitCourseHB, 0, 10);
 
-            
+
+            HBox submitCourseHB = createSubmission(ratePage,primaryStage);
+            ratePage.add(submitCourseHB, 0, 9);
+
+
             Button cancelPost = new Button("Cancel Post");
             HBox cancelHB = new HBox(10);
             //ratePage.add(cancelPost, 0, 8);
             //====== workimg on this===============
             //toUserHomePage = toUserRootPage;
-            cancelPost.setOnAction(e -> primaryStage.setScene(toUserRootPage.userpage(primaryStage, toRootPage))); 
+            cancelPost.setOnAction(e -> primaryStage.setScene(toUserHomePage.userpage(primaryStage)));
             cancelHB.setAlignment(Pos.BOTTOM_CENTER);
             cancelHB.getChildren().add(cancelPost);
-            ratePage.add(cancelHB, 0, 9);
-            
-           
+            ratePage.add(cancelPost, 0, 10);
+
+
         } catch (FileNotFoundException ex) {
             Logger.getLogger(rateCoursePage.class.getName()).log(Level.SEVERE, null, ex);
-        } finally {
-            try {
-                stream.close();
-            } catch (IOException ex) {
-                Logger.getLogger(rateCoursePage.class.getName()).log(Level.SEVERE, null, ex);
-            }
         }
          return scene;
-    
+
     }
-    
+
     private void createSubjectBox(GridPane grid) {
         // ============ Subject Name =================
         // label
@@ -333,7 +149,7 @@ public class rateCoursePage
         grid.add(comboBoxCourse, 0,4);
         comboBoxProfessor = new ComboBox();
         grid.add(comboBoxProfessor, 0,6);
-        
+
         Label professorName = new Label("Professor Name: ");
         grid.add(professorName, 0,5);
         ComboBox comboBoxSubject = new ComboBox();
@@ -354,16 +170,106 @@ public class rateCoursePage
             } catch (SQLException ex) {
                 Logger.getLogger(rateCoursePage.class.getName()).log(Level.SEVERE, null, ex);
             }
-            
+
         grid.add(comboBoxSubject, 0,2);
     }
-    
+
+    /*
+	-------------------------------
+	function: createStar
+	-------------------------------
+        params:
+                GridPane grid
+                Image img: image of a star
+	purpose:
+		highlight stars up to current index if clicked
+	*/
+    private void createStar(GridPane grid, Image img) {
+        Button button = new Button();
+        this.starList.add(button);
+        ImageView view = getImageView(img, 50, 50, false);
+        button.setGraphic(view);
+        int currentIdx = this.starList.size();
+        button.setOnAction((ActionEvent e)-> {
+
+            int start = this.starCount;
+            this.starCount = currentIdx;
+            if (start > currentIdx) {
+                start = currentIdx;
+            }
+            for (int i=start; i<this.starList.size(); i++) {
+                if (i < currentIdx) {
+                    this.starList.get(i).setStyle("-fx-background-color: #ff0000");
+                }
+                else {
+                    this.starList.get(i).setStyle("-fx-background-color: WHITESMOKE ");
+                }
+            }
+        });
+    }
+
+    /*
+	-------------------------------
+	function: createStars
+	-------------------------------
+	purpose:
+		create Stars
+                if clicked, highlight all prior
+	*/
+    private void createStars(GridPane grid) throws FileNotFoundException {
+           //============ stars ====================
+            FileInputStream stream = new FileInputStream("star.jpeg");
+            Image starsRate = new Image(stream);
+
+
+            this.starList = new ArrayList();
+            for (int i=0; i<5; i++) {
+                createStar(grid, starsRate);
+            }
+
+            Label label = new Label("Rate from 1 (low rating) to 5 (high rating): ");
+            grid.add(label,0,7);
+            HBox hbox = new HBox(this.starList.get(0), this.starList.get(1), this.starList.get(2), this.starList.get(3), this.starList.get(4));
+            grid.add(hbox,0,8);
+
+    }
+
+    private TextArea createQuestion(GridPane grid, String question, int loc) {
+        Label assignments = new Label(question);
+        grid.add(assignments, 6, loc);
+        TextArea textArea = new TextArea();
+        textArea.setPrefHeight(100);
+        VBox vbox = new VBox(textArea);
+        grid.add(vbox, 6, loc+1);
+        return textArea;
+    }
+
+    private GridPane createQuestions() {
+            //============= Questions ============
+            this.responseMap = new HashMap<>();
+            ResultSet rs = this.master.qp.selectPostQuestions();
+            int loc = 1;
+            GridPane qGrid = new GridPane();
+            try {
+                while (rs.next()) {
+                    String questionId = rs.getString(1);
+                    String question = rs.getString(2);
+                    TextArea textArea = createQuestion(qGrid,question,loc);
+                    this.responseMap.put(questionId, textArea);
+                    loc = loc+2;
+                }
+            } catch (SQLException ex) {
+                Logger.getLogger(rateCoursePage.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            return qGrid;
+    }
+
     private void createCourseBox(GridPane grid, String subject) {
         //grab classes
         //============================================
         //==================CourseName==============
         //label
-        
+
         ResultSet courseRs = this.master.qp.selectCourseBySubject(subject, "CourseNum");
         grid.getChildren().remove(comboBoxCourse);
         grid.getChildren().remove(comboBoxProfessor);
@@ -379,7 +285,7 @@ public class rateCoursePage
              }} catch (SQLException ex) {
              Logger.getLogger(rateCoursePage.class.getName()).log(Level.SEVERE, null, ex);
          }
-        
+
         comboBoxCourse.setOnAction((event) -> {
             int selectedIndex = comboBoxCourse.getSelectionModel().getSelectedIndex();
             Object selectedItem = comboBoxCourse.getSelectionModel().getSelectedItem();
@@ -391,40 +297,45 @@ public class rateCoursePage
         });
         grid.add(comboBoxCourse, 0,4);
     }
-    
+
+
+
     private void createProfessorBox(GridPane grid, String courseId) {
-        
+
         //grab classes
         //============================================
         //==================CourseName==============
         //label
-        
+
         ResultSet profRs = this.master.qp.selectCourseProfessors(courseId);
         grid.getChildren().remove(comboBoxProfessor);
         comboBoxProfessor = new ComboBox();
-        
+        Map<String,String> professorMap = new HashMap<>();
          try {
              while (profRs.next()) {
-                 comboBoxProfessor.getItems().add(profRs.getString(6));
+                 String classId = profRs.getString(1);
+                 String name = profRs.getString(6);
+                 professorMap.put(name,classId);
+                 comboBoxProfessor.getItems().add(name);
              }} catch (SQLException ex) {
              Logger.getLogger(rateCoursePage.class.getName()).log(Level.SEVERE, null, ex);
          }
-        
+         comboBoxProfessor.setOnAction((event) -> {
+            int selectedIndex = comboBoxProfessor.getSelectionModel().getSelectedIndex();
+            Object selectedItem = comboBoxProfessor.getSelectionModel().getSelectedItem();
+            if(selectedItem != null)
+            {
+                this.classId = professorMap.get(selectedItem.toString());
+            }
+        });
+
         grid.add(comboBoxProfessor,0,6);
 
     }
-    
-    private VBox createQuestion(GridPane grid, String question, int loc) {
-        Label assignments = new Label(question);
-        grid.add(assignments, 6, loc);
-        TextArea textArea = new TextArea();
-        textArea.setPrefHeight(100);
-        VBox vbox = new VBox(textArea);
-        grid.add(vbox, 6, loc+1);
-        return vbox;
-    }
-    
-     /* 
+
+
+
+     /*
     ---------------------------
     function: addScrollPane
     ----------------------------
@@ -435,14 +346,14 @@ public class rateCoursePage
     return:
         ScrollPane
     */
-   
+
    public ScrollPane addScrollPane(GridPane grid) {
        ScrollPane scroll = new ScrollPane();
        scroll.setPrefSize(600, 900);
        scroll.setContent(grid);
        return scroll;
    }
-    
+
     private ImageView getImageView(Image image, double fitWidth, double fitHeight, boolean preserveRation){
         ImageView view = new ImageView(image);
         view.setFitWidth(fitWidth);
@@ -450,19 +361,63 @@ public class rateCoursePage
         view.setPreserveRatio(preserveRation);
         view.setSmooth(true);
         return view;
-        
-        
+
+
     }
-    
-   
-    
-    
-    
-    
-     
-    
-    
-    
-    
-    
+    /*
+	-------------------------------
+	function: createSubmission
+	-------------------------------
+	purpose:
+		create submission button
+                check if entries valid
+                get new review id
+                insert review
+                insert question responses
+                insert post
+	return:
+		boolean HBox
+	*/
+    private HBox createSubmission(GridPane grid, Stage primaryStage) {
+        HBox hbox = new HBox(10);
+        Button submit = new Button("Submit Course Review");
+
+        submit.setOnAction((ActionEvent e)-> {
+            if (!this.classId.equals("0") && (this.starCount != 0)) {
+                //get current timestamp
+                Time time = new Time();
+                String timestamp = time.getCurrentTimestamp();
+                //get new reviewId
+                String reviewId = this.master.qp.getUniqueId("ReviewId", "Review");
+                //insert star review
+                this.master.qp.insertReview(reviewId,Integer.toString(this.starCount),timestamp);
+                //insert responses to all questions
+                for (String questionId : this.responseMap.keySet()) {
+                    String response = this.responseMap.get(questionId).getText();
+                    if (response.replace(" ","").length() > 0) {
+                        this.master.qp.insertResponse(reviewId, questionId, response, timestamp);
+                    }
+                }
+                //insert post
+                this.master.qp.insertPost(reviewId, this.master.getAccountId(), this.classId, timestamp);
+
+                primaryStage.setScene(toSubmit.submitReview(primaryStage, master));
+            }
+        });
+        hbox.getChildren().add(submit);
+
+        return hbox;
+    }
+
+
+
+
+
+
+
+
+
+
+
+
 }
