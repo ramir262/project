@@ -60,7 +60,10 @@ public class PantherInspectProject extends Application
     userHomePage userHome = new userHomePage(this);
     forgotPassword toReset = new forgotPassword(this);
     deletePost delete = new deletePost();
-
+    
+    // enable and disable 
+    final boolean EDIT_POST = true;
+    final boolean NEW_POST = false;
     // Environment variables
     Env env;
 

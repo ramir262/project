@@ -108,7 +108,7 @@ public class userHomePage
 
       Button rateButton = new Button("Rate a Chapman Course");
       HBox hRatebox = new HBox(rateButton);
-      rateButton.setOnAction(e -> primaryStage.setScene(rate.rateCourse(primaryStage)));
+      rateButton.setOnAction(e -> primaryStage.setScene(rate.rateCourse(primaryStage, master.NEW_POST)));
       homePage.add(hRatebox, 2, 2);
       //=========================================
 

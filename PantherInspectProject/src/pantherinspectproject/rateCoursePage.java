@@ -51,20 +51,13 @@ import pantherinspectproject.userHomePage;
  */
 public class rateCoursePage
 {
-    // User Interface: Review: for upcoming sprint
-    /*
-    - number of stars: combo box to select OR import of a star they click
-    - 1 demo question, difficulty of course; Label
-    - ------- with textField  (with limit of characters (200))
-    - import course from Page; dropdown of courses and professors
-
-
-    */
+   
      boolean highlight = true;
      SubmitCourseReview toSubmit = new SubmitCourseReview();
      PantherInspectProject master;
      ComboBox comboBoxCourse;
      ComboBox comboBoxProfessor;
+     ComboBox comboBoxSubject = new ComboBox();
      List<Button> starList;
      Map<String,TextArea> responseMap;
      int starCount;
@@ -76,14 +69,22 @@ public class rateCoursePage
         this.classId = "0";
         this.toUserHomePage = userHomePage;
      }
+     
 
 
-    public Scene rateCourse(Stage primaryStage)
+
+    public Scene rateCourse(Stage primaryStage, boolean edit)
     {
+        
         InputStream stream = null;
 
-
+        if (edit)
+        {
+            primaryStage.setTitle("Edit Course Posting ");
+        }
+        else{
             primaryStage.setTitle("Rate a Course ");
+        }
             //ScrollPane scrollPane = new ScrollPane();
             GridPane grid = new GridPane();
             GridPane ratePage = new GridPane();
@@ -99,12 +100,23 @@ public class rateCoursePage
             ratePage.setVgap(15);
             ratePage.setGridLinesVisible(false);
             Scene scene = new Scene(grid, 850, 600, Color.WHITESMOKE);
-            Text settingsTitle = new Text("Rate a Chapman Course");
-            settingsTitle.setFont(Font.font("Tahoma", FontWeight.NORMAL, 20));
-            ratePage.add(settingsTitle, 0, 0, 2, 1);
+            if(edit)
+            {
+                Text settingsTitle = new Text("Edit Chapman Course Rating");
+                settingsTitle.setFont(Font.font("Tahoma", FontWeight.NORMAL, 20));
+                ratePage.add(settingsTitle, 0, 0, 2, 1);
+            }
+            else
+            {
+                Text settingsTitle = new Text("Rate a Chapman Course");
+                settingsTitle.setFont(Font.font("Tahoma", FontWeight.NORMAL, 20));
+                ratePage.add(settingsTitle, 0, 0, 2, 1);
+            }
+            
+            
 
             //comboBox for subject, course, and professor
-            createSubjectBox(ratePage);
+            createSubjectBox(ratePage, edit);
 
             //Would Recommend (star rating)
             System.out.println(System.getProperty("user.dir"));
@@ -116,7 +128,7 @@ public class rateCoursePage
             grid.add(scroll, 2, 1);
 
 
-            HBox submitCourseHB = createSubmission(ratePage,primaryStage);
+            HBox submitCourseHB = createSubmission(ratePage,primaryStage, edit);
             ratePage.add(submitCourseHB, 0, 9);
 
 
@@ -138,21 +150,38 @@ public class rateCoursePage
 
     }
 
-    private void createSubjectBox(GridPane grid) {
+    private void createSubjectBox(GridPane grid, boolean edit) {
         // ============ Subject Name =================
         // label
+        comboBoxCourse = new ComboBox();
+        comboBoxProfessor = new ComboBox();
+       if(edit)
+       {
+           //database to show users choice 
+           comboBoxCourse.setDisable(true);
+           comboBoxProfessor.setDisable(true);
+           comboBoxSubject.setDisable(true);
+       }
+       
+       else
+       {
+           comboBoxCourse.setDisable(false);
+            comboBoxProfessor.setDisable(false);
+            comboBoxSubject.setDisable(false);
+       }
+       
         Label courseSubject = new Label("Subject Name");
         grid.add(courseSubject, 0,1);
         Label courseName = new Label("Course Name: ");
         grid.add(courseName, 0,3);
-        comboBoxCourse = new ComboBox();
+        
         grid.add(comboBoxCourse, 0,4);
-        comboBoxProfessor = new ComboBox();
+        
         grid.add(comboBoxProfessor, 0,6);
 
         Label professorName = new Label("Professor Name: ");
         grid.add(professorName, 0,5);
-        ComboBox comboBoxSubject = new ComboBox();
+        
         ResultSet subjectRs = this.master.qp.selectSubjects();
             try {
                 while (subjectRs.next()){
@@ -378,11 +407,14 @@ public class rateCoursePage
 	return:
 		boolean HBox
 	*/
-    private HBox createSubmission(GridPane grid, Stage primaryStage) {
+    private HBox createSubmission(GridPane grid, Stage primaryStage, boolean edit) {
         HBox hbox = new HBox(10);
-        Button submit = new Button("Submit Course Review");
-
-        submit.setOnAction((ActionEvent e)-> {
+        
+        Button submit;
+        if (edit)
+        {
+            submit = new Button("Submit Edit Course Review");
+            submit.setOnAction((ActionEvent e)-> {
             if (!this.classId.equals("0") && (this.starCount != 0)) {
                 //get current timestamp
                 Time time = new Time();
@@ -401,9 +433,41 @@ public class rateCoursePage
                 //insert post
                 this.master.qp.insertPost(reviewId, this.master.getAccountId(), this.classId, timestamp);
 
+                //===== go back to user home page button not working =======
+                //primaryStage.setScene(toUserHomePage.master(primaryStage, master));
+            }
+        });
+            
+        }
+        else
+        {
+            submit = new Button("Submit Course Review");
+            submit.setOnAction((ActionEvent e)-> {
+            if (!this.classId.equals("0") && (this.starCount != 0)) {
+                //get current timestamp
+                Time time = new Time();
+                String timestamp = time.getCurrentTimestamp();
+                //get new reviewId
+                String reviewId = this.master.qp.getUniqueId("ReviewId", "Review");
+                //insert star review
+                this.master.qp.insertReview(reviewId,Integer.toString(this.starCount),timestamp);
+                //insert responses to all questions
+                for (String questionId : this.responseMap.keySet()) {
+                    String response = this.responseMap.get(questionId).getText();
+                    if (response.replace(" ","").length() > 0) {
+                        this.master.qp.insertResponse(reviewId, questionId, response, timestamp);
+                    }
+                }
+                //insert post
+                this.master.qp.insertPost(reviewId, this.master.getAccountId(), this.classId, timestamp);
+                    //==============Submitting button edit does not do anything!!=====================
                 primaryStage.setScene(toSubmit.submitReview(primaryStage, master));
             }
         });
+        }
+        
+
+        
         hbox.getChildren().add(submit);
 
         return hbox;
