@@ -433,8 +433,8 @@ public class rateCoursePage
                 //insert post
                 this.master.qp.insertPost(reviewId, this.master.getAccountId(), this.classId, timestamp);
 
-                //===== go back to user home page button not working =======
-                //primaryStage.setScene(toUserHomePage.master(primaryStage, master));
+                //===== Submit Edit Course Review does not go to toSubmit Page =======
+                primaryStage.setScene(toSubmit.submitReview(primaryStage, master));
             }
         });
             
@@ -460,7 +460,7 @@ public class rateCoursePage
                 }
                 //insert post
                 this.master.qp.insertPost(reviewId, this.master.getAccountId(), this.classId, timestamp);
-                    //==============Submitting button edit does not do anything!!=====================
+                  
                 primaryStage.setScene(toSubmit.submitReview(primaryStage, master));
             }
         });
