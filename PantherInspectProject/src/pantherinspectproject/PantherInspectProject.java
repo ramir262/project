@@ -202,12 +202,7 @@ public class PantherInspectProject extends Application
                 return true;
             } else {
                 System.out.println("Incorrect Password!");
-                Alert alert = new Alert(AlertType.ERROR);
-                alert.setTitle("Error");
-                alert.setHeaderText("An Error has Occurred.");
-                alert.setContentText("Your username or password was incorrect.");
-
-                alert.showAndWait();
+                ErrorPopup.Pop("Your username or password was incorrect.");
                 return false;
             }
         }
