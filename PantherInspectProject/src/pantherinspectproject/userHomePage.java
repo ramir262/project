@@ -43,6 +43,7 @@ import pantherinspectproject.searchCoursePage;
 public class userHomePage
 {
     SettingsPage settings;
+    ProfilePage profile;
     profileSettings profilesetting;
     rateCoursePage rate;
 
@@ -52,6 +53,7 @@ public class userHomePage
 
     public userHomePage(PantherInspectProject master) {
         this.profilesetting = new profileSettings(master,settings);
+        this.profile = new ProfilePage(master);
         this.settings = new SettingsPage(master,this);
         this.master = master;
         rate = new rateCoursePage(this.master,this);
@@ -119,6 +121,11 @@ public class userHomePage
       HBox hbox = new HBox(settingsButton);
       settingsButton.setOnAction(e -> primaryStage.setScene(settings.settingsPage(primaryStage)));
       homePage.add(hbox, 0, 10);
+      
+      Button profileButton = new Button("Profile");
+      HBox profileBox = new HBox(profileButton);
+      profileButton.setOnAction(e -> primaryStage.setScene(profile.userpage(primaryStage)));
+      homePage.add(profileBox, 0, 11);
 
 
 
