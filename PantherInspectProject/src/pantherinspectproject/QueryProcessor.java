@@ -847,7 +847,29 @@ public class QueryProcessor {
 	Select Review Information
 	------------------------------------------------------------------------------------------
 	*/
-       
+       /*
+	-------------------------------
+	function: selectPostByReviewId
+	-------------------------------
+        params:
+                courseId, order
+	purpose:
+		select post, to be combined with questions and responses via reviewId
+	return:
+		ResultSet (subject, courseNum, cName, pName, stars, creation, edit)
+	*/
+	
+	public ResultSet selectPostByReviewId(String reviewId, String order) {
+		String desired = "subject,courseNum,cName,pName,stars,creation,edit";
+		String[] tableNames = new String[] {"Review","Post","Class","Course","Professor"};
+		String tables = String.join(this.NATURAL_JOIN, tableNames);
+                String order_by = String.format(this.ORDER_BY,order);		
+		String where = String.format(this.WHERE, "ReviewId=?");
+                String tail = where + order_by;
+		String[] instance = new String[] {reviewId};
+		ResultSet rs = select(desired,tables,where,instance);
+		return rs;
+	}
         /*
 	-------------------------------
 	function: selectPost

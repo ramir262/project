@@ -22,8 +22,15 @@ import javafx.stage.Stage;
 public class SubmitCourseReview {
     
     editPost toEditPosting = new editPost();
-    deletePost toDeletePosting = new deletePost();
+    deletePost toDeletePosting;// = new deletePost();
     viewPost toViewPosting = new viewPost();
+    userHomePage toHomePage;
+    //PantherInspectProject master;
+    SubmitCourseReview(PantherInspectProject master, String postId) {
+        //this.master = master;
+        toDeletePosting = new deletePost(master,postId,this);
+        toHomePage = new userHomePage(master);
+    }
     
     public Scene submitReview(Stage primaryStage)
     {
@@ -64,6 +71,7 @@ public class SubmitCourseReview {
       
       //======== working on going back to user Home page =================
       Button backToHome = new Button("Home Page");
+      backToHome.setOnAction(e -> primaryStage.setScene(toHomePage.userpage(primaryStage)));
       submitPage.add(backToHome, 4, 2);
       
         

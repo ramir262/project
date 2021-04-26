@@ -60,8 +60,7 @@ public class rateCoursePage
     
     
     */
-     boolean highlight = true;
-     SubmitCourseReview toSubmit = new SubmitCourseReview();
+     SubmitCourseReview toSubmit;// = new SubmitCourseReview();
      PantherInspectProject master;
      ComboBox comboBoxCourse;
      ComboBox comboBoxProfessor;
@@ -401,7 +400,7 @@ public class rateCoursePage
                 }
                 //insert post
                 this.master.qp.insertPost(reviewId, this.master.getAccountId(), this.classId, timestamp);
-
+                toSubmit = new SubmitCourseReview(this.master,reviewId);
                 primaryStage.setScene(toSubmit.submitReview(primaryStage));
             }
         });
