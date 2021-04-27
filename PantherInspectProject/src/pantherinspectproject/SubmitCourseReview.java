@@ -25,12 +25,16 @@ import javafx.stage.Stage;
  */
 public class SubmitCourseReview {
     
-    editPost toEditPosting = new editPost();
+    //editPost toEditPosting = new editPost();
     deletePost toDeletePosting = new deletePost();
     viewPost toViewPosting = new viewPost();
+    userHomePage toHomePage;
+    rateCoursePage toRateCourse;
     
     public Scene submitReview(Stage primaryStage, PantherInspectProject toRootPage)
     {
+      toHomePage = new userHomePage(toRootPage);
+      toRateCourse = new rateCoursePage(toRootPage, toHomePage);
       primaryStage.setTitle("Successfully Posted ");
       Text title = new Text("Posting Successful");
       title.setFont(Font.font("Tahoma", FontWeight.NORMAL, 20));
@@ -48,7 +52,7 @@ public class SubmitCourseReview {
       //============== editPost Button ============
       Button editPost = new Button("Edit Post");
       HBox editPostHB = new HBox(10);
-      editPost.setOnAction(e -> primaryStage.setScene(toEditPosting.editPosting(primaryStage)));
+      editPost.setOnAction(e -> primaryStage.setScene(toRateCourse.rateCourse(primaryStage, toRootPage.EDIT_POST)));
       editPostHB.setAlignment(Pos.BOTTOM_RIGHT);
       editPostHB.getChildren().add(editPost);
       submitPage.add(editPost,1,2);
@@ -62,18 +66,24 @@ public class SubmitCourseReview {
       submitPage.add(deletePost,2,2);
       
       
+      // ========== View Post =======================
       Button viewPost = new Button("View Post");
       HBox viewPostHB = new HBox(10);
-      viewPost.setOnAction(e -> primaryStage.setScene(toViewPosting.viewPosting(primaryStage)));
+      viewPost.setOnAction(e -> primaryStage.setScene(toRateCourse.rateCourse(primaryStage, PantherInspectProject.VIEW_POST)));
       viewPostHB.setAlignment(Pos.BOTTOM_RIGHT);
       viewPostHB.getChildren().add(viewPost);
       submitPage.add(viewPost,3,2);
       
       
       
-      //======== working on going back to user Home page =================
+      //======== Home page =================
       Button backToHome = new Button("Home Page");
-      submitPage.add(backToHome, 4, 2);
+      HBox backToHomeHB = new HBox(10);
+      backToHome.setOnAction(e -> primaryStage.setScene(toHomePage.userpage(primaryStage)));
+      backToHomeHB.setAlignment(Pos.BOTTOM_RIGHT);
+      backToHomeHB.getChildren().add(backToHome);
+      submitPage.add(backToHomeHB, 4, 2);
+      
       
         
         return scene;
