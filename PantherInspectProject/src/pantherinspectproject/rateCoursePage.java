@@ -72,19 +72,12 @@ public class rateCoursePage
      
 
 
-
-    public Scene rateCourse(Stage primaryStage, boolean edit)
+// added boolean view
+    public Scene rateCourse(Stage primaryStage, int edit)
     {
         
         InputStream stream = null;
-
-        if (edit)
-        {
-            primaryStage.setTitle("Edit Course Posting ");
-        }
-        else{
-            primaryStage.setTitle("Rate a Course ");
-        }
+        
             //ScrollPane scrollPane = new ScrollPane();
             GridPane grid = new GridPane();
             GridPane ratePage = new GridPane();
@@ -100,23 +93,40 @@ public class rateCoursePage
             ratePage.setVgap(15);
             ratePage.setGridLinesVisible(false);
             Scene scene = new Scene(grid, 850, 600, Color.WHITESMOKE);
-            if(edit)
-            {
-                Text settingsTitle = new Text("Edit Chapman Course Rating");
-                settingsTitle.setFont(Font.font("Tahoma", FontWeight.NORMAL, 20));
-                ratePage.add(settingsTitle, 0, 0, 2, 1);
-            }
-            else
-            {
-                Text settingsTitle = new Text("Rate a Chapman Course");
-                settingsTitle.setFont(Font.font("Tahoma", FontWeight.NORMAL, 20));
-                ratePage.add(settingsTitle, 0, 0, 2, 1);
-            }
-            
-            
-
+           
+           
             //comboBox for subject, course, and professor
-            createSubjectBox(ratePage, edit);
+            
+        Text settingsTitle = new Text();
+        switch (edit){
+            case 0:
+                primaryStage.setTitle("Edit Course Posting ");
+                settingsTitle.setText("Edit Chapman Course Rating");
+                settingsTitle.setFont(Font.font("Tahoma", FontWeight.NORMAL, 20));
+                ratePage.add(settingsTitle, 0, 0, 2, 1);
+                break;
+                
+                
+                
+               
+            
+            case 1:
+                 primaryStage.setTitle("Rate a Course ");
+                 settingsTitle.setText("Rate a Chapman Course");
+                 settingsTitle.setFont(Font.font("Tahoma", FontWeight.NORMAL, 20));
+                 ratePage.add(settingsTitle, 0, 0, 2, 1);
+                 break;
+                 
+            case 2:
+                primaryStage.setTitle("View Posting ");
+                settingsTitle.setText("View Students Reviews");
+                settingsTitle.setFont(Font.font("Tahoma", FontWeight.NORMAL, 20));
+                ratePage.add(settingsTitle, 0, 0, 2, 1);
+                
+               
+        }
+        
+        createSubjectBox(ratePage, edit);
 
             //Would Recommend (star rating)
             System.out.println(System.getProperty("user.dir"));
@@ -146,29 +156,48 @@ public class rateCoursePage
         } catch (FileNotFoundException ex) {
             Logger.getLogger(rateCoursePage.class.getName()).log(Level.SEVERE, null, ex);
         }
+        
+        
          return scene;
+         
+         
+          
 
     }
 
-    private void createSubjectBox(GridPane grid, boolean edit) {
+    private void createSubjectBox(GridPane grid, int edit) {
         // ============ Subject Name =================
         // label
         comboBoxCourse = new ComboBox();
         comboBoxProfessor = new ComboBox();
-       if(edit)
-       {
-           //database to show users choice 
-           comboBoxCourse.setDisable(true);
-           comboBoxProfessor.setDisable(true);
-           comboBoxSubject.setDisable(true);
-       }
+        
+        switch(edit)
+        {
+            case PantherInspectProject.EDIT_POST:
+                comboBoxCourse.setDisable(true);
+                comboBoxProfessor.setDisable(true);
+                comboBoxSubject.setDisable(true);
+                break;
+                
+            case PantherInspectProject.NEW_POST:
+                comboBoxCourse.setDisable(false);
+                comboBoxProfessor.setDisable(false);
+                comboBoxSubject.setDisable(false);
+                break;
+            
+            case PantherInspectProject.VIEW_POST:
+
+                comboBoxCourse.setDisable(true);
+                comboBoxProfessor.setDisable(true);
+                comboBoxSubject.setDisable(true);
+                break;
+                
+            
+                
+        }
+     
        
-       else
-       {
-           comboBoxCourse.setDisable(false);
-            comboBoxProfessor.setDisable(false);
-            comboBoxSubject.setDisable(false);
-       }
+      
        
         Label courseSubject = new Label("Subject Name");
         grid.add(courseSubject, 0,1);
@@ -183,7 +212,9 @@ public class rateCoursePage
         grid.add(professorName, 0,5);
         
         ResultSet subjectRs = this.master.qp.selectSubjects();
+        comboBoxSubject.getItems().clear();
             try {
+                
                 while (subjectRs.next()){
                     comboBoxSubject.getItems().add(subjectRs.getString(1));
                 }
@@ -407,13 +438,11 @@ public class rateCoursePage
 	return:
 		boolean HBox
 	*/
-    private HBox createSubmission(GridPane grid, Stage primaryStage, boolean edit) {
+    private HBox createSubmission(GridPane grid, Stage primaryStage, int edit) {
         HBox hbox = new HBox(10);
         
-        Button submit;
-        if (edit)
-        {
-            submit = new Button("Submit Edit Course Review");
+        Button submit = new Button();
+        
             submit.setOnAction((ActionEvent e)-> {
             if (!this.classId.equals("0") && (this.starCount != 0)) {
                 //get current timestamp
@@ -432,56 +461,32 @@ public class rateCoursePage
                 }
                 //insert post
                 this.master.qp.insertPost(reviewId, this.master.getAccountId(), this.classId, timestamp);
-
-                //===== Submit Edit Course Review does not go to toSubmit Page =======
                 primaryStage.setScene(toSubmit.submitReview(primaryStage, master));
             }
-        });
-            
-        }
-        else
+            });
+        
+        switch(edit)
         {
-            submit = new Button("Submit Course Review");
-            submit.setOnAction((ActionEvent e)-> {
-            if (!this.classId.equals("0") && (this.starCount != 0)) {
-                //get current timestamp
-                Time time = new Time();
-                String timestamp = time.getCurrentTimestamp();
-                //get new reviewId
-                String reviewId = this.master.qp.getUniqueId("ReviewId", "Review");
-                //insert star review
-                this.master.qp.insertReview(reviewId,Integer.toString(this.starCount),timestamp);
-                //insert responses to all questions
-                for (String questionId : this.responseMap.keySet()) {
-                    String response = this.responseMap.get(questionId).getText();
-                    if (response.replace(" ","").length() > 0) {
-                        this.master.qp.insertResponse(reviewId, questionId, response, timestamp);
-                    }
-                }
-                //insert post
-                this.master.qp.insertPost(reviewId, this.master.getAccountId(), this.classId, timestamp);
+            case PantherInspectProject.EDIT_POST:
+                //submit.setText("Back");
+                
+                  break;
                   
-                primaryStage.setScene(toSubmit.submitReview(primaryStage, master));
-            }
-        });
+                  
+            case PantherInspectProject.NEW_POST:
+                submit.setText("Submit Course Review");
+                break;
+                
+            
+            case PantherInspectProject.VIEW_POST:
+               // submit.setText("View Student's Posting");
+                break;
+                
         }
-        
-
-        
+ 
         hbox.getChildren().add(submit);
 
         return hbox;
     }
-
-
-
-
-
-
-
-
-
-
-
-
+    
 }

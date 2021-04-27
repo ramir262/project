@@ -39,7 +39,7 @@ public class displayCourseRatings {
         this.master = master;
     }
     
-    public Scene display(Stage primaryStage)
+    public Scene display(Stage primaryStage, rateCoursePage toRateCoursePage)
     {
         /* GridPane
         GridPane displayCourse = new GridPane();
@@ -90,7 +90,7 @@ public class displayCourseRatings {
 
         table.getColumns().addAll(colDate, colName, colStars);
 
-        addButtonToTable();
+        addButtonToTable(primaryStage, toRateCoursePage);
         
         
         // Back Button
@@ -106,22 +106,22 @@ public class displayCourseRatings {
         return scene;
     }
     
-    private void setTableappearance() {
+    public void setTableappearance() {
         table.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
         table.setPrefWidth(600);
         table.setPrefHeight(600);
     }
     
-    private void fillTableObservableListWithSampleData() {
+    public void fillTableObservableListWithSampleData() {
 
-        tvObservableList.addAll(new Data("day month year", "Boyd", "3"),
+        tvObservableList.addAll(new Data("string", "Boyd", "3"),
                                 new Data("3/3/3", "LLedo", "3"), 
                                 new Data("3/3/3", "linstead", "3"), 
-                                new Data("3/3/3", "german", "3"),
+                                new Data("string", "german", "3"),
                                 new Data("3/3/3", "transue", "4"));
     }
     
-    private void addButtonToTable() {
+    public void addButtonToTable(Stage primaryStage, rateCoursePage toRateCoursePage) {
         TableColumn<Data, Void> colBtn = new TableColumn("View More Info");
 
         Callback<TableColumn<Data, Void>, TableCell<Data, Void>> cellFactory = new Callback<TableColumn<Data, Void>, TableCell<Data, Void>>() {
@@ -132,14 +132,14 @@ public class displayCourseRatings {
                     private final Button btn = new Button("Read More");
 
                     {
-                        /*
+                        
                         btn.setOnAction((ActionEvent event) -> {
                             Data data = getTableView().getItems().get(getIndex());
                             System.out.println("selectedData: " + data);
                         });
-                        */
-                        //===================== private method and public method =============
-                        btn.setOnAction(e -> primaryStage.setScene(toViewPost.viewPosting(primaryStage)));
+                        
+                        //===================== Problem: private method and public method =============
+                        btn.setOnAction(e -> primaryStage.setScene(toRateCoursePage.rateCourse(primaryStage, PantherInspectProject.VIEW_POST)));
                         
                     }
 

@@ -69,7 +69,7 @@ public class SubmitCourseReview {
       // ========== View Post =======================
       Button viewPost = new Button("View Post");
       HBox viewPostHB = new HBox(10);
-      viewPost.setOnAction(e -> primaryStage.setScene(toViewPosting.viewPosting(primaryStage)));
+      viewPost.setOnAction(e -> primaryStage.setScene(toRateCourse.rateCourse(primaryStage, PantherInspectProject.VIEW_POST)));
       viewPostHB.setAlignment(Pos.BOTTOM_RIGHT);
       viewPostHB.getChildren().add(viewPost);
       submitPage.add(viewPost,3,2);

@@ -43,16 +43,18 @@ public class searchCoursePage
     PantherInspectProject master;
     displayCourseRatings courseRatings = new displayCourseRatings(this);
     userHomePage toUserHomePage;
+    rateCoursePage toRateCoursePage;
     
     List<HBox> buttonList = new ArrayList<>();
     String selectedCourse = "";
     String selectedOrder = "courseNum";
     
-    public searchCoursePage(PantherInspectProject master, String selectedCourse, userHomePage userHomePage)
+    public searchCoursePage(PantherInspectProject master, String selectedCourse, userHomePage userHomePage, rateCoursePage toRateCoursePage)
     {
         this.master = master;
         this.selectedCourse = selectedCourse;
         this.toUserHomePage = userHomePage;
+        this.toRateCoursePage = toRateCoursePage;
     }
    public Scene toSearchCourse(Stage primaryStage)
     {
@@ -207,7 +209,7 @@ public class searchCoursePage
         Button btn = new Button((String.format("%s: %s", courseNum, courseName)));
         btn.setMinWidth(180);
         HBox hbBtn = new HBox(10);
-        btn.setOnAction(e -> primaryStage.setScene(courseRatings.display(primaryStage)));
+        btn.setOnAction(e -> primaryStage.setScene(courseRatings.display(primaryStage, toRateCoursePage)));
         hbBtn.setAlignment(Pos.BASELINE_LEFT);
         hbBtn.getChildren().add(btn);
         grid.add(hbBtn, x, y);
