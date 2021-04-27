@@ -48,6 +48,7 @@ import pantherinspectproject.Database;
 import pantherinspectproject.Time;
 import pantherinspectproject.Env;
 //import org.mindrot.jbcrypt.BCrypt;
+import pantherinspectproject.deletePost;
 
 /**
  *
@@ -58,7 +59,15 @@ public class PantherInspectProject extends Application
     SignupForm signupform = new SignupForm(this);
     userHomePage userHome = new userHomePage(this);
     forgotPassword toReset = new forgotPassword(this);
-
+    deletePost delete = new deletePost();
+    
+    // enable and disable for editing post scene 
+    static final int EDIT_POST = 0;
+    static final int NEW_POST = 1;
+    
+    // enable for viewing a post 
+    static final int VIEW_POST = 2;
+    
     // Environment variables
     Env env;
 
@@ -123,6 +132,16 @@ public class PantherInspectProject extends Application
             db = new Database();
             String db_url = db.createURL("localhost","PantherInspect");
             conn = db.createConnection(db_url,USER,PASS);
+            try{
+                if(!conn.isValid(2)) {
+                ErrorPopup.Pop("Could not connect to database.");
+                System.exit(0);
+                }
+            } catch(Exception e) {
+                ErrorPopup.Pop("Could not connect to database.");
+                System.exit(0);
+            }
+            
             qp = new QueryProcessor(conn);
 
             //run create tables via thread
@@ -180,17 +199,13 @@ public class PantherInspectProject extends Application
                 return true;
             } else {
                 System.out.println("Incorrect Password!");
-                Alert alert = new Alert(AlertType.ERROR);
-                alert.setTitle("Error");
-                alert.setHeaderText("An Error has Occurred.");
-                alert.setContentText("Your username or password was incorrect.");
-
-                alert.showAndWait();
+                ErrorPopup.Pop("Your username or password was incorrect.");
                 return false;
             }
         }
         catch (Exception e) {
             System.out.println("Error: " + e.getMessage());
+            ErrorPopup.Pop("Your username or password was incorrect.");
         }
         return false;
     }
@@ -344,7 +359,8 @@ public class PantherInspectProject extends Application
         //create password entry
         Label pw = new Label("Password:");
         grid.add(pw, 0, 2);
-
+        
+        //PantherInspectProject panther = this;
         PasswordField pwBox = new PasswordField();
         pwBox.setOnKeyPressed(new EventHandler<KeyEvent>() {
             @Override

@@ -41,6 +41,35 @@ public class AccountSettings
         this.settingsPage = settingsPage;
     }
     
+    public boolean verifyPassword(String pass) {
+        //check length
+        if(pass.length() < 8)
+            return false;
+        
+        //check for spaces
+        if (pass.contains(" "))
+            return false;
+
+        
+  
+        // check for #
+        int count = 0;
+        for (int i = 0; i < 10; i++) {
+
+            // to convert int to string
+            String str = Integer.toString(i);
+
+            if (pass.contains(str)) {
+                count += 1;
+            }
+        }
+        if (count < 1) {
+            return false;
+        };
+        
+        return true;
+    }
+    
     public Scene accountPage(Stage primaryStage)
     {
       primaryStage.setTitle("Account Settings:  ");
@@ -73,7 +102,8 @@ public class AccountSettings
       Button accSettingsSaveButton = new Button("Save Changes");
       HBox saveChangesHB = new HBox(accSettingsSaveButton);
       accSettingsSaveButton.setOnAction((ActionEvent e) -> {
-            try {
+          if(verifyPassword(changePasswordField.getText())) {
+              try {
                 String accountId = master.getAccountId();
                 String passwd = changePasswordField.getText();
                 String salt = BCrypt.gensalt(10);
@@ -84,7 +114,10 @@ public class AccountSettings
                 primaryStage.setScene(settingsPage.settingsPage(primaryStage));
             } catch (Exception exception) {
                 System.out.println("Error: " + exception);
+                ErrorPopup.Pop("Password must be 8 characters or longer and contain numbers and letters.");
             }
+          }
+            
 
         });
       accountHome.add(saveChangesHB, 1, 4);

@@ -57,7 +57,7 @@ public class userHomePage
         this.settings = new SettingsPage(master,this);
         this.master = master;
         rate = new rateCoursePage(this.master,this);
-        this.searchCourse  = new searchCoursePage(master,selectedCourse,this);
+        this.searchCourse  = new searchCoursePage(master,selectedCourse,this, rate);
      }
 
 
@@ -90,7 +90,7 @@ public class userHomePage
             if(selectedItem != null)
             {
                 selectedCourse = selectedItem.toString();
-                this.searchCourse = new searchCoursePage(this.master,this.selectedCourse,this);
+                this.searchCourse = new searchCoursePage(this.master,this.selectedCourse,this, rate);
                 searchButton.setOnAction(e -> primaryStage.setScene(this.searchCourse.toSearchCourse(primaryStage)));
 
             }
@@ -110,7 +110,7 @@ public class userHomePage
 
       Button rateButton = new Button("Rate a Chapman Course");
       HBox hRatebox = new HBox(rateButton);
-      rateButton.setOnAction(e -> primaryStage.setScene(rate.rateCourse(primaryStage)));
+      rateButton.setOnAction(e -> primaryStage.setScene(rate.rateCourse(primaryStage, PantherInspectProject.NEW_POST)));
       homePage.add(hRatebox, 2, 2);
       //=========================================
 
