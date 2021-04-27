@@ -29,17 +29,19 @@ public class SubmitCourseReview {
     deletePost toDeletePosting;// = new deletePost();
     viewPost toViewPosting = new viewPost();
     userHomePage toHomePage;
+    rateCoursePage toRateCourse;
+    PantherInspectProject master;
     //PantherInspectProject master;
     SubmitCourseReview(PantherInspectProject master, String postId) {
         //this.master = master;
         toDeletePosting = new deletePost(master,postId,this);
         toHomePage = new userHomePage(master);
+        toRateCourse = new rateCoursePage(master, toHomePage);
+        this.master = master;
     }
 
-    public Scene submitReview(Stage primaryStage, PantherInspectProject toRootPage)
+    public Scene submitReview(Stage primaryStage)
     {
-      toHomePage = new userHomePage(toRootPage);
-      toRateCourse = new rateCoursePage(toRootPage, toHomePage);
       primaryStage.setTitle("Successfully Posted ");
       Text title = new Text("Posting Successful");
       title.setFont(Font.font("Tahoma", FontWeight.NORMAL, 20));
@@ -57,7 +59,7 @@ public class SubmitCourseReview {
       //============== editPost Button ============
       Button editPost = new Button("Edit Post");
       HBox editPostHB = new HBox(10);
-      editPost.setOnAction(e -> primaryStage.setScene(toRateCourse.rateCourse(primaryStage, toRootPage.EDIT_POST)));
+      editPost.setOnAction(e -> primaryStage.setScene(toRateCourse.rateCourse(primaryStage, this.master.EDIT_POST)));
       editPostHB.setAlignment(Pos.BOTTOM_RIGHT);
       editPostHB.getChildren().add(editPost);
       submitPage.add(editPost,1,2);
@@ -65,7 +67,7 @@ public class SubmitCourseReview {
       //============ deletePost =====================
       Button deletePost = new Button("Delete Post");
       HBox deletePostHB = new HBox(10);
-      deletePost.setOnAction(e -> primaryStage.setScene(toDeletePosting.deletePosting(primaryStage, toRootPage)));
+      deletePost.setOnAction(e -> primaryStage.setScene(toDeletePosting.deletePosting(primaryStage)));
       deletePostHB.setAlignment(Pos.BOTTOM_RIGHT);
       deletePostHB.getChildren().add(deletePost);
       submitPage.add(deletePost,2,2);
@@ -74,6 +76,7 @@ public class SubmitCourseReview {
       // ========== View Post =======================
       Button viewPost = new Button("View Post");
       HBox viewPostHB = new HBox(10);
+      //TODO: create view post page with dynamic filler
       viewPost.setOnAction(e -> primaryStage.setScene(toRateCourse.rateCourse(primaryStage, PantherInspectProject.VIEW_POST)));
       viewPostHB.setAlignment(Pos.BOTTOM_RIGHT);
       viewPostHB.getChildren().add(viewPost);

@@ -45,7 +45,7 @@ public class deletePost {
     userHomePage user;
 
 
-    public Scene deletePosting(Stage primaryStage, PantherInspectProject toRootPage)
+    public Scene deletePosting(Stage primaryStage)
     {
 
       primaryStage.setTitle("Delete Post ");

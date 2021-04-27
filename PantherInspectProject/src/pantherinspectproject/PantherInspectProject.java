@@ -59,7 +59,6 @@ public class PantherInspectProject extends Application
     SignupForm signupform = new SignupForm(this);
     userHomePage userHome = new userHomePage(this);
     forgotPassword toReset = new forgotPassword(this);
-    deletePost delete = new deletePost();
     
     // enable and disable for editing post scene 
     static final int EDIT_POST = 0;
