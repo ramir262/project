@@ -105,7 +105,8 @@ public class SignupForm {
         Button btn = new Button("Sign Up");
         btn.setOnAction((ActionEvent event) -> {
             //run account creation
-        try {
+        if(verifyPassword(pwBox.getText())) {
+            try {
             String aid = master.qp.getAccountId(email.getText());
             if (aid.equals("0")) {
                 int questionId = questions.getSelectionModel().getSelectedIndex() + 1;
@@ -119,12 +120,44 @@ public class SignupForm {
                 System.out.println("This email is already taken.  Please attempt to reset your password.");
             }
 
-        } catch(Exception e) {
-            System.out.println("Error: " + e.getMessage());
+            } catch(Exception e) {
+                System.out.println("Error: " + e.getMessage());
+            }
+        } else {
+            ErrorPopup.Pop("Password must be 8 characters or longer and contain numbers and letters.");
         }
+        
 
         });
         return btn;
+    }
+    public boolean verifyPassword(String pass) {
+        //check length
+        if(pass.length() < 8)
+            return false;
+        
+        //check for spaces
+        if (pass.contains(" "))
+            return false;
+
+        
+  
+        // check for #
+        int count = 0;
+        for (int i = 0; i < 10; i++) {
+
+            // to convert int to string
+            String str = Integer.toString(i);
+
+            if (pass.contains(str)) {
+                count += 1;
+            }
+        }
+        if (count < 1) {
+            return false;
+        };
+        
+        return true;
     }
 
      /*

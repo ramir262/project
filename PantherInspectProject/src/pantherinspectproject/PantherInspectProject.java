@@ -125,6 +125,16 @@ public class PantherInspectProject extends Application
             db = new Database();
             String db_url = db.createURL("localhost","PantherInspect");
             conn = db.createConnection(db_url,USER,PASS);
+            try{
+                if(!conn.isValid(2)) {
+                ErrorPopup.Pop("Could not connect to database.");
+                System.exit(0);
+                }
+            } catch(Exception e) {
+                ErrorPopup.Pop("Could not connect to database.");
+                System.exit(0);
+            }
+            
             qp = new QueryProcessor(conn);
 
             //run create tables via thread
@@ -210,6 +220,7 @@ public class PantherInspectProject extends Application
         }
         catch (Exception e) {
             System.out.println("Error: " + e.getMessage());
+            ErrorPopup.Pop("Your username or password was incorrect.");
         }
         return false;
     }

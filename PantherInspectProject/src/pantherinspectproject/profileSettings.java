@@ -95,6 +95,7 @@ public class profileSettings
                 primaryStage.setScene(settingsPage.settingsPage(primaryStage));
             } catch (Exception exception) {
                 System.out.println("Error: " + exception);
+                ErrorPopup.Pop(exception.getMessage());
             }
 
         });
