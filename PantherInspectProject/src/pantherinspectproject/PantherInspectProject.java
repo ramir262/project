@@ -151,29 +151,7 @@ public class PantherInspectProject extends Application
             qp.createTables(POST_FILE);
         }
 
-        ResultSet rs = qp.selectPost("2", "ReviewId");
-
-        try {
-            while(rs.next()) {
-                //ResultSet (reviewId, accountId, cName, pName, stars, creation, edit)
-                System.out.print("ReviewId: " + rs.getString(1) + ", ");
-                System.out.print("AccountId: " + rs.getString(2) + ", ");
-                System.out.print("Class Name: " + rs.getString(3) + ", ");
-                System.out.print("Professor Name: " + rs.getString(4) + ", ");
-                System.out.print("Stars: " + rs.getString(5) + ", ");
-                System.out.print("Creation: " + rs.getString(6) + ", ");
-                System.out.println("Edit: " + rs.getString(7));
-
-
-                ResultSet rs2 = qp.selectReviewQuestions(rs.getString(1));
-                while(rs2.next()) {
-                    System.out.print("Question: " + rs2.getString(1) + ", ");
-                    System.out.println("Response: " + rs2.getString(2));
-                }
-            }
-        } catch (SQLException ex) {
-            Logger.getLogger(PantherInspectProject.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        
 
     }
 
