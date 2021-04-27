@@ -42,6 +42,35 @@ public class forgotPassword
          this.master = master;
      }
     
+    public boolean verifyPassword(String pass) {
+        //check length
+        if(pass.length() < 8)
+            return false;
+        
+        //check for spaces
+        if (pass.contains(" "))
+            return false;
+
+        
+  
+        // check for #
+        int count = 0;
+        for (int i = 0; i < 10; i++) {
+
+            // to convert int to string
+            String str = Integer.toString(i);
+
+            if (pass.contains(str)) {
+                count += 1;
+            }
+        }
+        if (count < 1) {
+            return false;
+        };
+        
+        return true;
+    }
+    
     public Scene toResetPassword(Stage primaryStage)
     {
       primaryStage.setTitle("Reset password ");
@@ -111,6 +140,8 @@ public class forgotPassword
                 securityQuestion.setVisible(true);
                 securityAnswer.setVisible(true);
                 submitQuestion.setVisible(true);
+            } else {
+                ErrorPopup.Pop("No account exists.");
             }
             
 
@@ -130,20 +161,27 @@ public class forgotPassword
                 newPasswordLabel.setVisible(true);
                 newPassword.setVisible(true);
                 changePassword.setVisible(true);
+            } else {
+                ErrorPopup.Pop("Incorrect answer.");
             }
             
             
         });
         
         changePassword.setOnAction((ActionEvent e) -> {
-            int accountId = getAccountId(emailtoResetpassword.getText());
-            String passwd = newPassword.getText();
-            String salt = BCrypt.gensalt(10);
-            String hash = BCrypt.hashpw(passwd, salt);
-            Boolean succ = master.qp.updateAccount(Integer.toString(accountId),emailtoResetpassword.getText(),hash);
-            if(succ) {
-            master.start(primaryStage);
+            if(verifyPassword(newPassword.getText())) {
+               int accountId = getAccountId(emailtoResetpassword.getText());
+                String passwd = newPassword.getText();
+                String salt = BCrypt.gensalt(10);
+                String hash = BCrypt.hashpw(passwd, salt);
+                Boolean succ = master.qp.updateAccount(Integer.toString(accountId),emailtoResetpassword.getText(),hash);
+                if(succ) {
+                master.start(primaryStage);
+                } 
+            } else {
+                ErrorPopup.Pop("Password must be 8 characters or longer and contain numbers and letters.");
             }
+            
 
         });
       hbBtn.setAlignment(Pos.BOTTOM_RIGHT);

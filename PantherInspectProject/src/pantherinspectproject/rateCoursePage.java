@@ -402,6 +402,8 @@ public class rateCoursePage
                 this.master.qp.insertPost(reviewId, this.master.getAccountId(), this.classId, timestamp);
 
                 primaryStage.setScene(toSubmit.submitReview(primaryStage, master));
+            } else {
+                ErrorPopup.Pop("All fields must be filled out to submit.");
             }
         });
         hbox.getChildren().add(submit);

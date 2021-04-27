@@ -1,5 +1,5 @@
-/PantherInspectProject/nbproject/private/
-/PantherInspectProject/nbproject/
+/PantherInspectProject/nbproject/private/*
+/PantherInspectProject/nbproject/*
 /PantherInspectProject/dist/
 /PantherInspectProject/build/
 .env
