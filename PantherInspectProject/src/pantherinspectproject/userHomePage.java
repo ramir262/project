@@ -45,6 +45,7 @@ public class userHomePage
     SettingsPage settings;
     profileSettings profilesetting;
     rateCoursePage rate;
+    displayCourseRatings display;
 
     public String selectedCourse = "";
     PantherInspectProject master;
@@ -54,8 +55,7 @@ public class userHomePage
         this.profilesetting = new profileSettings(master,settings);
         this.settings = new SettingsPage(master,this);
         this.master = master;
-        rate = new rateCoursePage(this.master,this);
-        this.searchCourse  = new searchCoursePage(master,selectedCourse,this, rate);
+        
      }
 
 
@@ -71,7 +71,7 @@ public class userHomePage
 
 
 
-      Scene scene = new Scene(homePage, 800, 800);
+      Scene scene = new Scene(homePage, 700, 600);
 
       //=========== Search Course Label ============
       Label searchCourseLabel = new Label("Search a Chapman Subject:");
@@ -85,11 +85,12 @@ public class userHomePage
       comboBox.setOnAction((event) -> {
             int selectedIndex = comboBox.getSelectionModel().getSelectedIndex();
             Object selectedItem = comboBox.getSelectionModel().getSelectedItem();
+            System.out.println(selectedItem);
             if(selectedItem != null)
             {
                 selectedCourse = selectedItem.toString();
-                this.searchCourse = new searchCoursePage(this.master,this.selectedCourse,this, rate);
-                searchButton.setOnAction(e -> primaryStage.setScene(this.searchCourse.toSearchCourse(primaryStage)));
+                //System.out.println(selectedCourse);
+                searchButton.setOnAction(e -> primaryStage.setScene(master.getSearchCoursePage().toSearchCourse(primaryStage, selectedCourse)));
 
             }
       });
@@ -106,10 +107,13 @@ public class userHomePage
       //TextField rateCourseField = new TextField();
       //homePage.add(rateCourseField, 1, 2);
 
+      Label labelOR = new Label("OR");
+      
+      homePage.add(labelOR, 1,2);
       Button rateButton = new Button("Rate a Chapman Course");
       HBox hRatebox = new HBox(rateButton);
-      rateButton.setOnAction(e -> primaryStage.setScene(rate.rateCourse(primaryStage, PantherInspectProject.NEW_POST)));
-      homePage.add(hRatebox, 2, 2);
+      rateButton.setOnAction(e -> primaryStage.setScene(master.rateCourse.rateCourse(primaryStage, PantherInspectProject.NEW_POST)));
+      homePage.add(hRatebox, 1, 3);
       //=========================================
 
 

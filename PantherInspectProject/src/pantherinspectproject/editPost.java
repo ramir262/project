@@ -15,6 +15,10 @@ import javafx.stage.Stage;
  * @author cindyramirez
  */
 public class editPost {
+    PantherInspectProject master;
+    public editPost(PantherInspectProject master){
+        this.master = master;
+    }
     
     public Scene editPosting(Stage primaryStage)
     {

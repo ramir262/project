@@ -51,9 +51,10 @@ import pantherinspectproject.userHomePage;
  */
 public class rateCoursePage
 {
-   
+    
      boolean highlight = true;
-     SubmitCourseReview toSubmit = new SubmitCourseReview();
+     
+     
      PantherInspectProject master;
      ComboBox comboBoxCourse;
      ComboBox comboBoxProfessor;
@@ -62,12 +63,14 @@ public class rateCoursePage
      Map<String,TextArea> responseMap;
      int starCount;
      String classId;
-     userHomePage toUserHomePage;
-     public rateCoursePage(PantherInspectProject master, userHomePage userHomePage) {
+     public String selectedCourse = "";
+     
+     public rateCoursePage(PantherInspectProject master) {
         this.master = master;
         this.starCount = 0;
         this.classId = "0";
-        this.toUserHomePage = userHomePage;
+      
+       
      }
      
 
@@ -75,7 +78,7 @@ public class rateCoursePage
 // added boolean view
     public Scene rateCourse(Stage primaryStage, int edit)
     {
-        
+        this.selectedCourse = selectedCourse;
         InputStream stream = null;
         
             //ScrollPane scrollPane = new ScrollPane();
@@ -141,16 +144,38 @@ public class rateCoursePage
             HBox submitCourseHB = createSubmission(ratePage,primaryStage, edit);
             ratePage.add(submitCourseHB, 0, 9);
 
-
-            Button cancelPost = new Button("Cancel Post");
+            //toDisplayRatings = new displayCourseRatings(master);
+            //!!!!!!!!!
+            Button cancelPost = new Button();
             HBox cancelHB = new HBox(10);
             //ratePage.add(cancelPost, 0, 8);
             //====== workimg on this===============
             //toUserHomePage = toUserRootPage;
-            cancelPost.setOnAction(e -> primaryStage.setScene(toUserHomePage.userpage(primaryStage)));
+            //cancelPost.setOnAction(e -> primaryStage.setScene(toUserHomePage.userpage(primaryStage)));
             cancelHB.setAlignment(Pos.BOTTOM_CENTER);
             cancelHB.getChildren().add(cancelPost);
             ratePage.add(cancelPost, 0, 10);
+            
+            switch(edit)
+            {
+                case PantherInspectProject.EDIT_POST:
+                cancelPost.setText("Cancel Edit");
+                cancelPost.setOnAction(e -> primaryStage.setScene(master.getUserHomePage().userpage(primaryStage)));
+                
+                break;
+                
+            case PantherInspectProject.NEW_POST:
+                cancelPost.setText("Cancel Posting");
+                cancelPost.setOnAction(e -> primaryStage.setScene(master.getUserHomePage().userpage(primaryStage)));
+                break;
+            
+            case PantherInspectProject.VIEW_POST:
+                cancelPost.setText("Home Page"); // deleted back to show Home Page 
+             
+                cancelPost.setOnAction(e -> primaryStage.setScene(master.getUserHomePage().userpage(primaryStage)));
+                
+                break;
+            }
 
 
         } catch (FileNotFoundException ex) {
@@ -438,11 +463,13 @@ public class rateCoursePage
 	return:
 		boolean HBox
 	*/
-    private HBox createSubmission(GridPane grid, Stage primaryStage, int edit) {
+    private HBox createSubmission(GridPane grid, Stage primaryStage, int edit ) {
         HBox hbox = new HBox(10);
         
         Button submit = new Button();
         
+        
+            
             submit.setOnAction((ActionEvent e)-> {
             if (!this.classId.equals("0") && (this.starCount != 0)) {
                 //get current timestamp
@@ -461,27 +488,45 @@ public class rateCoursePage
                 }
                 //insert post
                 this.master.qp.insertPost(reviewId, this.master.getAccountId(), this.classId, timestamp);
-                primaryStage.setScene(toSubmit.submitReview(primaryStage, master));
+                switch(edit)
+                {
+                    case PantherInspectProject.EDIT_POST:
+                        primaryStage.setScene(master.getCourseReview().submitReview(primaryStage, selectedCourse)); // added selcted Course
+                        break;
+                  
+                    case PantherInspectProject.NEW_POST:
+                        primaryStage.setScene(master.getCourseReview().submitReview(primaryStage, selectedCourse)); //added selcted course
+                        break;
+                        
+                    case PantherInspectProject.VIEW_POST:
+                        primaryStage.setScene(master.getCourseDisplay().display(primaryStage, selectedCourse));
+                        break;
+                }
+                
+                
+               // primaryStage.setScene(toSubmit.submitReview(primaryStage, master));
             } else {
                 ErrorPopup.Pop("All fields must be filled out to submit.");
             }
             });
-        
+    
         switch(edit)
         {
             case PantherInspectProject.EDIT_POST:
-                //submit.setText("Back");
+                submit.setText("Submit Edited Post");
                 
                   break;
                   
                   
             case PantherInspectProject.NEW_POST:
                 submit.setText("Submit Course Review");
+                // Successfully posted with 4 options - edit, delete, view, homepage
                 break;
                 
             
             case PantherInspectProject.VIEW_POST:
-               // submit.setText("View Student's Posting");
+               submit.setText("Search Courses");
+               
                 break;
                 
         }

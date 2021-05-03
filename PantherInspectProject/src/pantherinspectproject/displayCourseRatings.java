@@ -5,6 +5,7 @@
  */
 package pantherinspectproject;
 
+
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -19,6 +20,7 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.util.Callback;
 
@@ -29,53 +31,14 @@ import javafx.util.Callback;
 
 
 public class displayCourseRatings {
-    searchCoursePage master;
-    viewPost toViewPost = new viewPost();
+    PantherInspectProject master;
+    public String selectedCourse = "";
+    
     private final TableView<Data> table = new TableView<>();
     private final ObservableList<Data> tvObservableList = FXCollections.observableArrayList();
 
-    
-    public displayCourseRatings(searchCoursePage master){
+    public displayCourseRatings(PantherInspectProject master){
         this.master = master;
-    }
-    
-    public Scene display(Stage primaryStage, rateCoursePage toRateCoursePage)
-    {
-        /* GridPane
-        GridPane displayCourse = new GridPane();
-        displayCourse.setAlignment(Pos.CENTER);
-        displayCourse.setHgap(15);
-        displayCourse.setVgap(15);
-        displayCourse.setGridLinesVisible(false);
-        primaryStage.setTitle("Tableview with button column");
-        Scene scene = new Scene(displayCourse, 800, 800); //object to return
-        
-        setTableappearance();
-        
-        
-        // Back Button
-      
-      Button backButton = new Button("Back");
-      HBox backButtonBox = new HBox(10);
-      backButton.setOnAction(e -> primaryStage.setScene(master.toSearchCourse(primaryStage)));
-      backButtonBox.setAlignment(Pos.BOTTOM_RIGHT);
-      backButtonBox.getChildren().add(backButton);
-      
-      displayCourse.add(backButtonBox,0,0);
-        
-        return scene;
-        */
-        
-        primaryStage.setTitle("Tableview with button column");
-        Scene scene = new Scene(new Group(table)); //object to return
-        primaryStage.setWidth(600);
-        primaryStage.setHeight(600);
-        
-        setTableappearance();
-        
-        fillTableObservableListWithSampleData();
-        table.setItems(tvObservableList);
-        
         
         TableColumn<Data, String> colDate = new TableColumn<>("Date");
         colDate.setCellValueFactory(new PropertyValueFactory<>("date"));
@@ -87,32 +50,70 @@ public class displayCourseRatings {
         
         TableColumn<Data, String> colStars = new TableColumn<>("Stars Rating");
         colStars.setCellValueFactory(new PropertyValueFactory<>("starRatings"));
-
+        
         table.getColumns().addAll(colDate, colName, colStars);
-
-        addButtonToTable(primaryStage, toRateCoursePage);
         
-        
-        // Back Button
-      
-      Button backButton = new Button("Back");
-      HBox backButtonBox = new HBox(10);
-      backButton.setOnAction(e -> primaryStage.setScene(master.toSearchCourse(primaryStage)));
-      backButtonBox.setAlignment(Pos.BOTTOM_RIGHT);
-      backButtonBox.getChildren().add(backButton);
-      
-      //displayCourse.add(backButtonBox,0,0);
-        
-        return scene;
+        setTableappearance();
+        addButtonToTable(master.primaryStage);
+ 
     }
     
-    public void setTableappearance() {
+    
+    
+    public Scene display(Stage primaryStage, String selectedCourse)
+    {
+        tvObservableList.removeAll();
+        //table.getItems().removeAll(tvObservableList);
+        this.selectedCourse = selectedCourse;
+        GridPane displayCourse = new GridPane(); 
+        table.getItems().clear();
+        VBox gridBox = new VBox();
+        gridBox.setAlignment(Pos.CENTER);
+        gridBox.getChildren().addAll(displayCourse, table);
+        
+        
+        primaryStage.setTitle("View Postings");
+        Scene scene = new Scene(gridBox); //object to return
+        primaryStage.setWidth(600);
+        primaryStage.setHeight(600);
+        
+        
+        
+        Button backButton = new Button("Back");
+        HBox backButtonBox = new HBox(10);
+        backButton.setOnAction(e -> primaryStage.setScene(master.getSearchCoursePage().toSearchCourse(primaryStage, selectedCourse)));
+        backButtonBox.setAlignment(Pos.TOP_LEFT);
+        backButtonBox.getChildren().add(backButton);
+        displayCourse.add(backButtonBox,0,0);
+        
+        Button viewAllProfessors = new Button("View all Professors");
+        HBox viewHB = new HBox(10);
+        //=============================================================================
+        // Set action for Button to go to
+        //=============================================================================
+        //viewAllProfessors.setOnAction(e -> primaryStage.setScene(master.getViewPost().viewPosting(primaryStage, selectedCourse)));
+        viewHB.setAlignment(Pos.CENTER);
+        viewHB.getChildren().add(viewAllProfessors);
+        displayCourse.add(viewHB,14,9);
+        
+        
+        fillTableObservableListWithSampleData();
+        table.setItems(tvObservableList);
+       
+        //addButtonToTable();
+        
+
+        return scene;
+
+}
+    
+     public void setTableappearance() {
         table.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
         table.setPrefWidth(600);
         table.setPrefHeight(600);
     }
-    
-    public void fillTableObservableListWithSampleData() {
+     
+     public void fillTableObservableListWithSampleData() {
 
         tvObservableList.addAll(new Data("string", "Boyd", "3"),
                                 new Data("3/3/3", "LLedo", "3"), 
@@ -120,8 +121,9 @@ public class displayCourseRatings {
                                 new Data("string", "german", "3"),
                                 new Data("3/3/3", "transue", "4"));
     }
-    
-    public void addButtonToTable(Stage primaryStage, rateCoursePage toRateCoursePage) {
+     
+     
+     public void addButtonToTable(Stage primaryStage) {
         TableColumn<Data, Void> colBtn = new TableColumn("View More Info");
 
         Callback<TableColumn<Data, Void>, TableCell<Data, Void>> cellFactory = new Callback<TableColumn<Data, Void>, TableCell<Data, Void>>() {
@@ -138,8 +140,10 @@ public class displayCourseRatings {
                             System.out.println("selectedData: " + data);
                         });
                         
-                        //===================== Problem: private method and public method =============
-                        btn.setOnAction(e -> primaryStage.setScene(toRateCoursePage.rateCourse(primaryStage, PantherInspectProject.VIEW_POST)));
+                         //=============================================================================
+                        // Set action for Button to Read More students review of courses for specific professor 
+                        //=============================================================================
+                        //btn.setOnAction(e -> primaryStage.setScene(master.readMore.readMore(primaryStage, selectedCourse)));
                         
                     }
 
@@ -158,12 +162,12 @@ public class displayCourseRatings {
         };
 
         colBtn.setCellFactory(cellFactory);
-
         table.getColumns().add(colBtn);
+        
 
     }
-
-    public class Data {
+     
+     public class Data {
 
         private String datePosted;
         private String name;
@@ -209,6 +213,5 @@ public class displayCourseRatings {
         }
 
     }
-    
-   
+     
 }

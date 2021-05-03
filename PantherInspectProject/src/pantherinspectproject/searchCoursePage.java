@@ -41,23 +41,20 @@ import javafx.stage.Stage;
 public class searchCoursePage 
 {
     PantherInspectProject master;
-    displayCourseRatings courseRatings = new displayCourseRatings(this);
-    userHomePage toUserHomePage;
-    rateCoursePage toRateCoursePage;
     
     List<HBox> buttonList = new ArrayList<>();
     String selectedCourse = "";
     String selectedOrder = "courseNum";
     
-    public searchCoursePage(PantherInspectProject master, String selectedCourse, userHomePage userHomePage, rateCoursePage toRateCoursePage)
+    public searchCoursePage(PantherInspectProject master)
     {
         this.master = master;
-        this.selectedCourse = selectedCourse;
-        this.toUserHomePage = userHomePage;
-        this.toRateCoursePage = toRateCoursePage;
+        
+        
     }
-   public Scene toSearchCourse(Stage primaryStage)
+   public Scene toSearchCourse(Stage primaryStage, String selectedCourse)
     {
+      this.selectedCourse = selectedCourse;
       primaryStage.setTitle("Search Courses ");
       GridPane coursesPage = new GridPane();
       coursesPage.setAlignment(Pos.TOP_LEFT);
@@ -66,6 +63,7 @@ public class searchCoursePage
       coursesPage.setGridLinesVisible(false);
       
       Label titleLbl = new Label(String.format("Welcome: %s", this.selectedCourse));
+      System.out.println("this.selected course: " + this.selectedCourse);
       coursesPage.add(titleLbl, 0,0);
       
       //add combobox to order findings
@@ -77,8 +75,9 @@ public class searchCoursePage
       // Back Button
       
       Button backButton = new Button("Back");
+      
       HBox backButtonBox = new HBox(10);
-      backButton.setOnAction(e -> primaryStage.setScene(toUserHomePage.userpage(primaryStage)));
+      backButton.setOnAction(e -> primaryStage.setScene(master.getUserHomePage().userpage(primaryStage)));
       backButtonBox.setAlignment(Pos.BOTTOM_RIGHT);
       backButtonBox.getChildren().add(backButton);
       coursesPage.add(backButtonBox,0,1);
@@ -108,7 +107,7 @@ public class searchCoursePage
     */
    public void addClasses(GridPane grid, Stage primaryStage, String sort_by)  {
        ResultSet rs = this.master.qp.selectCourseBySubject(this.selectedCourse,sort_by);
-       
+      System.out.println(" searchCoursePage 107" + rs);
         try {
             int row = 0;
             int x = 0;
@@ -188,6 +187,7 @@ public class searchCoursePage
            //   delete buttons
            //   replace with new order
             Object selectedItem = comboBox.getSelectionModel().getSelectedItem();
+            System.out.println(selectedItem);
             if(selectedItem.equals("Course Number"))
             {
                 deleteClasses(grid);
@@ -209,7 +209,7 @@ public class searchCoursePage
         Button btn = new Button((String.format("%s: %s", courseNum, courseName)));
         btn.setMinWidth(180);
         HBox hbBtn = new HBox(10);
-        btn.setOnAction(e -> primaryStage.setScene(courseRatings.display(primaryStage, toRateCoursePage)));
+        btn.setOnAction(e -> primaryStage.setScene(master.getCourseDisplay().display(primaryStage, selectedCourse))); // added selectedCourse
         hbBtn.setAlignment(Pos.BASELINE_LEFT);
         hbBtn.getChildren().add(btn);
         grid.add(hbBtn, x, y);

@@ -56,10 +56,20 @@ import pantherinspectproject.deletePost;
  */
 public class PantherInspectProject extends Application
 {
-    SignupForm signupform = new SignupForm(this);
-    userHomePage userHome = new userHomePage(this);
-    forgotPassword toReset = new forgotPassword(this);
-    deletePost delete = new deletePost();
+    public Stage primaryStage;
+    SignupForm signupform;
+    userHomePage userHome;
+    forgotPassword toReset;
+    deletePost delete;
+    displayCourseRatings displayCourse;
+    rateCoursePage rateCourse;
+    SubmitCourseReview submitCourseReview;
+    editPost editPost;
+    searchCoursePage searchCourse;
+    viewPost view;
+    public String selectedCourse = ""; // global in project 
+    
+    
     
     // enable and disable for editing post scene 
     static final int EDIT_POST = 0;
@@ -350,7 +360,7 @@ public class PantherInspectProject extends Application
 		GridPane
 	*/
     private void setupScene(Stage primaryStage, GridPane grid) {
-        Scene scene = new Scene(grid, 300, 275);
+        Scene scene = new Scene(grid, 400, 400);
         primaryStage.setScene(scene);
         primaryStage.show();
         SplashScreenLoader.splashScreen.hide();
@@ -359,6 +369,8 @@ public class PantherInspectProject extends Application
     @Override
     public void start(Stage primaryStage)
     {
+        this.primaryStage = primaryStage;
+        setClasses();
         //get environment variables
         
         //set up database and query processor
@@ -435,6 +447,66 @@ public class PantherInspectProject extends Application
     public static void main(String[] args) {
       LauncherImpl.launchApplication(PantherInspectProject.class, SplashScreenLoader.class, args);
    }
+
+    public userHomePage getUserHomePage() 
+    {
+        return userHome;
+    }
+
+    public displayCourseRatings getCourseDisplay() {
+        return displayCourse;
+       
+    }
+    
+    public rateCoursePage getCoursePage() {
+        return rateCourse;
+       
+    }
+    
+    public SubmitCourseReview getCourseReview()
+    {
+        return submitCourseReview;
+    }
+    
+    public editPost getEditPost()
+    {
+        return editPost;
+    }
+    
+    public searchCoursePage getSearchCoursePage()
+    {
+        return searchCourse;
+    }
+    
+    public viewPost getViewPost()
+    {
+        return view;
+    }
+    
+    
+
+    public void setClasses() 
+    {
+        
+        signupform = new SignupForm(this);
+        userHome = new userHomePage(this);
+        toReset = new forgotPassword(this);
+       delete = new deletePost();
+        displayCourse = new displayCourseRatings(this);
+        rateCourse = new rateCoursePage(this);
+        submitCourseReview =  new SubmitCourseReview(this);
+       editPost = new editPost(this);
+        searchCourse = new searchCoursePage(this);
+        view = new viewPost(this);
+        
+         
+        
+    }
+    
+    
+    
+    
+    
 
 
 }

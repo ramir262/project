@@ -329,15 +329,15 @@ public class SignupForm {
 
       //create picture for profile photo entry
       HBox picBtn = setupPicture(primaryStage);
-      signup.add(picBtn, 1, 8);
+      signup.add(picBtn, 0, 8); //1,8
 
       //create signup functionality
       Button btn = createSignupButton(primaryStage, email, pwBox, username, gradyear, gradsemester, gradstatus ,questions, securityAnswer);
-      HBox hbBtn = createBox(btn);
-      signup.add(hbBtn,1,13);
+      //HBox hbBtn = createBox(btn);
+      //signup.add(hbBtn,1,8); // btn UI 
+      signup.add(btn,0,9); //0,8
 
-
-      Scene scene = new Scene(signup, 800, 800); //object to return
+      Scene scene = new Scene(signup, 770, 700); //object to return
       return scene;
 
     }
