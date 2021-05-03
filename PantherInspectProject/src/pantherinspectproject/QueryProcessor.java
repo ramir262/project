@@ -813,9 +813,9 @@ public class QueryProcessor {
 		boolean success or failure
 	*/
 	
-	public boolean updateReview(String reviewId, String stars) {
-		String edit = this.time.getCurrentTimestamp();
-		String tableName = "Review";
+	public boolean updateReview(String reviewId, String stars, String edit) {
+
+                String tableName = "Review";
 		String columns = "Stars=?,Edit=?";
 		String where = String.format(this.WHERE, "ReviewId=?");
 		String[] instance = new String[] {stars, edit, reviewId};
@@ -831,8 +831,8 @@ public class QueryProcessor {
 	return:
 		boolean success or failure
 	*/
-	public boolean updateResponse(String reviewId, String questionId, String response) {
-		String edit = this.time.getCurrentTimestamp();
+	public boolean updateResponse(String reviewId, String questionId, String response, String edit) {
+		
 		String tableName = "Responses";
 		String columns = "response=?,Edit=?";
 		String[] wheres = new String[] {"ReviewId=?","QuestionId=?"};

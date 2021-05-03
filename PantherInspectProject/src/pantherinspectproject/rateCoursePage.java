@@ -483,6 +483,55 @@ public class rateCoursePage
 
 
     }
+    
+    private void insertToDB(Stage primaryStage, Button submit) {
+        submit.setOnAction((ActionEvent e)-> {
+                if (!this.classId.equals("0") && (this.starCount != 0)) {
+                    //get current timestamp
+                    Time time = new Time();
+                    String timestamp = time.getCurrentTimestamp();
+                    //get new reviewId
+                    String reviewId = this.master.qp.getUniqueId("ReviewId", "Review");
+                    //insert star review
+                    this.master.qp.insertReview(reviewId,Integer.toString(this.starCount),timestamp);
+                    //insert responses to all questions
+                    for (String questionId : this.responseMap.keySet()) {
+                        String response = this.responseMap.get(questionId).getText();
+                        if (response.replace(" ","").length() > 0) {
+                            this.master.qp.insertResponse(reviewId, questionId, response, timestamp);
+                        }
+                    }
+                    //insert post
+                    this.master.qp.insertPost(reviewId, this.master.getAccountId(), this.classId, timestamp);
+                    SubmitCourseReview toSubmit = new SubmitCourseReview(this.master);
+                    primaryStage.setScene(toSubmit.submitReview(primaryStage,this.courseId,reviewId));
+                } else {
+                    ErrorPopup.Pop("All fields must be filled out to submit.");
+                }
+            });
+    }
+    private void updateDB(Stage primaryStage, Button submit, String reviewId) {
+        submit.setOnAction((ActionEvent e)-> {
+                //get current timestamp
+                    Time time = new Time();
+                    String timestamp = time.getCurrentTimestamp();
+                    //get new reviewId
+                    
+                    //insert star review
+                    this.master.qp.updateReview(reviewId,Integer.toString(this.starCount),timestamp);
+                    //insert responses to all questions
+                    for (String questionId : this.responseMap.keySet()) {
+                        String response = this.responseMap.get(questionId).getText();
+                        // remove all empty spaces to check for valid entry
+                        if (response.replace(" ","").length() > 0) {
+                            this.master.qp.updateResponse(reviewId, questionId, response, timestamp);
+                        }
+                    }
+                    //navigate to next page
+                    SubmitCourseReview toSubmit = new SubmitCourseReview(this.master);
+                    primaryStage.setScene(toSubmit.submitReview(primaryStage,this.courseId,reviewId));
+            });
+    }
     /*
 	-------------------------------
 	function: createSubmission
@@ -502,30 +551,7 @@ public class rateCoursePage
 
         Button submit = new Button();
 
-            submit.setOnAction((ActionEvent e)-> {
-            if (!this.classId.equals("0") && (this.starCount != 0)) {
-                //get current timestamp
-                Time time = new Time();
-                String timestamp = time.getCurrentTimestamp();
-                //get new reviewId
-                String reviewId = this.master.qp.getUniqueId("ReviewId", "Review");
-                //insert star review
-                this.master.qp.insertReview(reviewId,Integer.toString(this.starCount),timestamp);
-                //insert responses to all questions
-                for (String questionId : this.responseMap.keySet()) {
-                    String response = this.responseMap.get(questionId).getText();
-                    if (response.replace(" ","").length() > 0) {
-                        this.master.qp.insertResponse(reviewId, questionId, response, timestamp);
-                    }
-                }
-                //insert post
-                this.master.qp.insertPost(reviewId, this.master.getAccountId(), this.classId, timestamp);
-                SubmitCourseReview toSubmit = new SubmitCourseReview(this.master);
-                primaryStage.setScene(toSubmit.submitReview(primaryStage,this.courseId,reviewId));
-            } else {
-                ErrorPopup.Pop("All fields must be filled out to submit.");
-            }
-            });
+            
 
         switch(edit)
         {
@@ -533,12 +559,14 @@ public class rateCoursePage
             // new post
             case PantherInspectProject.NEW_POST:
                 submit.setText("Submit Course Review");
+                insertToDB(primaryStage,submit);
                 break;
             // edit post
             default:
                 submit.setText("Update Course Review");
                 
                 selectClass(edit);
+                updateDB(primaryStage,submit,edit);
                 break;
 
 
