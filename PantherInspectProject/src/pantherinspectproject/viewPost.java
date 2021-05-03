@@ -88,7 +88,6 @@ public class viewPost {
         try {
 
             while(rs.next()) {
-                int i = 1;
                 GridPane post = new GridPane();
                 post.setAlignment(Pos.CENTER);
                 post.setHgap(15);
@@ -96,47 +95,8 @@ public class viewPost {
                 post.setGridLinesVisible(false);
                 grid.add(post,0,g++);
                 //ResultSet (subject, courseNum, cName, pName, stars, creation, edit, reviewId, accountId)
-                //TODO: change to picture
-                Button accountBtn = new Button(rs.getString(9));
-                HBox accountBox = new HBox(accountBtn);
-                post.add(accountBox,0,i++);
-                
-                Label classLblBold = new Label("Class:");
-                classLblBold.setStyle("-fx-font-weight: bold");
-                Label classLbl = new Label(String.format("%s %s: %s", rs.getString(1), rs.getString(2), rs.getString(3)));
-                HBox classBox = new HBox(classLblBold,classLbl);
-                post.add(classBox,0,i++);
-
-                Label profLblBold = new Label("Professor:");
-                profLblBold.setStyle("-fx-font-weight: bold");
-                Label profLbl = new Label(rs.getString(4));
-                HBox profBox = new HBox(profLblBold,profLbl);
-                post.add(profBox,0,i++);
-
-                HBox starGrid = createStars(rs.getInt(5));
-                post.add(starGrid,0,i++);
-
-                String create = rs.getString(6);
-                String edit = rs.getString(7);
-                Label createLbl = new Label(create);
-                post.add(createLbl,0,i++);
-                if (!create.equals(edit)) {
-                    Label editLblBold = new Label("Edit:");
-                    editLblBold.setStyle("-fx-font-weight: bold");
-                    Label editLbl = new Label(edit);
-                    HBox editBox = new HBox(editLblBold,editLbl);
-                    post.add(editBox,0,i++);
-                }
-
-                ResultSet rs2 = this.master.qp.selectReviewQuestions(rs.getString(8));
-
-                while(rs2.next()) {
-                    Label quesLbl = new Label(rs2.getString(1));
-                    quesLbl.setStyle("-fx-font-weight: bold");
-                    post.add(quesLbl,0,i++);
-                    Label resLbl = new Label(rs2.getString(2));
-                    post.add(resLbl,0,i++);
-                }
+                createPost(post,rs.getString(9),rs.getString(1),rs.getString(2),rs.getString(3),rs.getString(4),
+                        rs.getInt(5),rs.getString(8),rs.getString(6),rs.getString(7));
             }
         } catch (SQLException ex) {
             Logger.getLogger(PantherInspectProject.class.getName()).log(Level.SEVERE, null, ex);
@@ -155,6 +115,64 @@ public class viewPost {
 
       return scene;
 
+    }
+     /*
+	-------------------------------
+	function: createPost
+	-------------------------------
+        params:
+                GridPane grid
+                ResultSet values
+	purpose:
+		format post
+	*/
+    private void createPost(GridPane post,String accountId,String subject, String courseNum, String cName, 
+            String pName, int stars, String reviewId, String create, String edit) throws SQLException, FileNotFoundException {
+        //ResultSet (subject, courseNum, cName, pName, stars, creation, edit, reviewId, accountId)
+                //TODO: change to picture
+                int i = 1;
+                Button accountBtn = new Button(accountId);
+                HBox accountBox = new HBox(accountBtn);
+                post.add(accountBox,0,i++);
+                
+                // display course info
+                Label classLblBold = new Label("Class:");
+                classLblBold.setStyle("-fx-font-weight: bold");
+                Label classLbl = new Label(String.format("%s %s: %s", subject, courseNum, cName));
+                HBox classBox = new HBox(classLblBold,classLbl);
+                post.add(classBox,0,i++);
+
+                //display professor name
+                Label profLblBold = new Label("Professor:");
+                profLblBold.setStyle("-fx-font-weight: bold");
+                Label profLbl = new Label(pName);
+                HBox profBox = new HBox(profLblBold,profLbl);
+                post.add(profBox,0,i++);
+
+                //display star count
+                HBox starGrid = createStars(stars);
+                post.add(starGrid,0,i++);
+
+                //display timestamp
+                Label createLbl = new Label(create);
+                post.add(createLbl,0,i++);
+                if (!create.equals(edit)) {
+                    Label editLblBold = new Label("Edit:");
+                    editLblBold.setStyle("-fx-font-weight: bold");
+                    Label editLbl = new Label(edit);
+                    HBox editBox = new HBox(editLblBold,editLbl);
+                    post.add(editBox,0,i++);
+                }
+
+                //display questions and responses
+                ResultSet rs2 = this.master.qp.selectReviewQuestions(reviewId);
+                while(rs2.next()) {
+                    Label quesLbl = new Label(rs2.getString(1));
+                    quesLbl.setStyle("-fx-font-weight: bold");
+                    post.add(quesLbl,0,i++);
+                    Label resLbl = new Label(rs2.getString(2));
+                    post.add(resLbl,0,i++);
+                }
     }
 
     private ImageView getImageView(Image image, double fitWidth, double fitHeight, boolean preserveRation){
