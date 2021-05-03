@@ -895,6 +895,29 @@ public class QueryProcessor {
 	}
         /*
 	-------------------------------
+	function: selectPostByClass
+	-------------------------------
+        params:
+                classId, order
+	purpose:
+		select post, to be combined with questions and responses via reviewId
+	return:
+		ResultSet (subject, courseNum, cName, pName, stars, creation, edit,reviewId,accountId)
+	*/
+	
+	public ResultSet selectPostByClass(String classId, String order) {
+		String desired = "subject,courseNum,cName,pName,stars,creation,edit,reviewId,accountId";
+		String[] tableNames = new String[] {"Review","Post","Class","Course","Professor"};
+		String tables = String.join(this.NATURAL_JOIN, tableNames);
+                String order_by = String.format(this.ORDER_BY,order);		
+		String where = String.format(this.WHERE, "ClassId=?");
+                String tail = where + order_by;
+		String[] instance = new String[] {classId};
+		ResultSet rs = select(desired,tables,where,instance);
+		return rs;
+	}
+        /*
+	-------------------------------
 	function: selectReviewQuestions
 	-------------------------------
         params:

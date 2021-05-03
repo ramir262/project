@@ -41,23 +41,23 @@ import javafx.stage.Stage;
 public class searchCoursePage 
 {
     PantherInspectProject master;
-    displayCourseRatings courseRatings = new displayCourseRatings(this);
-    userHomePage toUserHomePage;
-    rateCoursePage toRateCoursePage;
+    displayCourseRatings courseRatings;
     
     List<HBox> buttonList = new ArrayList<>();
     String selectedCourse = "";
     String selectedOrder = "courseNum";
     
-    public searchCoursePage(PantherInspectProject master, String selectedCourse, userHomePage userHomePage, rateCoursePage toRateCoursePage)
+    public searchCoursePage(PantherInspectProject master, String selectedCourse)
     {
         this.master = master;
+        this.courseRatings = new displayCourseRatings(master,this);
         this.selectedCourse = selectedCourse;
-        this.toUserHomePage = userHomePage;
-        this.toRateCoursePage = toRateCoursePage;
+        
     }
    public Scene toSearchCourse(Stage primaryStage)
     {
+      userHomePage toUserHomePage = new userHomePage(this.master);
+        
       primaryStage.setTitle("Search Courses ");
       GridPane coursesPage = new GridPane();
       coursesPage.setAlignment(Pos.TOP_LEFT);
@@ -107,6 +107,7 @@ public class searchCoursePage
     
     */
    public void addClasses(GridPane grid, Stage primaryStage, String sort_by)  {
+       //ourseNum, cname, courseId
        ResultSet rs = this.master.qp.selectCourseBySubject(this.selectedCourse,sort_by);
        
         try {
@@ -121,7 +122,7 @@ public class searchCoursePage
                 else {
                     x++;
                 }
-                HBox hb = coursesButton(rs.getString(1),rs.getString(2),grid,primaryStage,x,y);
+                HBox hb = coursesButton(rs.getString(1),rs.getString(2),rs.getString(3),grid,primaryStage,x,y);
                 this.buttonList.add(hb);
                 row++;
                 
@@ -204,12 +205,12 @@ public class searchCoursePage
        return comboBox;
    }
    
-   public HBox coursesButton(String courseNum, String courseName, GridPane grid, Stage primaryStage, int x, int y)
+   public HBox coursesButton(String courseNum, String courseName, String courseId, GridPane grid, Stage primaryStage, int x, int y)
    {
         Button btn = new Button((String.format("%s: %s", courseNum, courseName)));
         btn.setMinWidth(180);
         HBox hbBtn = new HBox(10);
-        btn.setOnAction(e -> primaryStage.setScene(courseRatings.display(primaryStage, toRateCoursePage)));
+        btn.setOnAction(e -> primaryStage.setScene(courseRatings.display(primaryStage, courseId)));
         hbBtn.setAlignment(Pos.BASELINE_LEFT);
         hbBtn.getChildren().add(btn);
         grid.add(hbBtn, x, y);

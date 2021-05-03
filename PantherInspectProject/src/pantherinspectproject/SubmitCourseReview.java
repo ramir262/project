@@ -27,7 +27,7 @@ public class SubmitCourseReview {
 
     editPost toEditPosting = new editPost();
     deletePost toDeletePosting;// = new deletePost();
-    viewPost toViewPosting = new viewPost();
+    viewPost toViewPosting;// = new viewPost();
     userHomePage toHomePage;
     rateCoursePage toRateCourse;
     PantherInspectProject master;
@@ -36,11 +36,12 @@ public class SubmitCourseReview {
         //this.master = master;
         toDeletePosting = new deletePost(master,postId,this);
         toHomePage = new userHomePage(master);
-        toRateCourse = new rateCoursePage(master, toHomePage);
+        toRateCourse = new rateCoursePage(master);
+        toViewPosting = new viewPost(master);
         this.master = master;
     }
 
-    public Scene submitReview(Stage primaryStage)
+    public Scene submitReview(Stage primaryStage, String courseId)
     {
       primaryStage.setTitle("Successfully Posted ");
       Text title = new Text("Posting Successful");
@@ -67,7 +68,7 @@ public class SubmitCourseReview {
       //============ deletePost =====================
       Button deletePost = new Button("Delete Post");
       HBox deletePostHB = new HBox(10);
-      deletePost.setOnAction(e -> primaryStage.setScene(toDeletePosting.deletePosting(primaryStage)));
+      deletePost.setOnAction(e -> primaryStage.setScene(toDeletePosting.deletePosting(primaryStage,courseId)));
       deletePostHB.setAlignment(Pos.BOTTOM_RIGHT);
       deletePostHB.getChildren().add(deletePost);
       submitPage.add(deletePost,2,2);
@@ -77,7 +78,7 @@ public class SubmitCourseReview {
       Button viewPost = new Button("View Post");
       HBox viewPostHB = new HBox(10);
       //TODO: create view post page with dynamic filler
-      viewPost.setOnAction(e -> primaryStage.setScene(toRateCourse.rateCourse(primaryStage, PantherInspectProject.VIEW_POST)));
+      viewPost.setOnAction(e -> primaryStage.setScene(toViewPosting.viewPosting(primaryStage,courseId,true)));
       viewPostHB.setAlignment(Pos.BOTTOM_RIGHT);
       viewPostHB.getChildren().add(viewPost);
       submitPage.add(viewPost,3,2);

@@ -45,25 +45,26 @@ public class userHomePage
     SettingsPage settings;
     ProfilePage profile;
     profileSettings profilesetting;
-    rateCoursePage rate;
 
     public String selectedCourse = "";
     PantherInspectProject master;
-    searchCoursePage searchCourse;
 
     public userHomePage(PantherInspectProject master) {
         this.profilesetting = new profileSettings(master,settings);
         this.profile = new ProfilePage(master);
         this.settings = new SettingsPage(master,this);
         this.master = master;
-        rate = new rateCoursePage(this.master,this);
-        this.searchCourse  = new searchCoursePage(master,selectedCourse,this, rate);
      }
 
 
 
     public Scene userpage(Stage primaryStage)
     {
+        
+      
+      rateCoursePage rate = new rateCoursePage(this.master);
+       
+        
       primaryStage.setTitle("User Home Page ");
       GridPane homePage = new GridPane();
       homePage.setAlignment(Pos.CENTER);
@@ -90,8 +91,8 @@ public class userHomePage
             if(selectedItem != null)
             {
                 selectedCourse = selectedItem.toString();
-                this.searchCourse = new searchCoursePage(this.master,this.selectedCourse,this, rate);
-                searchButton.setOnAction(e -> primaryStage.setScene(this.searchCourse.toSearchCourse(primaryStage)));
+                searchCoursePage searchCourse = new searchCoursePage(this.master,this.selectedCourse);
+                searchButton.setOnAction(e -> primaryStage.setScene(searchCourse.toSearchCourse(primaryStage)));
 
             }
       });

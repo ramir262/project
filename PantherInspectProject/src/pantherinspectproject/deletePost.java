@@ -38,6 +38,7 @@ public class deletePost {
     deletePost(PantherInspectProject master, String postId, SubmitCourseReview toPrevPage) {
         this.master = master;
         this.postId = postId;
+        
         toHomePage = new userHomePage(master);
         this.toPrevPage = toPrevPage;
     }
@@ -45,7 +46,7 @@ public class deletePost {
     userHomePage user;
 
 
-    public Scene deletePosting(Stage primaryStage)
+    public Scene deletePosting(Stage primaryStage, String courseId)
     {
 
       primaryStage.setTitle("Delete Post ");
@@ -112,7 +113,7 @@ public class deletePost {
         });
         deletepost.add(delBtn,0,i++);
         Button cancelBtn = new Button("Cancel");
-        cancelBtn.setOnAction(e -> primaryStage.setScene(toPrevPage.submitReview(primaryStage)));
+        cancelBtn.setOnAction(e -> primaryStage.setScene(toPrevPage.submitReview(primaryStage,courseId)));
         deletepost.add(cancelBtn,0,i++);
 
       Scene scene = new Scene(deletepost, 800, 800);

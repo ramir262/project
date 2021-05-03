@@ -60,7 +60,7 @@ public class rateCoursePage
 
 
     */
-     SubmitCourseReview toSubmit;// = new SubmitCourseReview();
+     
      PantherInspectProject master;
      ComboBox comboBoxCourse;
      ComboBox comboBoxProfessor;
@@ -69,12 +69,12 @@ public class rateCoursePage
      Map<String,TextArea> responseMap;
      int starCount;
      String classId;
-     userHomePage toUserHomePage;
-     public rateCoursePage(PantherInspectProject master, userHomePage userHomePage) {
+     String courseId;
+     public rateCoursePage(PantherInspectProject master) {
         this.master = master;
         this.starCount = 0;
         this.classId = "0";
-        this.toUserHomePage = userHomePage;
+        this.courseId = "0";
      }
 
 
@@ -85,16 +85,10 @@ public class rateCoursePage
 
         InputStream stream = null;
 
-            //ScrollPane scrollPane = new ScrollPane();
             GridPane grid = new GridPane();
             GridPane ratePage = new GridPane();
             grid.add(ratePage, 1, 1);
-            /*
-            scrollPane.setHbarPolicy(ScrollBarPolicy.AS_NEEDED);
-            scrollPane.setVbarPolicy(ScrollBarPolicy.AS_NEEDED);
-            scrollPane.setPrefSize(500, 500);
-            scrollPane.setContent(ratePage);
-            */
+            
             ratePage.setAlignment(Pos.TOP_CENTER);
             ratePage.setHgap(15);
             ratePage.setVgap(15);
@@ -154,6 +148,8 @@ public class rateCoursePage
             //ratePage.add(cancelPost, 0, 8);
             //====== workimg on this===============
             //toUserHomePage = toUserRootPage;
+            
+            userHomePage toUserHomePage = new userHomePage(master);
             cancelPost.setOnAction(e -> primaryStage.setScene(toUserHomePage.userpage(primaryStage)));
             cancelHB.setAlignment(Pos.BOTTOM_CENTER);
             cancelHB.getChildren().add(cancelPost);
@@ -377,12 +373,15 @@ public class rateCoursePage
         ResultSet profRs = this.master.qp.selectCourseProfessors(courseId);
         grid.getChildren().remove(comboBoxProfessor);
         comboBoxProfessor = new ComboBox();
-        Map<String,String> professorMap = new HashMap<>();
+        Map<String,Map<String,String>> professorMap = new HashMap<>();
          try {
              while (profRs.next()) {
                  String classId = profRs.getString(1);
                  String name = profRs.getString(6);
-                 professorMap.put(name,classId);
+                 Map<String,String> info = new HashMap<>();
+                 info.put("classId",classId);
+                 info.put("courseId", courseId);
+                 professorMap.put(name,info);
                  comboBoxProfessor.getItems().add(name);
              }} catch (SQLException ex) {
              Logger.getLogger(rateCoursePage.class.getName()).log(Level.SEVERE, null, ex);
@@ -392,7 +391,8 @@ public class rateCoursePage
             Object selectedItem = comboBoxProfessor.getSelectionModel().getSelectedItem();
             if(selectedItem != null)
             {
-                this.classId = professorMap.get(selectedItem.toString());
+                this.classId = professorMap.get(selectedItem.toString()).get("classId");
+                this.courseId = professorMap.get(selectedItem.toString()).get("courseId");
             }
         });
 
@@ -468,8 +468,8 @@ public class rateCoursePage
                 }
                 //insert post
                 this.master.qp.insertPost(reviewId, this.master.getAccountId(), this.classId, timestamp);
-                toSubmit = new SubmitCourseReview(this.master,reviewId);
-                primaryStage.setScene(toSubmit.submitReview(primaryStage));
+                SubmitCourseReview toSubmit = new SubmitCourseReview(this.master,this.courseId);
+                primaryStage.setScene(toSubmit.submitReview(primaryStage,this.courseId));
             } else {
                 ErrorPopup.Pop("All fields must be filled out to submit.");
             }

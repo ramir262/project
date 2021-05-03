@@ -5,6 +5,12 @@
  */
 package pantherinspectproject;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -29,17 +35,19 @@ import javafx.util.Callback;
 
 
 public class displayCourseRatings {
-    searchCoursePage master;
-    viewPost toViewPost = new viewPost();
+    PantherInspectProject master;
+    searchCoursePage toSearchCoursePage;
+    viewPost toViewPost;
     private final TableView<Data> table = new TableView<>();
     private final ObservableList<Data> tvObservableList = FXCollections.observableArrayList();
-
     
-    public displayCourseRatings(searchCoursePage master){
+    public displayCourseRatings(PantherInspectProject master, searchCoursePage toSearchCoursePage){
         this.master = master;
+        this.toSearchCoursePage = toSearchCoursePage;
+        toViewPost = new viewPost(master);
     }
     
-    public Scene display(Stage primaryStage, rateCoursePage toRateCoursePage)
+    public Scene display(Stage primaryStage, String courseId)
     {
         /* GridPane
         GridPane displayCourse = new GridPane();
@@ -73,7 +81,7 @@ public class displayCourseRatings {
         
         setTableappearance();
         
-        fillTableObservableListWithSampleData();
+        List<String> classes = fillTableObservableListWithData(courseId);
         table.setItems(tvObservableList);
         
         
@@ -90,14 +98,14 @@ public class displayCourseRatings {
 
         table.getColumns().addAll(colDate, colName, colStars);
 
-        addButtonToTable(primaryStage, toRateCoursePage);
+        addButtonToTable(primaryStage,classes);
         
         
         // Back Button
       
       Button backButton = new Button("Back");
       HBox backButtonBox = new HBox(10);
-      backButton.setOnAction(e -> primaryStage.setScene(master.toSearchCourse(primaryStage)));
+      backButton.setOnAction(e -> primaryStage.setScene(toSearchCoursePage.toSearchCourse(primaryStage)));
       backButtonBox.setAlignment(Pos.BOTTOM_RIGHT);
       backButtonBox.getChildren().add(backButton);
       
@@ -112,16 +120,25 @@ public class displayCourseRatings {
         table.setPrefHeight(600);
     }
     
-    public void fillTableObservableListWithSampleData() {
-
-        tvObservableList.addAll(new Data("string", "Boyd", "3"),
-                                new Data("3/3/3", "LLedo", "3"), 
-                                new Data("3/3/3", "linstead", "3"), 
-                                new Data("string", "german", "3"),
-                                new Data("3/3/3", "transue", "4"));
+    public List fillTableObservableListWithData(String courseId) {
+        List<String> classes = new ArrayList<>();
+            
+        try {
+            ResultSet rs = this.master.qp.selectCourseProfessors(courseId);
+            //TODO: gather most recent timestamp from class
+            //TODO: gather avg rating from class
+            while (rs.next()) {
+                //classid,subject,coursenum,cname,professorid,pname
+                tvObservableList.add(new Data("date",rs.getString(6),"5"));
+                classes.add(rs.getString(1));
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(displayCourseRatings.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return classes;
     }
     
-    public void addButtonToTable(Stage primaryStage, rateCoursePage toRateCoursePage) {
+    public void addButtonToTable(Stage primaryStage, List<String> classes) {
         TableColumn<Data, Void> colBtn = new TableColumn("View More Info");
 
         Callback<TableColumn<Data, Void>, TableCell<Data, Void>> cellFactory = new Callback<TableColumn<Data, Void>, TableCell<Data, Void>>() {
@@ -136,10 +153,11 @@ public class displayCourseRatings {
                         btn.setOnAction((ActionEvent event) -> {
                             Data data = getTableView().getItems().get(getIndex());
                             System.out.println("selectedData: " + data);
+                            primaryStage.setScene(toViewPost.viewPosting(primaryStage,classes.get(getIndex()),false));
                         });
                         
                         //===================== Problem: private method and public method =============
-                        btn.setOnAction(e -> primaryStage.setScene(toRateCoursePage.rateCourse(primaryStage, PantherInspectProject.VIEW_POST)));
+                        //btn.setOnAction(e -> primaryStage.setScene(toViewPost.viewPosting(primaryStage,classId,false)));
                         
                     }
 
