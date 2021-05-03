@@ -929,7 +929,7 @@ public class QueryProcessor {
 	*/
 	
 	public ResultSet selectReviewQuestions(String reviewId) {
-		String desired = "question,response";
+		String desired = "question,response,questionId";
 		String[] tableNames = new String[] {"Post","Questions","Responses"};
 		String tables = String.join(this.NATURAL_JOIN, tableNames);		
 		String where = String.format(this.WHERE, "ReviewId=?");

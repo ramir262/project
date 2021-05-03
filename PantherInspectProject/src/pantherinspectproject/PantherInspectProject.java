@@ -61,11 +61,10 @@ public class PantherInspectProject extends Application
     forgotPassword toReset = new forgotPassword(this);
     
     // enable and disable for editing post scene 
-    static final int EDIT_POST = 0;
-    static final int NEW_POST = 1;
+    //static final int EDIT_POST = 0;
+    //static final int NEW_POST = 1;
     
-    // enable for viewing a post 
-    static final int VIEW_POST = 2;
+    static final String NEW_POST = "create";
     
     // Environment variables
     Env env;

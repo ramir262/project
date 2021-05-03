@@ -31,24 +31,23 @@ import pantherinspectproject.userHomePage;
  */
 public class deletePost {
     PantherInspectProject master;
-    String postId = "0";
-    userHomePage toHomePage;
+    
     SubmitCourseReview toPrevPage;
     //String BOLD = "<b>%s</b>";
-    deletePost(PantherInspectProject master, String postId, SubmitCourseReview toPrevPage) {
+    deletePost(PantherInspectProject master, SubmitCourseReview toPrevPage) {
         this.master = master;
-        this.postId = postId;
-        
-        toHomePage = new userHomePage(master);
         this.toPrevPage = toPrevPage;
     }
 
     userHomePage user;
 
 
-    public Scene deletePosting(Stage primaryStage, String courseId)
+    public Scene deletePosting(Stage primaryStage, String courseId, String postId)
     {
-
+        //setup pages
+        userHomePage toHomePage = new userHomePage(master);
+        
+        
       primaryStage.setTitle("Delete Post ");
       GridPane deletepost = new GridPane();
       deletepost.setAlignment(Pos.CENTER);
@@ -57,7 +56,7 @@ public class deletePost {
       deletepost.setGridLinesVisible(false);
 
       //TODO: add scrollpane
-      ResultSet rs = this.master.qp.selectPostByReviewId(this.postId, "ReviewId");
+      ResultSet rs = this.master.qp.selectPostByReviewId(postId, "ReviewId");
       int i = 1;
         try {
 
@@ -90,7 +89,7 @@ public class deletePost {
                     deletepost.add(editBox,0,i++);
                 }
 
-                ResultSet rs2 = this.master.qp.selectReviewQuestions(this.postId);
+                ResultSet rs2 = this.master.qp.selectReviewQuestions(postId);
 
                 while(rs2.next()) {
                     Label quesLbl = new Label(rs2.getString(1));
@@ -108,12 +107,12 @@ public class deletePost {
 
         Button delBtn = new Button("Delete");
         delBtn.setOnAction((ActionEvent e)-> {
-            this.master.qp.deleteReview(this.postId);
+            this.master.qp.deleteReview(postId);
             primaryStage.setScene(toHomePage.userpage(primaryStage));
         });
         deletepost.add(delBtn,0,i++);
         Button cancelBtn = new Button("Cancel");
-        cancelBtn.setOnAction(e -> primaryStage.setScene(toPrevPage.submitReview(primaryStage,courseId)));
+        cancelBtn.setOnAction(e -> primaryStage.setScene(toPrevPage.submitReview(primaryStage,courseId,postId)));
         deletepost.add(cancelBtn,0,i++);
 
       Scene scene = new Scene(deletepost, 800, 800);
