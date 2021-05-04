@@ -49,33 +49,10 @@ public class displayCourseRatings {
     
     public Scene display(Stage primaryStage, String courseId)
     {
-        /* GridPane
-        GridPane displayCourse = new GridPane();
-        displayCourse.setAlignment(Pos.CENTER);
-        displayCourse.setHgap(15);
-        displayCourse.setVgap(15);
-        displayCourse.setGridLinesVisible(false);
-        primaryStage.setTitle("Tableview with button column");
-        Scene scene = new Scene(displayCourse, 800, 800); //object to return
-        
-        setTableappearance();
-        
-        
-        // Back Button
-      
-      Button backButton = new Button("Back");
-      HBox backButtonBox = new HBox(10);
-      backButton.setOnAction(e -> primaryStage.setScene(master.toSearchCourse(primaryStage)));
-      backButtonBox.setAlignment(Pos.BOTTOM_RIGHT);
-      backButtonBox.getChildren().add(backButton);
-      
-      displayCourse.add(backButtonBox,0,0);
-        
-        return scene;
-        */
         
         primaryStage.setTitle("Tableview with button column");
         Scene scene = new Scene(new Group(table)); //object to return
+        //TODO: fix this
         primaryStage.setWidth(600);
         primaryStage.setHeight(600);
         
@@ -86,7 +63,7 @@ public class displayCourseRatings {
         
         
         TableColumn<Data, String> colDate = new TableColumn<>("Date");
-        colDate.setCellValueFactory(new PropertyValueFactory<>("date"));
+        colDate.setCellValueFactory(new PropertyValueFactory<>("datePosted"));
         
 
         TableColumn<Data, String> colName = new TableColumn<>("Professor Name");
@@ -125,12 +102,16 @@ public class displayCourseRatings {
             
         try {
             ResultSet rs = this.master.qp.selectCourseProfessors(courseId);
-            //TODO: gather most recent timestamp from class
-            //TODO: gather avg rating from class
+            
             while (rs.next()) {
                 //classid,subject,coursenum,cname,professorid,pname
-                tvObservableList.add(new Data("date",rs.getString(6),"5"));
+                
+                // get stars
+                String date = this.master.qp.selectMaxPostTimestamp(rs.getString(1));
+                String stars = this.master.qp.selectAvgOfClass(rs.getString(1));
+                tvObservableList.add(new Data(date,rs.getString(6),stars));
                 classes.add(rs.getString(1));
+                
             }
         } catch (SQLException ex) {
             Logger.getLogger(displayCourseRatings.class.getName()).log(Level.SEVERE, null, ex);
@@ -156,8 +137,6 @@ public class displayCourseRatings {
                             primaryStage.setScene(toViewPost.viewPosting(primaryStage,classes.get(getIndex()),false));
                         });
                         
-                        //===================== Problem: private method and public method =============
-                        //btn.setOnAction(e -> primaryStage.setScene(toViewPost.viewPosting(primaryStage,classId,false)));
                         
                     }
 

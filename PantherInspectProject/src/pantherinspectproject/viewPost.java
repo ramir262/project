@@ -76,15 +76,16 @@ public class viewPost {
       scroll.setContent(grid);
       posts.add(scroll, 0, 0);
 
-      //TODO: add scrollpane
+      
       ResultSet rs;
       if (all == true) {
-          rs = this.master.qp.selectPost(cId, "Create");
+          rs = this.master.qp.selectPost(cId, "Creation DESC");
       }
       else {
-        rs = this.master.qp.selectPostByClass(cId, "Create");
+        rs = this.master.qp.selectPostByClass(cId, "Creation DESC");
       }
       int g = 1;
+      //TODO: Cindy: add UI labels and combobox
         try {
 
             while(rs.next()) {

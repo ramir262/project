@@ -23,7 +23,7 @@ public class QueryProcessor {
 	
 	String WHERE = "WHERE %s ";
         String DISTINCT = "DISTINCT %s";
-        String ORDER_BY = "ORDER BY %s ASC";
+        String ORDER_BY = "ORDER BY %s";
 	String MAX = "MAX( %s )";
 	String AVG = "AVG( %s )";
         String COUNT = "COUNT( %s ) " ;
@@ -889,7 +889,7 @@ public class QueryProcessor {
 		String where = String.format(this.WHERE, "CourseId=?");
                 String tail = where + order_by;
 		String[] instance = new String[] {courseId};
-		ResultSet rs = select(desired,tables,where,instance);
+		ResultSet rs = select(desired,tables,tail,instance);
 		return rs;
 	}
         /*
@@ -912,7 +912,7 @@ public class QueryProcessor {
 		String where = String.format(this.WHERE, "ClassId=?");
                 String tail = where + order_by;
 		String[] instance = new String[] {classId};
-		ResultSet rs = select(desired,tables,where,instance);
+		ResultSet rs = select(desired,tables,tail,instance);
 		return rs;
 	}
         /*
@@ -955,6 +955,26 @@ public class QueryProcessor {
 		String num = getId(desired,tables,where,instance);
 		return num;
 	}
+        /*
+	-------------------------------
+	function: selectMaxPostTimestamp
+	-------------------------------
+	purpose:
+		select max timestamp of post
+	return:
+		timestamp
+	*/
+	
+	public String selectMaxPostTimestamp(String classId) throws SQLException {
+		String desired = String.format(this.MAX,"Creation");
+		String[] tableNames = new String[] {"Post"};
+		String tables = String.join(this.NATURAL_JOIN, tableNames);		
+		String where = String.format(this.WHERE, "ClassId=?");
+		String[] instance = new String[] {classId};
+		ResultSet rs = select(desired,tables,where,instance);
+                rs.next();
+		return rs.getString(1);
+	}
 	/*
 	-------------------------------
 	function: selectAvgOfClass
@@ -995,17 +1015,17 @@ public class QueryProcessor {
 	}
 	/*
 	-------------------------------
-	function: selectReviewByStars
+	function: selectClassReviewByStars
 	-------------------------------
 	purpose:
 		select reviews by overall rating
 	return:
-		ResultSet : reviewId
+		ResultSet : subject,courseNum,cName,pName,stars,creation,edit,reviewId,accountId
 	*/
 	
-	public ResultSet selectReviewByStars(String stars, String classId) {
-		String desired = "ReviewId";
-		String[] tableNames = new String[] {"Review","Post"};
+	public ResultSet selectClassReviewByStars(String stars, String classId) {
+		String desired = "subject,courseNum,cName,pName,stars,creation,edit,reviewId,accountId";
+		String[] tableNames = new String[] {"Review","Post","Class","Course","Professor"};
 		String tables = String.join(this.NATURAL_JOIN, tableNames);
 		String[] wheres = new String[] {"ClassId=?","Stars=?"};
 		String where = String.format(this.WHERE, String.join(this.AND, wheres));
@@ -1013,7 +1033,26 @@ public class QueryProcessor {
 		ResultSet rs = select(desired,tables,where,instance);
 		return rs;
 	}
+        /*
+	-------------------------------
+	function: selectCourseReviewByStars
+	-------------------------------
+	purpose:
+		select reviews by overall rating
+	return:
+		ResultSet : subject,courseNum,cName,pName,stars,creation,edit,reviewId,accountId
+	*/
 	
+	public ResultSet selectCourseReviewByStars(String stars, String courseId) {
+		String desired = "subject,courseNum,cName,pName,stars,creation,edit,reviewId,accountId";
+		String[] tableNames = new String[] {"Review","Post","Class","Course","Professor"};
+		String tables = String.join(this.NATURAL_JOIN, tableNames);
+		String[] wheres = new String[] {"CourseId=?","Stars=?"};
+		String where = String.format(this.WHERE, String.join(this.AND, wheres));
+		String[] instance = new String[] {courseId,stars};
+		ResultSet rs = select(desired,tables,where,instance);
+		return rs;
+	}
 	/*
 	------------------------------------------------------------------------------------------
 	Database Interaction

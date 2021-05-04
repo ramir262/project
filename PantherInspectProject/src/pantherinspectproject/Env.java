@@ -31,7 +31,7 @@ public class Env {
                 if(data.substring(0, 1).equals("#"))
                     continue;
                 
-                data = data.replace(" ", "");
+                //data = data.replace(" ", "");
                 String[] kv = data.split("=");
                 map.put(kv[0],kv[1]);
 
