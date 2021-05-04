@@ -559,6 +559,46 @@ public class QueryProcessor {
 		String id = getId(columns,tableName,where,instance);
 		return id;
 	}
+        /*
+	-------------------------------
+	function: getCourseName
+	-------------------------------
+	purpose:
+		get name of course by id
+	return:
+		ResultSet (Subject, CourseNum, cName)
+	*/
+	public ResultSet getCourseName(String courseId) {
+		
+                String columns = "Subject, CourseNum, cName";
+		String[] tableNames = new String[] {"Course"};
+		String tables = String.join(this.NATURAL_JOIN, tableNames);
+		String where = String.format(this.WHERE,"courseid=?");
+		String[] instances = new String[] {courseId};
+		//SELECT classid,cname,professorid,pname FROM course NATURAL JOIN class NATURAL JOIN professor WHERE courseId=?
+		ResultSet rs = select(columns,tables,where,instances);
+		return rs;
+	}
+        /*
+	-------------------------------
+	function: getClassName
+	-------------------------------
+	purpose:
+		get name of course by id
+	return:
+		ResultSet (Subject, CourseNum, cName, pName)
+	*/
+	public ResultSet getClassName(String classId) {
+		
+                String columns = "Subject, CourseNum, cName, pName";
+		String[] tableNames = new String[] {"Course","Class"};
+		String tables = String.join(this.NATURAL_JOIN, tableNames);
+		String where = String.format(this.WHERE,"classId=?");
+		String[] instances = new String[] {classId};
+		
+                ResultSet rs = select(columns,tables,where,instances);
+		return rs;
+	}
 	/*
 	-------------------------------
 	function: getProfessorId

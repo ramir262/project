@@ -76,16 +76,29 @@ public class viewPost {
       scroll.setContent(grid);
       posts.add(scroll, 0, 0);
 
-      
-      ResultSet rs;
-      if (all == true) {
-          rs = this.master.qp.selectPost(cId, "Creation DESC");
-      }
-      else {
-        rs = this.master.qp.selectPostByClass(cId, "Creation DESC");
-      }
+      //TODO: Cindy: add UI labels, back btn, and combobox
+      /*
+      Back button (return to table view page)
+      Label: Display Course Name, result set determined by all == true boolean
+      ComboBox: values are (1,2,3,4,5,All)
+      */
       int g = 1;
-      //TODO: Cindy: add UI labels and combobox
+      ResultSet rs;
+      if (all == true) { // display ALL course reviews
+          rs = this.master.qp.selectPost(cId, "Creation DESC");
+          // Label: Display Course Name
+          // courseRs = this.master.qp.getCourseName(cId)
+          // ResultSet (Subject, CourseNum, cName) -> if you want to get Subject implement courseRs.getString(1)
+          // cName is Course Name
+      }
+      else { // display class reviews (determined by professor)
+        rs = this.master.qp.selectPostByClass(cId, "Creation DESC");
+        // Label: Display Course Name
+          // classRs = this.master.qp.getClassName(cId)
+          // ResultSet (Subject, CourseNum, cName, pName) -> if you want to get Subject implement classRs.getString(1)
+          // pName is Professor Name
+      }
+      
         try {
 
             while(rs.next()) {
