@@ -125,7 +125,7 @@ public class userHomePage
       
       Button profileButton = new Button("Profile");
       HBox profileBox = new HBox(profileButton);
-      profileButton.setOnAction(e -> primaryStage.setScene(profile.userpage(primaryStage)));
+      profileButton.setOnAction(e -> primaryStage.setScene(profile.userpage(primaryStage,this.master.getAccountId())));
       homePage.add(profileBox, 0, 11);
 
 

@@ -95,7 +95,7 @@ public class viewPost {
                 post.setGridLinesVisible(false);
                 grid.add(post,0,g++);
                 //ResultSet (subject, courseNum, cName, pName, stars, creation, edit, reviewId, accountId)
-                createPost(post,rs.getString(9),rs.getString(1),rs.getString(2),rs.getString(3),rs.getString(4),
+                createPost(primaryStage,post,rs.getString(9),rs.getString(1),rs.getString(2),rs.getString(3),rs.getString(4),
                         rs.getInt(5),rs.getString(8),rs.getString(6),rs.getString(7));
             }
         } catch (SQLException ex) {
@@ -111,10 +111,50 @@ public class viewPost {
             grid.add(lbl,0,g);
             
         }
-      Scene scene = new Scene(posts, 800, 800);
+      Scene scene = new Scene(posts, 400, 600);
 
       return scene;
 
+    }
+    /*
+	-------------------------------
+	function: navigateToProfile
+	-------------------------------
+        params:
+                Stage primaryStage
+                Button btn : either image or username attached to post
+                String accountId
+	purpose:
+		navigate to profile of user
+	*/
+    private void navigateToProfile(Stage primaryStage, Button btn, String accountId) {
+        btn.setOnAction((ActionEvent event) -> {
+
+            // navigate to profile page for user
+            ProfilePage profilePage = new ProfilePage(this.master);
+            primaryStage.setScene(profilePage.userpage(primaryStage,accountId));
+
+        });
+    }
+    /*
+	-------------------------------
+	function: navigateToEdit
+	-------------------------------
+        params:
+                Stage primaryStage
+                Button btn : either image or username attached to post
+                String accountId
+	purpose:
+		navigate to profile of user
+	*/
+    private void navigateToEdit(Stage primaryStage, Button btn, String reviewId) {
+        btn.setOnAction((ActionEvent event) -> {
+
+            // navigate to profile page for user
+            rateCoursePage profilePage = new rateCoursePage(this.master);
+            primaryStage.setScene(profilePage.rateCourse(primaryStage,reviewId));
+
+        });
     }
      /*
 	-------------------------------
@@ -126,14 +166,33 @@ public class viewPost {
 	purpose:
 		format post
 	*/
-    private void createPost(GridPane post,String accountId,String subject, String courseNum, String cName, 
+    private void createPost(Stage primaryStage,GridPane post,String accountId,String subject, String courseNum, String cName, 
             String pName, int stars, String reviewId, String create, String edit) throws SQLException, FileNotFoundException {
         //ResultSet (subject, courseNum, cName, pName, stars, creation, edit, reviewId, accountId)
+        
+                // get profile info based on accountId
+                // "Email, Username, Picture, Year, Semester, Graduated";
+                System.out.println(accountId);
+                ResultSet accountRs = this.master.qp.selectProfileDisplay(accountId);
+                accountRs.next();
                 //TODO: change to picture
                 int i = 1;
-                Button accountBtn = new Button(accountId);
-                HBox accountBox = new HBox(accountBtn);
+                Button picBtn = new Button(accountRs.getString(3));
+                navigateToProfile(primaryStage,picBtn,accountId);
+                HBox picBox = new HBox(picBtn);
+                post.add(picBox,0,i++);
+                Label accountLbl = new Label(accountRs.getString(2));
+                //navigateToProfile(primaryStage,accountBtn,accountId);
+                HBox accountBox = new HBox(accountLbl);
                 post.add(accountBox,0,i++);
+                
+                //add edit button if accountId = master.accountId
+                if (accountId.equals(this.master.getAccountId())) {
+                    Button editBtn = new Button("Edit");
+                    navigateToEdit(primaryStage,editBtn,reviewId);
+                    HBox editBox = new HBox(editBtn);
+                    post.add(editBox,0,i++);
+                }
                 
                 // display course info
                 Label classLblBold = new Label("Class:");
@@ -248,7 +307,7 @@ public class viewPost {
 
    public ScrollPane addScrollPane(GridPane grid) {
        ScrollPane scroll = new ScrollPane();
-       scroll.setPrefSize(800, 800);
+       scroll.setPrefSize(400, 600);
        scroll.setContent(grid);
        return scroll;
    }

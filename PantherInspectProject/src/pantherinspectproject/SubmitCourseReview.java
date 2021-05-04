@@ -77,6 +77,8 @@ public class SubmitCourseReview {
       Button viewPost = new Button("View Post");
       HBox viewPostHB = new HBox(10);
       //TODO: create view post page with dynamic filler
+      System.out.print("COURSE: ");
+      System.out.println(courseId);
       viewPost.setOnAction(e -> primaryStage.setScene(toViewPosting.viewPosting(primaryStage,courseId,true)));
       viewPostHB.setAlignment(Pos.BOTTOM_RIGHT);
       viewPostHB.getChildren().add(viewPost);

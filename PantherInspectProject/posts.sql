@@ -2,6 +2,14 @@ INSERT INTO
 	Account (AccountId, Email, Hash)
 VALUES
 	(1,"demo@chapman.edu","none");
+INSERT INTO
+	Profile (AccountId, Username, Picture)
+VALUES
+	(1,"demo","empty");
+INSERT INTO
+	Graduation (AccountId, Year, Semester, Graduated)
+VALUES
+	(1,"2020","Spring",1);
 
 
 INSERT INTO

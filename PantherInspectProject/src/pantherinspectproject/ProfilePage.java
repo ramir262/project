@@ -31,7 +31,7 @@ public class ProfilePage {
     public ProfilePage(PantherInspectProject master) {
         this.master = master;
     }
-    public Scene userpage(Stage primaryStage)
+    public Scene userpage(Stage primaryStage,String accountId)
     {
         GridPane grid = new GridPane();
         grid.setAlignment(Pos.CENTER);

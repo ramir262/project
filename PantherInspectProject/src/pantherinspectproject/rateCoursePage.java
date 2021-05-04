@@ -20,6 +20,7 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.event.ActionEvent;
+import javafx.event.Event;
 import javafx.geometry.Pos;
 import javafx.scene.Group;
 import javafx.scene.Scene;
@@ -33,6 +34,8 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.Toggle;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseButton;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
@@ -171,7 +174,7 @@ public class rateCoursePage
 		select combo boxes by searching for postId
 	*/
     private void selectClass(String edit) {
-        //ResultSet (subject, courseNum, cName, pName, stars, creation, edit)
+        //ResultSet (subject, courseNum, cName, pName, stars, creation, edit, courseId, classId)
         ResultSet rs = this.master.qp.selectPostByReviewId(edit, "subject");
         
          try {
@@ -179,6 +182,11 @@ public class rateCoursePage
              comboBoxSubject.setValue(rs.getString(1));
              comboBoxCourse.setValue(String.format("%s: %s",rs.getString(2),rs.getString(3)));
              comboBoxProfessor.setValue(rs.getString(4));
+            
+             
+             // grab classId and courseId
+             this.courseId = rs.getString(8);
+             this.classId = rs.getString(9);
              
              selectStars(0,rs.getInt(5));
              

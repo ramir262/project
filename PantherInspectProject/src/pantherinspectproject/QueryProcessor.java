@@ -318,11 +318,10 @@ public class QueryProcessor {
 	}
 	/*
 	-------------------------------
-	function: selectProfileDisplay
+	function: selectAccountHash
 	-------------------------------
 	purpose:
-		select values corresponding to profile display
-		select values from account and profile (join tables)
+		select hash from account based on email
 	return:
 		ResultSet (hash)
 	*/
@@ -856,11 +855,11 @@ public class QueryProcessor {
 	purpose:
 		select post, to be combined with questions and responses via reviewId
 	return:
-		ResultSet (subject, courseNum, cName, pName, stars, creation, edit)
+		ResultSet (subject, courseNum, cName, pName, stars, creation, edit, courseId, classId)
 	*/
 	
 	public ResultSet selectPostByReviewId(String reviewId, String order) {
-		String desired = "subject,courseNum,cName,pName,stars,creation,edit";
+		String desired = "subject,courseNum,cName,pName,stars,creation,edit,courseId,classId";
 		String[] tableNames = new String[] {"Review","Post","Class","Course","Professor"};
 		String tables = String.join(this.NATURAL_JOIN, tableNames);
                 String order_by = String.format(this.ORDER_BY,order);		
@@ -879,11 +878,11 @@ public class QueryProcessor {
 	purpose:
 		select post, to be combined with questions and responses via reviewId
 	return:
-		ResultSet (reviewId, accountId, cName, pName, stars, creation, edit)
+		ResultSet "subject,courseNum,cName,pName,stars,creation,edit,reviewId,accountId"
 	*/
 	
 	public ResultSet selectPost(String courseId, String order) {
-		String desired = "reviewId,accountId,cName,pName,stars,creation,edit";
+		String desired = "subject,courseNum,cName,pName,stars,creation,edit,reviewId,accountId";
 		String[] tableNames = new String[] {"Review","Post","Class","Course","Professor"};
 		String tables = String.join(this.NATURAL_JOIN, tableNames);
                 String order_by = String.format(this.ORDER_BY,order);		

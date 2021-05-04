@@ -84,4 +84,8 @@ VALUES
 INSERT INTO
 	Class (ClassId,CourseId,ProfessorId)
 VALUES
-	(6,6,5);
+	(7,6,5);
+INSERT INTO
+	Class (ClassId,CourseId,ProfessorId)
+VALUES
+	(8,4,5);

@@ -124,7 +124,7 @@ public class PantherInspectProject extends Application
             PASS = env.get("PASS");
             UPLOAD_PATH = env.get("UPLOAD_PATH");
             SETUP_FILE = env.get("SETUP_FILE");
-            COURSE_FILE = env.get("CORUSE_FILE");
+            COURSE_FILE = env.get("COURSE_FILE");
             POST_FILE = env.get("POST_FILE");
 
             db = new Database();
