@@ -23,7 +23,6 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
-import pantherinspectproject.userHomePage;
 
 /**
  *
@@ -32,11 +31,8 @@ import pantherinspectproject.userHomePage;
 public class deletePost {
     PantherInspectProject master;
     
-    SubmitCourseReview toPrevPage;
-    //String BOLD = "<b>%s</b>";
-    deletePost(PantherInspectProject master, SubmitCourseReview toPrevPage) {
+    deletePost(PantherInspectProject master) {
         this.master = master;
-        this.toPrevPage = toPrevPage;
     }
 
     userHomePage user;
@@ -45,7 +41,8 @@ public class deletePost {
     public Scene deletePosting(Stage primaryStage, String courseId, String postId)
     {
         //setup pages
-        userHomePage toHomePage = new userHomePage(master);
+        userHomePage toHomePage = this.master.getUserHomePage();
+        SubmitCourseReview submit = this.master.getCourseReview();
         
         
       primaryStage.setTitle("Delete Post ");
@@ -112,7 +109,7 @@ public class deletePost {
         });
         deletepost.add(delBtn,0,i++);
         Button cancelBtn = new Button("Cancel");
-        cancelBtn.setOnAction(e -> primaryStage.setScene(toPrevPage.submitReview(primaryStage,courseId,postId)));
+        cancelBtn.setOnAction(e -> primaryStage.setScene(submit.submitReview(primaryStage,courseId,postId)));
         deletepost.add(cancelBtn,0,i++);
 
       Scene scene = new Scene(deletepost, 800, 800);

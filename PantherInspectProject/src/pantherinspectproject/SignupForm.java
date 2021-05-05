@@ -10,15 +10,11 @@ import java.nio.file.StandardCopyOption;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.InputStream;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javafx.application.Application;
 import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
-import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -32,11 +28,9 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.StackPane;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
 import javafx.stage.Stage;
-import pantherinspectproject.PantherInspectProject;
 
 /**
  *
@@ -329,15 +323,15 @@ public class SignupForm {
 
       //create picture for profile photo entry
       HBox picBtn = setupPicture(primaryStage);
-      signup.add(picBtn, 1, 8);
+      signup.add(picBtn, 0, 8); //1,8
 
       //create signup functionality
       Button btn = createSignupButton(primaryStage, email, pwBox, username, gradyear, gradsemester, gradstatus ,questions, securityAnswer);
-      HBox hbBtn = createBox(btn);
-      signup.add(hbBtn,1,13);
+      //HBox hbBtn = createBox(btn);
+      //signup.add(hbBtn,1,8); // btn UI 
+      signup.add(btn,0,9); //0,8
 
-
-      Scene scene = new Scene(signup, 800, 800); //object to return
+      Scene scene = new Scene(signup, 770, 700); //object to return
       return scene;
 
     }

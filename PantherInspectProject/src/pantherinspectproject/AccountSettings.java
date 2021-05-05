@@ -32,16 +32,15 @@ import javafx.scene.control.PasswordField;
  */
 public class AccountSettings 
 {
-    // ======== error =============
-    SettingsPage settingsPage;
+    
     PantherInspectProject master;
     
-    public AccountSettings(PantherInspectProject master, SettingsPage settingsPage) {
+    public AccountSettings(PantherInspectProject master) {
         this.master = master;
-        this.settingsPage = settingsPage;
     }
     
     public boolean verifyPassword(String pass) {
+        
         //check length
         if(pass.length() < 8)
             return false;
@@ -72,6 +71,9 @@ public class AccountSettings
     
     public Scene accountPage(Stage primaryStage)
     {
+        
+        SettingsPage settingsPage = this.master.getSettings();
+        
       primaryStage.setTitle("Account Settings:  ");
       GridPane accountHome = new GridPane();
       accountHome.setAlignment(Pos.CENTER);

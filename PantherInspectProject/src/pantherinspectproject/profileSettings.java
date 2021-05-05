@@ -5,44 +5,33 @@
  */
 package pantherinspectproject;
 
-import javafx.application.Application;
 import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
-import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
-import static javafx.scene.input.KeyCode.H;
 import javafx.scene.control.CheckBox;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.StackPane;
-import javafx.scene.text.Font;
-import javafx.scene.text.FontWeight;
-import javafx.scene.text.Text;
 import javafx.stage.Stage;
-import pantherinspectproject.SettingsPage;
-import pantherinspectproject.userHomePage;
-import pantherinspectproject.PantherInspectProject;
 /**
  *
  * @author cindyramirez
  */
 public class profileSettings 
 {
-    SettingsPage settingsPage;
+    //SettingsPage settingsPage;
     PantherInspectProject master;
-    public profileSettings(PantherInspectProject master, SettingsPage settingsPage) {
+    public profileSettings(PantherInspectProject master) {
          this.master = master;
-         this.settingsPage = settingsPage;
      }
     
     
     public Scene editProfile(Stage primaryStage)
     {
+        SettingsPage settingsPage = this.master.getSettings();
+        
       primaryStage.setTitle("Edit Profile Settings ");
       GridPane editprofileSettings = new GridPane();
       editprofileSettings.setAlignment(Pos.CENTER);

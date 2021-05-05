@@ -6,49 +6,26 @@
 package pantherinspectproject;
 
 import com.sun.javafx.application.LauncherImpl;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
-import static javafx.scene.input.KeyCode.H;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.StackPane;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
-import pantherinspectproject.SignupForm;
-import pantherinspectproject.userHomePage;
-import pantherinspectproject.QueryProcessor;
-import pantherinspectproject.Database;
-import pantherinspectproject.Time;
-import pantherinspectproject.Env;
-//import org.mindrot.jbcrypt.BCrypt;
-import pantherinspectproject.deletePost;
 
 /**
  *
@@ -56,16 +33,31 @@ import pantherinspectproject.deletePost;
  */
 public class PantherInspectProject extends Application
 {
-    SignupForm signupform = new SignupForm(this);
-    userHomePage userHome = new userHomePage(this);
-    forgotPassword toReset = new forgotPassword(this);
-    
-    // enable and disable for editing post scene 
+    public Stage primaryStage;
+    SignupForm signupform;
+    userHomePage userHome;
+    forgotPassword toReset;
+    deletePost delete;
+    displayCourseRatings displayCourse;
+    rateCoursePage rateCourse;
+    SubmitCourseReview submitCourseReview;
+
+    searchCoursePage searchCourse;
+    viewPost view;
+    profileSettings profileSetting;
+    SettingsPage settings;
+    ProfilePage profile;
+    AccountSettings accountSettings;
+    public String selectedCourse = ""; // global in project
+
+
+
+    // enable and disable for editing post scene
     //static final int EDIT_POST = 0;
     //static final int NEW_POST = 1;
-    
+
     static final String NEW_POST = "create";
-    
+
     // Environment variables
     Env env;
 
@@ -117,7 +109,7 @@ public class PantherInspectProject extends Application
     private void setupDB() {
         if (conn == null) {
             //setup database
-            
+
             getEnvironmentVariables();
             System.out.println(env.ToString());
             USER = env.get("USER");
@@ -139,7 +131,7 @@ public class PantherInspectProject extends Application
                 ErrorPopup.Pop("Could not connect to database.");
                 System.exit(0);
             }
-            
+
             qp = new QueryProcessor(conn);
 
             //run create tables via thread
@@ -168,7 +160,7 @@ public class PantherInspectProject extends Application
             qp.createTables(POST_FILE);
         }
 
-        
+
 
     }
 
@@ -326,7 +318,7 @@ public class PantherInspectProject extends Application
 		GridPane
 	*/
     private void setupScene(Stage primaryStage, GridPane grid) {
-        Scene scene = new Scene(grid, 300, 275);
+        Scene scene = new Scene(grid, 400, 400);
         primaryStage.setScene(scene);
         primaryStage.show();
         SplashScreenLoader.splashScreen.hide();
@@ -335,8 +327,10 @@ public class PantherInspectProject extends Application
     @Override
     public void start(Stage primaryStage)
     {
+        this.primaryStage = primaryStage;
+        setClasses();
         //get environment variables
-        
+
         //set up database and query processor
         setupDB();
 
@@ -357,7 +351,7 @@ public class PantherInspectProject extends Application
         //create password entry
         Label pw = new Label("Password:");
         grid.add(pw, 0, 2);
-        
+
         //PantherInspectProject panther = this;
         PasswordField pwBox = new PasswordField();
         pwBox.setOnKeyPressed(new EventHandler<KeyEvent>() {
@@ -411,6 +405,83 @@ public class PantherInspectProject extends Application
     public static void main(String[] args) {
       LauncherImpl.launchApplication(PantherInspectProject.class, SplashScreenLoader.class, args);
    }
+    
+    public rateCoursePage getRateCoursePage() {
+        return rateCourse;
+    }
+    
+    public deletePost getDeletePost() {
+        return delete;
+    }
+
+    public userHomePage getUserHomePage()
+    {
+        return userHome;
+    }
+
+    public displayCourseRatings getCourseDisplay() {
+        return displayCourse;
+
+    }
+
+    public rateCoursePage getCoursePage() {
+        return rateCourse;
+
+    }
+
+    public SubmitCourseReview getCourseReview()
+    {
+        return submitCourseReview;
+    }
+
+   
+    public searchCoursePage getSearchCoursePage()
+    {
+        return searchCourse;
+    }
+
+    public viewPost getViewPost()
+    {
+        return view;
+    }
+    public ProfilePage getProfilePage() {
+        return profile;
+    }
+    public profileSettings getProfileSettings() {
+        return profileSetting;
+    }
+    public SettingsPage getSettings() {
+        return settings;
+    }
+    
+    public AccountSettings getAccountSettings() {
+        return accountSettings;
+    }
+
+    public void setClasses()
+    {
+
+        signupform = new SignupForm(this);
+        userHome = new userHomePage(this);
+        toReset = new forgotPassword(this);
+        delete = new deletePost(this);
+        displayCourse = new displayCourseRatings(this);
+        rateCourse = new rateCoursePage(this);
+        submitCourseReview =  new SubmitCourseReview(this);
+
+        searchCourse = new searchCoursePage(this);
+        view = new viewPost(this);
+        profileSetting = new profileSettings(this);
+        settings = new SettingsPage(this);
+        profile = new ProfilePage(this);
+        accountSettings = new AccountSettings(this);
+
+    }
+
+
+
+
+
 
 
 }

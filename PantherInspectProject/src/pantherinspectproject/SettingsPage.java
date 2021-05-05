@@ -4,27 +4,15 @@
  * and open the template in the editor.
  */
 package pantherinspectproject;
-import javafx.application.Application;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
-import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.PasswordField;
-import javafx.scene.control.TextField;
-import static javafx.scene.input.KeyCode.H;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.StackPane;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
-import pantherinspectproject.userHomePage;
-import pantherinspectproject.profileSettings;
-import pantherinspectproject.AccountSettings;
 
 /**
  *
@@ -32,19 +20,18 @@ import pantherinspectproject.AccountSettings;
  */
 public class SettingsPage 
 {
-    profileSettings editProfileSetting;
-    AccountSettings accountSetting;
+    
     PantherInspectProject master;
-    userHomePage userHomePage;
-    public SettingsPage(PantherInspectProject master,userHomePage userHomePage) {
-        this.editProfileSetting = new profileSettings(master,this);
-        this.accountSetting = new AccountSettings(master,this);
+    public SettingsPage(PantherInspectProject master) {
          this.master = master;
-         this.userHomePage = userHomePage;
      }
     
     public Scene settingsPage(Stage primaryStage)
     {
+        userHomePage homePage = this.master.getUserHomePage();
+        profileSettings editProfileSetting = this.master.getProfileSettings();//new profileSettings(master);
+        AccountSettings accountSetting = this.master.getAccountSettings();
+        
       primaryStage.setTitle("Settings Page ");
       GridPane settings = new GridPane();
       settings.setAlignment(Pos.CENTER);
@@ -81,7 +68,7 @@ public class SettingsPage
       
       Button backButton = new Button("Back");
       HBox backButtonBox = new HBox(10);
-      backButton.setOnAction(e -> primaryStage.setScene(userHomePage.userpage(primaryStage)));
+      backButton.setOnAction(e -> primaryStage.setScene(homePage.userpage(primaryStage)));
       backButtonBox.setAlignment(Pos.BOTTOM_RIGHT);
       backButtonBox.getChildren().add(backButton);
       settings.add(backButtonBox,0,0);

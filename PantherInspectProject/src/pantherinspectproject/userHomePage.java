@@ -9,32 +9,14 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javafx.application.Application;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
-import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
-import javafx.scene.control.PasswordField;
-import javafx.scene.control.TextField;
-import static javafx.scene.input.KeyCode.H;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.StackPane;
-import javafx.scene.layout.VBox;
-import javafx.scene.text.Font;
-import javafx.scene.text.FontWeight;
-import javafx.scene.text.Text;
 import javafx.stage.Stage;
-import pantherinspectproject.PantherInspectProject;
-import pantherinspectproject.SettingsPage;
-import pantherinspectproject.profileSettings;
-import pantherinspectproject.AccountSettings;
-import pantherinspectproject.searchCoursePage;
 /**
  *
  * @author cindyramirez
@@ -42,17 +24,11 @@ import pantherinspectproject.searchCoursePage;
 
 public class userHomePage
 {
-    SettingsPage settings;
-    ProfilePage profile;
-    profileSettings profilesetting;
-
-    public String selectedCourse = "";
+   
+    public String selectedSubject = "";
     PantherInspectProject master;
 
     public userHomePage(PantherInspectProject master) {
-        this.profilesetting = new profileSettings(master,settings);
-        this.profile = new ProfilePage(master);
-        this.settings = new SettingsPage(master,this);
         this.master = master;
      }
 
@@ -60,11 +36,12 @@ public class userHomePage
 
     public Scene userpage(Stage primaryStage)
     {
-        
+      rateCoursePage rate = this.master.getRateCoursePage();
+      SettingsPage settings = this.master.getSettings();
+      ProfilePage profile = this.master.getProfilePage();
       
-      rateCoursePage rate = new rateCoursePage(this.master);
-       
-        
+      
+
       primaryStage.setTitle("User Home Page ");
       GridPane homePage = new GridPane();
       homePage.setAlignment(Pos.CENTER);
@@ -74,7 +51,7 @@ public class userHomePage
 
 
 
-      Scene scene = new Scene(homePage, 800, 800);
+      Scene scene = new Scene(homePage, 700, 600);
 
       //=========== Search Course Label ============
       Label searchCourseLabel = new Label("Search a Chapman Subject:");
@@ -86,13 +63,14 @@ public class userHomePage
       ComboBox comboBox = addClasses();
 
       comboBox.setOnAction((event) -> {
-            int selectedIndex = comboBox.getSelectionModel().getSelectedIndex();
+
             Object selectedItem = comboBox.getSelectionModel().getSelectedItem();
+            System.out.println(selectedItem);
             if(selectedItem != null)
             {
-                selectedCourse = selectedItem.toString();
-                searchCoursePage searchCourse = new searchCoursePage(this.master,this.selectedCourse);
-                searchButton.setOnAction(e -> primaryStage.setScene(searchCourse.toSearchCourse(primaryStage)));
+                selectedSubject = selectedItem.toString();
+                searchCoursePage searchCourse = this.master.getSearchCoursePage();//new searchCoursePage(this.master,this.selectedCourse);
+                searchButton.setOnAction(e -> primaryStage.setScene(searchCourse.toSearchCourse(primaryStage,selectedSubject)));
 
             }
       });
@@ -109,10 +87,13 @@ public class userHomePage
       //TextField rateCourseField = new TextField();
       //homePage.add(rateCourseField, 1, 2);
 
+      Label labelOR = new Label("OR");
+
+      homePage.add(labelOR, 1,2);
       Button rateButton = new Button("Rate a Chapman Course");
       HBox hRatebox = new HBox(rateButton);
-      rateButton.setOnAction(e -> primaryStage.setScene(rate.rateCourse(primaryStage, PantherInspectProject.NEW_POST)));
-      homePage.add(hRatebox, 2, 2);
+      rateButton.setOnAction(e -> primaryStage.setScene(master.rateCourse.rateCourse(primaryStage, PantherInspectProject.NEW_POST)));
+      homePage.add(hRatebox, 1, 3);
       //=========================================
 
 
@@ -122,7 +103,7 @@ public class userHomePage
       HBox hbox = new HBox(settingsButton);
       settingsButton.setOnAction(e -> primaryStage.setScene(settings.settingsPage(primaryStage)));
       homePage.add(hbox, 0, 10);
-      
+
       Button profileButton = new Button("Profile");
       HBox profileBox = new HBox(profileButton);
       profileButton.setOnAction(e -> primaryStage.setScene(profile.userpage(primaryStage,this.master.getAccountId())));

@@ -5,7 +5,6 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
-import java.io.IOException;
 import java.io.Reader;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -837,6 +836,24 @@ public class QueryProcessor {
 		boolean success = delete(tableName, instance,where);
 		return success;
 	}
+
+        /*
+	-------------------------------
+	function: deleteResponse
+	-------------------------------
+	purpose:
+		delete question response from review
+	return:
+		boolean success or failure
+	*/
+	public boolean deleteResponse(String reviewId, String questionId) {
+		String tableName = "Responses";
+                String[] wheres = new String[] {"ReviewId=?","QuestionId=?"};
+		String where = String.format(this.WHERE, String.join(this.AND, wheres));
+		String[] instance = new String[] {reviewId,questionId} ;
+		boolean success = delete(tableName, instance, where);
+		return success;
+	}
 	/*
 	------------------------------------------------------------------------------------------
 	Update Review Information
@@ -918,11 +935,11 @@ public class QueryProcessor {
 	purpose:
 		select post, to be combined with questions and responses via reviewId
 	return:
-		ResultSet "subject,courseNum,cName,pName,stars,creation,edit,reviewId,accountId"
+		ResultSet "subject,courseNum,cName,pName,stars,creation,edit,reviewId,accountId,courseId"
 	*/
 	
 	public ResultSet selectPost(String courseId, String order) {
-		String desired = "subject,courseNum,cName,pName,stars,creation,edit,reviewId,accountId";
+		String desired = "subject,courseNum,cName,pName,stars,creation,edit,reviewId,accountId,courseId";
 		String[] tableNames = new String[] {"Review","Post","Class","Course","Professor"};
 		String tables = String.join(this.NATURAL_JOIN, tableNames);
                 String order_by = String.format(this.ORDER_BY,order);		
@@ -941,11 +958,11 @@ public class QueryProcessor {
 	purpose:
 		select post, to be combined with questions and responses via reviewId
 	return:
-		ResultSet (subject, courseNum, cName, pName, stars, creation, edit,reviewId,accountId)
+		ResultSet (subject, courseNum, cName, pName, stars, creation, edit,reviewId,accountId,courseId)
 	*/
 	
 	public ResultSet selectPostByClass(String classId, String order) {
-		String desired = "subject,courseNum,cName,pName,stars,creation,edit,reviewId,accountId";
+		String desired = "subject,courseNum,cName,pName,stars,creation,edit,reviewId,accountId,courseId";
 		String[] tableNames = new String[] {"Review","Post","Class","Course","Professor"};
 		String tables = String.join(this.NATURAL_JOIN, tableNames);
                 String order_by = String.format(this.ORDER_BY,order);		

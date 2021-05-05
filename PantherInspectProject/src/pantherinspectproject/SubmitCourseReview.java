@@ -8,13 +8,11 @@ package pantherinspectproject;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.scene.control.Label;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
-import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
 //import pantherinspectproject.editPost;
 //import pantherinspectproject.deletePost;
@@ -25,23 +23,23 @@ import javafx.stage.Stage;
  */
 public class SubmitCourseReview {
 
-    
+
     PantherInspectProject master;
-    //PantherInspectProject master;
+
     SubmitCourseReview(PantherInspectProject master) {
-        
+
         this.master = master;
     }
 
     public Scene submitReview(Stage primaryStage, String courseId, String postId)
     {
         // set up other pages
-        deletePost toDeletePosting = new deletePost(master,this);
-        userHomePage toHomePage = new userHomePage(master);
-        rateCoursePage toRateCourse = new rateCoursePage(master);
-        viewPost toViewPosting = new viewPost(master);
-        
-        
+        deletePost toDeletePosting = this.master.getDeletePost();
+        userHomePage toHomePage = this.master.getUserHomePage();
+        rateCoursePage toRateCourse = this.master.getRateCoursePage();
+        viewPost toViewPosting = this.master.getViewPost();
+
+
       primaryStage.setTitle("Successfully Posted ");
       Text title = new Text("Posting Successful");
       title.setFont(Font.font("Tahoma", FontWeight.NORMAL, 20));

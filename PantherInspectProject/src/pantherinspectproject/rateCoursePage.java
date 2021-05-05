@@ -5,12 +5,8 @@
  */
 package pantherinspectproject;
 
-
-import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -20,22 +16,15 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.event.ActionEvent;
-import javafx.event.Event;
 import javafx.geometry.Pos;
-import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
-import javafx.scene.control.ScrollPane.ScrollBarPolicy;
 import javafx.scene.control.TextArea;
-import javafx.scene.control.TextField;
-import javafx.scene.control.Toggle;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.MouseButton;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
@@ -44,9 +33,6 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
-import javax.swing.ImageIcon;
-import pantherinspectproject.SubmitCourseReview;
-import pantherinspectproject.userHomePage;
 
 /**
  *
@@ -60,8 +46,6 @@ public class rateCoursePage
     - 1 demo question, difficulty of course; Label
     - ------- with textField  (with limit of characters (200))
     - import course from Page; dropdown of courses and professors
-
-
     */
      
      PantherInspectProject master;
@@ -70,6 +54,7 @@ public class rateCoursePage
      ComboBox comboBoxSubject = new ComboBox();
      List<Button> starList;
      Map<String,TextArea> responseMap;
+     List<String> questionInDB = new ArrayList<>();
      int starCount;
      String classId;
      String courseId;
@@ -85,9 +70,6 @@ public class rateCoursePage
 // added boolean view
     public Scene rateCourse(Stage primaryStage, String edit)
     {
-
-        InputStream stream = null;
-
             GridPane grid = new GridPane();
             GridPane ratePage = new GridPane();
             grid.add(ratePage, 1, 1);
@@ -97,9 +79,6 @@ public class rateCoursePage
             ratePage.setVgap(15);
             ratePage.setGridLinesVisible(false);
             Scene scene = new Scene(grid, 850, 600, Color.WHITESMOKE);
-
-
-            //comboBox for subject, course, and professor
 
         Text settingsTitle = new Text();
         switch (edit){
@@ -182,6 +161,9 @@ public class rateCoursePage
              comboBoxSubject.setValue(rs.getString(1));
              comboBoxCourse.setValue(String.format("%s: %s",rs.getString(2),rs.getString(3)));
              comboBoxProfessor.setValue(rs.getString(4));
+             comboBoxSubject.setDisable(true);
+             comboBoxCourse.setDisable(true);
+             comboBoxProfessor.setDisable(true);
             
              
              // grab classId and courseId
@@ -191,10 +173,11 @@ public class rateCoursePage
              selectStars(0,rs.getInt(5));
              
              // auto fill answers
-             ResultSet rs2 = this.master.qp.selectReviewQuestions(edit);
+             ResultSet questionRs = this.master.qp.selectReviewQuestions(edit);
             //question,response,questionId
-                while(rs2.next()) {
-                    this.responseMap.get(rs2.getString(3)).setText(rs2.getString(2));
+                while(questionRs.next()) {
+                    this.responseMap.get(questionRs.getString(3)).setText(questionRs.getString(2));
+                    this.questionInDB.add(questionRs.getString(3));
                 }
              
              
@@ -241,7 +224,7 @@ public class rateCoursePage
                     comboBoxSubject.getItems().add(subjectRs.getString(1));
                 }
                 comboBoxSubject.setOnAction((event) -> {
-                int selectedIndex = comboBoxSubject.getSelectionModel().getSelectedIndex();
+
                 Object selectedItem = comboBoxSubject.getSelectionModel().getSelectedItem();
                 if(selectedItem != null)
                 {
@@ -256,23 +239,6 @@ public class rateCoursePage
         grid.add(comboBoxSubject, 0,2);
         
         
-        // enable or disable selection
-        switch(edit)
-        {
-            // new
-            case PantherInspectProject.NEW_POST:
-                comboBoxCourse.setDisable(false);
-                comboBoxProfessor.setDisable(false);
-                comboBoxSubject.setDisable(false);
-                break;
-                
-            // edit post
-            default:
-                comboBoxCourse.setDisable(true);
-                comboBoxProfessor.setDisable(true);
-                comboBoxSubject.setDisable(true);
-                break;
-        }
     }
 
     /*
@@ -532,11 +498,19 @@ public class rateCoursePage
                         String response = this.responseMap.get(questionId).getText();
                         // remove all empty spaces to check for valid entry
                         if (response.replace(" ","").length() > 0) {
-                            this.master.qp.updateResponse(reviewId, questionId, response, timestamp);
+                            if (!questionInDB.contains(questionId)){
+                                this.master.qp.insertResponse(reviewId, questionId, response, timestamp);
+                            }
+                            else {
+                                this.master.qp.updateResponse(reviewId, questionId, response, timestamp);
+                            }
+                        }
+                        else if (questionInDB.contains(questionId)) { // if question response was deleted
+                            this.master.qp.deleteResponse(reviewId,questionId);
                         }
                     }
                     //navigate to next page
-                    SubmitCourseReview toSubmit = new SubmitCourseReview(this.master);
+                    SubmitCourseReview toSubmit = this.master.getCourseReview();
                     primaryStage.setScene(toSubmit.submitReview(primaryStage,this.courseId,reviewId));
             });
     }
