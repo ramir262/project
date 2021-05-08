@@ -28,6 +28,7 @@ import javafx.stage.Stage;
 public class searchCoursePage
 {
     PantherInspectProject master;
+   
 
     
     List<HBox> buttonList = new ArrayList<>();

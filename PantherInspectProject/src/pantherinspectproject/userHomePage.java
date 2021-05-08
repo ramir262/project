@@ -108,6 +108,13 @@ public class userHomePage
       HBox profileBox = new HBox(profileButton);
       profileButton.setOnAction(e -> primaryStage.setScene(profile.userpage(primaryStage,this.master.getAccountId())));
       homePage.add(profileBox, 0, 11);
+      
+      //ToDo: Naviagate to PantherInspectProject 
+      // LogOut 
+      //PantherInspectProject panther = this;
+      Button logoutButton = new Button("Log Out");
+      //logoutButton.setOnAction(e -> LauncherImpl.launchApplication(PantherInspectProject.class, SplashScreenLoader.class));
+      homePage.add(logoutButton, 0, 15);
 
 
 

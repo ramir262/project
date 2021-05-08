@@ -590,7 +590,7 @@ public class QueryProcessor {
 	public ResultSet getClassName(String classId) {
 		
                 String columns = "Subject, CourseNum, cName, pName";
-		String[] tableNames = new String[] {"Course","Class"};
+		String[] tableNames = new String[] {"Course","Class","Professor"};
 		String tables = String.join(this.NATURAL_JOIN, tableNames);
 		String where = String.format(this.WHERE,"classId=?");
 		String[] instances = new String[] {classId};

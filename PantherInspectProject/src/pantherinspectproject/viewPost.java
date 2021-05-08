@@ -17,12 +17,14 @@ import javafx.event.ActionEvent;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 /**
@@ -37,6 +39,7 @@ public class viewPost {
 
 
     PantherInspectProject master;
+    //public String selectedSubject = "";
 
 
     viewPost(PantherInspectProject master) {
@@ -44,14 +47,16 @@ public class viewPost {
     }
 
     userHomePage user;
-
+    
     /*
     param: cId (classId or courseId, depending on boolean), all (if all classes in course selected)
     */
     public Scene viewPosting(Stage primaryStage, String cId, boolean all)
     {
+        //this.selectedSubject = selectedSubject;
 
       primaryStage.setTitle("Select Post ");
+      
       GridPane posts = new GridPane();
       posts.setAlignment(Pos.CENTER);
       posts.setHgap(15);
@@ -63,11 +68,65 @@ public class viewPost {
       grid.setHgap(15);
       grid.setVgap(15);
       grid.setGridLinesVisible(false);
-
+      //Cindy: new 
+      grid.setPrefSize(800, 700); //400, 600
+      
       ScrollPane scroll = addScrollPane(posts);
       scroll.setContent(grid);
-      posts.add(scroll, 0, 0);
+      
+      
+      posts.add(scroll, 0, 0); //0,0
+      
+      // Cindy: label
+      //Label displayCourseName = new Label("Course Name:");
+      //grid.add(displayCourseName, 0,0);
+      
+       //Cindy: setFitToHeight and Width
+      
+       
+       
+       // Cindy: VBOX 
+       VBox vbox = new VBox();
+       vbox.setAlignment(Pos.CENTER);
+       vbox.getChildren().addAll(posts, grid, scroll);
+       //scroll.setFitToHeight(true);
+       
+       Label displayCourseName = new Label("Course Name:");
+       displayCourseName.setStyle("-fx-font-weight:bold");
+       grid.add(displayCourseName, 0,1); // posts
+       // Label to display course name - userhome page 
+       
+       
+       Label rateByStars = new Label("Filter by Star Ratings:");
+       grid.add(rateByStars, 5,1);
+       
+       ComboBox starBox = new ComboBox();
+       starBox.getItems().add("1 Star");
+       starBox.getItems().add("2 Star");
+       starBox.getItems().add("3 Star");
+       starBox.getItems().add("4 Star");
+       starBox.getItems().add("5 Star");
+       starBox.getItems().add("All");
+       grid.add(starBox, 6,1);
+       
+       
+       
+       
+       
+       // Cindy: Back Button
+       Button backButton = new Button("Back");
+       HBox backHbox = new HBox();
+       backHbox.setAlignment(Pos.TOP_RIGHT);
+       backHbox.getChildren().add(backButton);
+       backButton.setOnAction(e -> primaryStage.setScene(master.getCourseDisplay().display(primaryStage, cId, cId)));
+       grid.add(backButton, 0, 0);
+       
+       
+      
+       
+      
 
+      
       //TODO: Cindy: add UI labels, back btn, and combobox
       /*
       Back button (return to table view page)
@@ -76,11 +135,49 @@ public class viewPost {
       */
         if (all == true) { // display ALL course reviews
             // Label: Display Course Name
-            // courseRs = this.master.qp.getCourseName(cId)
+          
+            ResultSet courseRs = this.master.qp.getCourseName(cId);
+          try {
+              courseRs.next();
+              String subject = courseRs.getString(1);
+              String courseNum = courseRs.getString(2);           
+              String cName = courseRs.getString(3);
+              
+              String classPattern = "Class Name: \n %s %s: %s";
+              String classTitle = String.format(classPattern, subject, courseNum,cName);
+              
+              displayCourseName.setText(classTitle);
+              
+          } catch (SQLException ex) {
+              Logger.getLogger(viewPost.class.getName()).log(Level.SEVERE, null, ex);
+          }
+            
+            //courseRs = this.master.qp.getCourseName(cId)
             // ResultSet (Subject, CourseNum, cName) -> if you want to get Subject implement courseRs.getString(1)
             // cName is Course Name
+            //grid.add(displayCouseNameTitle, 2,0);
         }
         else { // display class reviews (determined by professor)
+             ResultSet courseRs = this.master.qp.getClassName(cId);
+          try {
+              courseRs.next();
+              String subject = courseRs.getString(1);
+              String courseNum = courseRs.getString(2);           
+              String cName = courseRs.getString(3);
+              String pName = courseRs.getString(4);
+              
+              String classPattern = "%s %s: %s";
+              String classTitle = String.format(classPattern, subject, courseNum,cName);
+              
+              Label displayClassName = new Label(classTitle);
+              grid.add(displayClassName, 0,2);
+              
+              Label displayProfName = new Label(pName);
+              grid.add(displayProfName, 0,3);
+              
+          } catch (SQLException ex) {
+              Logger.getLogger(viewPost.class.getName()).log(Level.SEVERE, null, ex);
+          }
             // Label: Display Course Name
             // classRs = this.master.qp.getClassName(cId)
             // ResultSet (Subject, CourseNum, cName, pName) -> if you want to get Subject implement classRs.getString(1)
@@ -88,8 +185,8 @@ public class viewPost {
         }
       
         displayUnfilteredReviews(primaryStage, grid, all, cId);
-        Scene scene = new Scene(posts, 400, 600);
-
+        //Scene scene = new Scene(posts, 400, 600);
+        Scene scene = new Scene(vbox,900,900); // Cindy : VBOX
         return scene;
 
     }
@@ -133,7 +230,7 @@ public class viewPost {
                 may be called using either filtered or unfiltered post resultset
 	*/
     private void displayReviews(Stage primaryStage, GridPane grid, ResultSet rs) {
-        int g = 2;
+        int g = 4;
         try {
             
             while(rs.next()) {
@@ -376,7 +473,7 @@ public class viewPost {
 
    public ScrollPane addScrollPane(GridPane grid) {
        ScrollPane scroll = new ScrollPane();
-       scroll.setPrefSize(400, 600);
+       scroll.setPrefSize(900, 900); // 400, 600
        scroll.setContent(grid);
        return scroll;
    }
