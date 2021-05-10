@@ -113,7 +113,7 @@ public class userHomePage
       // LogOut 
       //PantherInspectProject panther = this;
       Button logoutButton = new Button("Log Out");
-      //logoutButton.setOnAction(e -> LauncherImpl.launchApplication(PantherInspectProject.class, SplashScreenLoader.class));
+      //logoutButton.setOnAction(e -> primaryStage.setScene(master.start(primaryStage)));
       homePage.add(logoutButton, 0, 15);
 
 
