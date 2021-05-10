@@ -45,7 +45,7 @@ public class displayCourseRatings {
     public Scene display(Stage primaryStage, String courseId, String selectedSubject)
     {
         searchCoursePage toSearchCoursePage = this.master.getSearchCoursePage();
-        
+        viewPost toViewPost = this.master.getViewPost();
         //build table
         TableView<Data> table = new TableView<>();
         ObservableList<Data> tvObservableList = FXCollections.observableArrayList();
@@ -80,7 +80,7 @@ public class displayCourseRatings {
 
         table.getColumns().addAll(colDate, colName, colStars);
 
-        addButtonToTable(primaryStage,table,classes);
+        addButtonToTable(primaryStage,table,classes,toViewPost,selectedSubject);
 
 
         // Back Button
@@ -94,6 +94,8 @@ public class displayCourseRatings {
         displayCourse.add(backButtonBox,0,0);
 
         Button viewAllProfessors = new Button("View all Professors");
+        viewAllProfessors.setOnAction(e -> primaryStage.setScene(toViewPost.viewPosting(primaryStage,selectedSubject,courseId,true)));
+        //
         HBox viewHB = new HBox(10);
         //=============================================================================
         // Set action for Button to go to
@@ -140,10 +142,10 @@ public class displayCourseRatings {
         return classes;
     }
 
-    public void addButtonToTable(Stage primaryStage, TableView<Data> table, List<String> classes) {
+    public void addButtonToTable(Stage primaryStage, TableView<Data> table, List<String> classes, viewPost toViewPost, String selectedSubject) {
         TableColumn<Data, Void> colBtn = new TableColumn("View More Info");
-        viewPost toViewPost = this.master.getViewPost();
 
+        
         Callback<TableColumn<Data, Void>, TableCell<Data, Void>> cellFactory = new Callback<TableColumn<Data, Void>, TableCell<Data, Void>>() {
             @Override
             public TableCell<Data, Void> call(final TableColumn<Data, Void> param) {
@@ -156,7 +158,7 @@ public class displayCourseRatings {
                         btn.setOnAction((ActionEvent event) -> {
                             Data data = getTableView().getItems().get(getIndex());
                             System.out.println("selectedData: " + data);
-                            primaryStage.setScene(toViewPost.viewPosting(primaryStage,classes.get(getIndex()),false));
+                            primaryStage.setScene(toViewPost.viewPosting(primaryStage,selectedSubject,classes.get(getIndex()),false));
                         });
 
 

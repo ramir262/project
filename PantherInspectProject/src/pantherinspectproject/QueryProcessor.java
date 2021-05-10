@@ -642,7 +642,7 @@ public class QueryProcessor {
 	purpose:
 		get all courses of a professor
 	return:
-		ResultSet : classid, cname, professorid, pname
+		ResultSet : classid,subject,coursenum,cname,professorid,pname
 	*/
 	public ResultSet selectCourseProfessors(String courseId) {
 		String columns = "classid,subject,coursenum,cname,professorid,pname";
@@ -651,6 +651,24 @@ public class QueryProcessor {
 		String where = String.format(this.WHERE,"courseid=?");
 		String[] instances = new String[] {courseId};
 		//SELECT classid,cname,professorid,pname FROM course NATURAL JOIN class NATURAL JOIN professor WHERE courseId=?
+		ResultSet rs = select(columns,tables,where,instances);
+		return rs;
+	}
+        /*
+	-------------------------------
+	function: selectSubjectFromCourse
+	-------------------------------
+	purpose:
+		get subject from courseId
+	return:
+		ResultSet : subject
+	*/
+	public ResultSet selectSubjectFromCourse(String courseId) {
+		String columns = "subject";
+		String tables = "Course";
+		String where = String.format(this.WHERE,"courseid=?");
+		String[] instances = new String[] {courseId};
+		
 		ResultSet rs = select(columns,tables,where,instances);
 		return rs;
 	}
@@ -1077,11 +1095,11 @@ public class QueryProcessor {
 	purpose:
 		select reviews by overall rating
 	return:
-		ResultSet : subject,courseNum,cName,pName,stars,creation,edit,reviewId,accountId
+		ResultSet : subject,courseNum,cName,pName,stars,creation,edit,reviewId,accountId,courseId
 	*/
 	
 	public ResultSet selectClassReviewByStars(String stars, String classId) {
-		String desired = "subject,courseNum,cName,pName,stars,creation,edit,reviewId,accountId";
+		String desired = "subject,courseNum,cName,pName,stars,creation,edit,reviewId,accountId,courseId";
 		String[] tableNames = new String[] {"Review","Post","Class","Course","Professor"};
 		String tables = String.join(this.NATURAL_JOIN, tableNames);
 		String[] wheres = new String[] {"ClassId=?","Stars=?"};
@@ -1097,11 +1115,11 @@ public class QueryProcessor {
 	purpose:
 		select reviews by overall rating
 	return:
-		ResultSet : subject,courseNum,cName,pName,stars,creation,edit,reviewId,accountId
+		ResultSet : subject,courseNum,cName,pName,stars,creation,edit,reviewId,accountId,courseId
 	*/
 	
 	public ResultSet selectCourseReviewByStars(String stars, String courseId) {
-		String desired = "subject,courseNum,cName,pName,stars,creation,edit,reviewId,accountId";
+		String desired = "subject,courseNum,cName,pName,stars,creation,edit,reviewId,accountId,courseId";
 		String[] tableNames = new String[] {"Review","Post","Class","Course","Professor"};
 		String tables = String.join(this.NATURAL_JOIN, tableNames);
 		String[] wheres = new String[] {"CourseId=?","Stars=?"};

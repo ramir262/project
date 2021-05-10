@@ -5,6 +5,10 @@
  */
 package pantherinspectproject;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -14,8 +18,6 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
-//import pantherinspectproject.editPost;
-//import pantherinspectproject.deletePost;
 
 /**
  *
@@ -43,7 +45,6 @@ public class SubmitCourseReview {
       primaryStage.setTitle("Successfully Posted ");
       Text title = new Text("Posting Successful");
       title.setFont(Font.font("Tahoma", FontWeight.NORMAL, 20));
-      //title.setTextAlignment(TextAlignment.CENTER);
 
       GridPane submitPage = new GridPane();
       submitPage.setAlignment(Pos.CENTER);
@@ -74,12 +75,17 @@ public class SubmitCourseReview {
       // ========== View Post =======================
       Button viewPost = new Button("View Post");
       HBox viewPostHB = new HBox(10);
-      //TODO: create view post page with dynamic filler
-      System.out.print("COURSE: ");
-      System.out.println(courseId);
-      viewPost.setOnAction(e -> primaryStage.setScene(toViewPosting.viewPosting(primaryStage,courseId,true)));
-      viewPostHB.setAlignment(Pos.BOTTOM_RIGHT);
-      viewPostHB.getChildren().add(viewPost);
+      //ResultSet  = subject
+      ResultSet rs = this.master.qp.selectSubjectFromCourse(courseId);
+        try {
+            rs.next();
+            String selectedSubject = rs.getString(1);
+            viewPost.setOnAction(e -> primaryStage.setScene(toViewPosting.viewPosting(primaryStage,selectedSubject,courseId,true)));
+            viewPostHB.setAlignment(Pos.BOTTOM_RIGHT);
+            viewPostHB.getChildren().add(viewPost);
+      } catch (SQLException ex) {
+            Logger.getLogger(SubmitCourseReview.class.getName()).log(Level.SEVERE, null, ex);
+        }
       submitPage.add(viewPost,3,2);
 
 
