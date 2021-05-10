@@ -5,6 +5,7 @@
  */
 package pantherinspectproject;
 
+import com.sun.javafx.application.LauncherImpl;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.logging.Level;
@@ -113,7 +114,10 @@ public class userHomePage
       // LogOut 
       //PantherInspectProject panther = this;
       Button logoutButton = new Button("Log Out");
-      //logoutButton.setOnAction(e -> primaryStage.setScene(master.start(primaryStage)));
+      logoutButton.setOnAction(e -> {
+          primaryStage.close();
+          master.start(new Stage());
+      });
       homePage.add(logoutButton, 0, 15);
 
 
