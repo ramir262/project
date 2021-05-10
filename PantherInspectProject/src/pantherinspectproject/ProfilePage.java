@@ -63,10 +63,11 @@ public class ProfilePage {
             if (!path.equals("empty")) {
                 try
                 {
+                    System.out.println(path);
                     FileInputStream stream = new FileInputStream(path);
                     Image imagestream = new Image(stream);
                     imageView.setImage(imagestream);
-                    grid.add(userLbl,0,2);
+                    grid.add(imageView,0,3);
 
                 } catch (FileNotFoundException ex) {
                     Logger.getLogger(SignupForm.class.getName()).log(Level.SEVERE, null, ex);
@@ -83,7 +84,7 @@ public class ProfilePage {
             }
             Label gradLbl = new Label(graduated);
             HBox gradBox = new HBox(graduatedLbl,gradLbl);
-            grid.add(gradBox, 0, 3);
+            grid.add(gradBox, 0, 2);
             
         } catch (SQLException ex) {
             Logger.getLogger(ProfilePage.class.getName()).log(Level.SEVERE, null, ex);

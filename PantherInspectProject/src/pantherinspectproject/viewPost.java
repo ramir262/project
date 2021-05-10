@@ -341,7 +341,24 @@ public class viewPost {
                 //TODO: change to picture
                 int i = 1;
                 String imgPath = accountRs.getString(3);
-                Button picBtn = new Button("image");
+                ImageView imageView = new ImageView();
+                imageView.setFitHeight(128);
+                imageView.setFitWidth(128);
+                imageView.setPreserveRatio(true);
+                if (!imgPath.equals("empty")) {
+                    try
+                    {
+                        FileInputStream stream = new FileInputStream(imgPath);
+                        Image imagestream = new Image(stream);
+                        imageView.setImage(imagestream);
+
+                    } catch (FileNotFoundException ex) {
+                        Logger.getLogger(SignupForm.class.getName()).log(Level.SEVERE, null, ex);
+
+                    }
+                }
+                Button picBtn = new Button("View Profile");
+                picBtn.setGraphic(imageView);
                 navigateToProfile(primaryStage,picBtn,accountId);
                 HBox picBox = new HBox(picBtn);
                 post.add(picBox,0,i++);
