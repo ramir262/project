@@ -52,13 +52,18 @@ public class searchCoursePage
       coursesPage.setGridLinesVisible(false);
 
       Label titleLbl = new Label(String.format("Welcome: %s", selectedSubject));
-      coursesPage.add(titleLbl, 0,0);
+      coursesPage.add(titleLbl, 1,0);
 
       //add combobox to order findings
       Label orderLbl = new Label("Order");
-      coursesPage.add(orderLbl,1,1);
+      //coursesPage.add(orderLbl,1,1);
       ComboBox comboBox = addOrderComboBox(coursesPage,primaryStage,selectedSubject);
-      coursesPage.add(comboBox, 2, 1);
+      //coursesPage.add(comboBox, 2, 1);
+      
+      HBox hboxLabelandCombo = new HBox(5);
+      hboxLabelandCombo.setAlignment(Pos.TOP_CENTER);
+      hboxLabelandCombo.getChildren().addAll(orderLbl, comboBox);
+      coursesPage.add(hboxLabelandCombo, 1,1);
 
       // Back Button
 
@@ -66,14 +71,14 @@ public class searchCoursePage
 
       HBox backButtonBox = new HBox(10);
       backButton.setOnAction(e -> primaryStage.setScene(master.getUserHomePage().userpage(primaryStage)));
-      backButtonBox.setAlignment(Pos.BOTTOM_RIGHT);
+      backButtonBox.setAlignment(Pos.TOP_LEFT);
       backButtonBox.getChildren().add(backButton);
-      coursesPage.add(backButtonBox,0,1);
+      coursesPage.add(backButtonBox,0,0);
 
       addClasses(coursesPage,primaryStage,selectedSubject,"courseNum");
       ScrollPane scroll = addScrollPane(coursesPage);
 
-      Scene scene = new Scene(scroll, 800, 800);
+      Scene scene = new Scene(scroll, 600, 500);
 
       return scene;
     }

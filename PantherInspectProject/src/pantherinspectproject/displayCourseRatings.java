@@ -56,7 +56,7 @@ public class displayCourseRatings {
         gridBox.setAlignment(Pos.CENTER);
         gridBox.getChildren().addAll(displayCourse, table);
 
-        primaryStage.setTitle("Tableview with button column");
+        primaryStage.setTitle("View All Postings");
         Scene scene = new Scene(gridBox); //object to return
 
         //set table
@@ -103,7 +103,7 @@ public class displayCourseRatings {
         //viewAllProfessors.setOnAction(e -> primaryStage.setScene(master.getViewPost().viewPosting(primaryStage, selectedCourse)));
         viewHB.setAlignment(Pos.CENTER);
         viewHB.getChildren().add(viewAllProfessors);
-        displayCourse.add(viewHB,14,9);
+        displayCourse.add(viewHB,4,0);
 
         return scene;
 
