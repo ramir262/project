@@ -324,12 +324,20 @@ public class SignupForm {
       //create picture for profile photo entry
       HBox picBtn = setupPicture(primaryStage);
       signup.add(picBtn, 0, 8); //1,8
+      
+      //cancel button
+      Button logoutButton = new Button("Cancel");
+      logoutButton.setOnAction(e -> {
+          primaryStage.close();
+          master.start(new Stage());
+      });
+      signup.add(logoutButton, 0, 9);
 
       //create signup functionality
       Button btn = createSignupButton(primaryStage, email, pwBox, username, gradyear, gradsemester, gradstatus ,questions, securityAnswer);
       //HBox hbBtn = createBox(btn);
       //signup.add(hbBtn,1,8); // btn UI 
-      signup.add(btn,0,9); //0,8
+      signup.add(btn,1,9); //0,8
 
       Scene scene = new Scene(signup, 770, 700); //object to return
       return scene;

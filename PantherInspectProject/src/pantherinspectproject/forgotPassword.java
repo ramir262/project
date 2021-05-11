@@ -69,6 +69,14 @@ public class forgotPassword
       resetPassword.setVgap(15);
       resetPassword.setGridLinesVisible(false);
       
+      //cancel button
+      Button logoutButton = new Button("Cancel");
+      logoutButton.setOnAction(e -> {
+          primaryStage.close();
+          master.start(new Stage());
+      });
+      resetPassword.add(logoutButton, 0, 0);
+      
       Label label = new Label("Enter email to reset password:");
       resetPassword.add(label, 0,4);
       
