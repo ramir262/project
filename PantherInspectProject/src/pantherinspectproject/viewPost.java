@@ -39,6 +39,7 @@ public class viewPost {
 
 
     PantherInspectProject master;
+    List<GridPane> postList;
     //public String selectedSubject = "";
 
 
@@ -51,10 +52,10 @@ public class viewPost {
     /*
     param: cId (classId or courseId, depending on boolean), all (if all classes in course selected)
     */
-    public Scene viewPosting(Stage primaryStage, String cId, boolean all)
+    public Scene viewPosting(Stage primaryStage, String selectedSubject, String cId, boolean all)
     {
-        //this.selectedSubject = selectedSubject;
-
+      this.postList = new ArrayList<>();
+      
       primaryStage.setTitle("Select Post ");
       
       GridPane posts = new GridPane();
@@ -68,22 +69,14 @@ public class viewPost {
       grid.setHgap(15);
       grid.setVgap(15);
       grid.setGridLinesVisible(false);
-      //Cindy: new 
-      grid.setPrefSize(800, 700); //400, 600
+
+      grid.setPrefSize(800, 700); 
       
       ScrollPane scroll = addScrollPane(posts);
       scroll.setContent(grid);
       
-      
       posts.add(scroll, 0, 0); //0,0
       
-      // Cindy: label
-      //Label displayCourseName = new Label("Course Name:");
-      //grid.add(displayCourseName, 0,0);
-      
-       //Cindy: setFitToHeight and Width
-      
-       
        
        // Cindy: VBOX 
        VBox vbox = new VBox();
@@ -100,88 +93,43 @@ public class viewPost {
        Label rateByStars = new Label("Filter by Star Ratings:");
        grid.add(rateByStars, 5,1);
        
-       ComboBox starBox = new ComboBox();
-       starBox.getItems().add("1 Star");
-       starBox.getItems().add("2 Star");
-       starBox.getItems().add("3 Star");
-       starBox.getItems().add("4 Star");
-       starBox.getItems().add("5 Star");
-       starBox.getItems().add("All");
-       grid.add(starBox, 6,1);
+       ComboBox starBox = addStarComboBox(primaryStage, grid, all, cId);
        
        
-       
-       
-       
-       // Cindy: Back Button
        Button backButton = new Button("Back");
        HBox backHbox = new HBox();
        backHbox.setAlignment(Pos.TOP_RIGHT);
        backHbox.getChildren().add(backButton);
-       backButton.setOnAction(e -> primaryStage.setScene(master.getCourseDisplay().display(primaryStage, cId, cId)));
+       backButton.setOnAction(e -> primaryStage.setScene(master.getCourseDisplay().display(primaryStage, cId, selectedSubject)));
        grid.add(backButton, 0, 0);
        
        
-      
-       
-      
-
-      
-      //TODO: Cindy: add UI labels, back btn, and combobox
-      /*
-      Back button (return to table view page)
-      Label: Display Course Name, result set determined by all == true boolean
-      ComboBox: values are (1,2,3,4,5,All)
-      */
         if (all == true) { // display ALL course reviews
             // Label: Display Course Name
           
             ResultSet courseRs = this.master.qp.getCourseName(cId);
-          try {
-              courseRs.next();
-              String subject = courseRs.getString(1);
-              String courseNum = courseRs.getString(2);           
-              String cName = courseRs.getString(3);
-              
-              String classPattern = "Class Name: \n %s %s: %s";
-              String classTitle = String.format(classPattern, subject, courseNum,cName);
-              
-              displayCourseName.setText(classTitle);
-              
-          } catch (SQLException ex) {
-              Logger.getLogger(viewPost.class.getName()).log(Level.SEVERE, null, ex);
-          }
+            try {
+                courseRs.next();
+                displayTitle(grid,courseRs);
+            } catch (SQLException ex) {
+                Logger.getLogger(viewPost.class.getName()).log(Level.SEVERE, null, ex);
+            }
             
-            //courseRs = this.master.qp.getCourseName(cId)
-            // ResultSet (Subject, CourseNum, cName) -> if you want to get Subject implement courseRs.getString(1)
-            // cName is Course Name
-            //grid.add(displayCouseNameTitle, 2,0);
         }
         else { // display class reviews (determined by professor)
              ResultSet courseRs = this.master.qp.getClassName(cId);
-          try {
-              courseRs.next();
-              String subject = courseRs.getString(1);
-              String courseNum = courseRs.getString(2);           
-              String cName = courseRs.getString(3);
-              String pName = courseRs.getString(4);
-              
-              String classPattern = "%s %s: %s";
-              String classTitle = String.format(classPattern, subject, courseNum,cName);
-              
-              Label displayClassName = new Label(classTitle);
-              grid.add(displayClassName, 0,2);
-              
-              Label displayProfName = new Label(pName);
-              grid.add(displayProfName, 0,3);
-              
-          } catch (SQLException ex) {
-              Logger.getLogger(viewPost.class.getName()).log(Level.SEVERE, null, ex);
-          }
-            // Label: Display Course Name
-            // classRs = this.master.qp.getClassName(cId)
-            // ResultSet (Subject, CourseNum, cName, pName) -> if you want to get Subject implement classRs.getString(1)
-            // pName is Professor Name
+            try {
+                courseRs.next();
+                String pName = courseRs.getString(4);
+                displayTitle(grid,courseRs);
+
+                Label displayProfName = new Label(pName);
+                grid.add(displayProfName, 0,3);
+
+            } catch (SQLException ex) {
+                Logger.getLogger(viewPost.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            
         }
       
         displayUnfilteredReviews(primaryStage, grid, all, cId);
@@ -189,6 +137,83 @@ public class viewPost {
         Scene scene = new Scene(vbox,900,900); // Cindy : VBOX
         return scene;
 
+    }
+    /*
+    ---------------------------
+    function: addStarComboBox
+    ----------------------------
+    purpose:
+        select review by star count
+    return:
+        ComboBox
+    */
+    private ComboBox addStarComboBox(Stage primaryStage, GridPane grid, boolean all, String cId) {
+        ComboBox starBox = new ComboBox();
+        starBox.getItems().add("1 Star");
+        starBox.getItems().add("2 Star");
+        starBox.getItems().add("3 Star");
+        starBox.getItems().add("4 Star");
+        starBox.getItems().add("5 Star");
+        starBox.getItems().add("All");
+        starBox.setOnAction((event) -> {
+           //if selection made:
+           //   delete buttons
+           //   replace with new order
+            Object selectedItem = starBox.getSelectionModel().getSelectedItem();
+
+            if(selectedItem.equals("All"))
+            {
+                removeReviews(grid);
+                displayUnfilteredReviews(primaryStage, grid, all, cId);
+            }
+            else
+            {
+                removeReviews(grid);
+                displayFilteredReviews(primaryStage, grid, all, cId, selectedItem.toString());
+            }
+        });
+       grid.add(starBox, 6,1);
+       return starBox;
+    }
+    /*
+	-------------------------------
+	function: displayTitle
+	-------------------------------
+        params:
+
+                GridPane grid
+                ResultSet
+	purpose:
+		take in courseRs from course info or class info
+                generate title
+	*/
+    private void displayTitle(GridPane grid, ResultSet courseRs) throws SQLException {
+
+              String subject = courseRs.getString(1);
+              String courseNum = courseRs.getString(2);           
+              String cName = courseRs.getString(3);
+              
+              String classPattern = "%s %s: %s";
+              String classTitle = String.format(classPattern, subject, courseNum,cName);
+              
+              Label displayClassName = new Label(classTitle);
+              grid.add(displayClassName, 0,2);
+    }
+    /*
+	-------------------------------
+	function: removeReviews
+	-------------------------------
+        params:
+                GridPane grid
+	purpose:
+                remove posts from grid
+	*/
+    private void removeReviews(GridPane grid) {
+        
+        for (GridPane post : this.postList) {
+            grid.getChildren().remove(post);
+        }
+        this.postList = new ArrayList<>();
     }
     /*
 	-------------------------------
@@ -215,7 +240,35 @@ public class viewPost {
           
         }
 
-        displayReviews(primaryStage,grid,rs);
+        displayReviews(primaryStage,grid,all,rs);
+    }
+    /*
+	-------------------------------
+	function: displayFilteredReviews
+	-------------------------------
+        params:
+                Stage primaryStage
+                GridPane grid
+                boolean all : if all classes in course all is true
+                string cId : courseId if all==true, else classId
+                string star : count of stars to filter by
+	purpose:
+                create resultset without star count filter
+		populate grid with posts
+	*/
+    private void displayFilteredReviews(Stage primaryStage, GridPane grid, boolean all, String cId, String star) {
+        
+        ResultSet rs;
+        if (all == true) { // display ALL course reviews
+            rs = this.master.qp.selectCourseReviewByStars(star,cId);
+            
+        }
+        else { // display class reviews (determined by professor)
+          rs = this.master.qp.selectClassReviewByStars(star,cId);
+          
+        }
+
+        displayReviews(primaryStage,grid,all,rs);
     }
     /*
 	-------------------------------
@@ -229,8 +282,9 @@ public class viewPost {
 		take in resultset and populate reviews
                 may be called using either filtered or unfiltered post resultset
 	*/
-    private void displayReviews(Stage primaryStage, GridPane grid, ResultSet rs) {
-        int g = 4;
+    private void displayReviews(Stage primaryStage, GridPane grid, boolean all, ResultSet rs) {
+        int FIRST_POST = 4;
+        int g = FIRST_POST;
         try {
             
             while(rs.next()) {
@@ -239,9 +293,12 @@ public class viewPost {
                 post.setHgap(15);
                 post.setVgap(15);
                 post.setGridLinesVisible(false);
+                post.setStyle("-fx-background-color: white; -fx-grid-lines-visible: false");
+                this.postList.add(post);
                 grid.add(post,0,g++);
+                g++;
                 //ResultSet (subject, courseNum, cName, pName, stars, creation, edit, reviewId, accountId,courseId)
-                createPost(primaryStage,post,rs.getString(9),rs.getString(10),rs.getString(1),rs.getString(2),
+                createPost(primaryStage,post,all,rs.getString(9),rs.getString(10),rs.getString(1),rs.getString(2),
                         rs.getString(3),rs.getString(4),rs.getInt(5),rs.getString(8),rs.getString(6),rs.getString(7));
                 System.out.println(rs.getString(10));
             }
@@ -252,10 +309,18 @@ public class viewPost {
         }
 
 
-        if (g == 2) {
-            System.out.println("No reviews");
-            Label lbl = new Label("No reviews available.");
-            grid.add(lbl,0,g);
+        if (g == FIRST_POST) {
+                GridPane post = new GridPane();
+                post.setAlignment(Pos.CENTER);
+                post.setHgap(15);
+                post.setVgap(15);
+                post.setGridLinesVisible(false);
+                post.setStyle("-fx-background-color: white; -fx-grid-lines-visible: false");
+                this.postList.add(post);
+                grid.add(post,0,g++);
+                
+                Label lbl = new Label("No reviews available.");
+                post.add(lbl,0,g);
 
         }
     }
@@ -329,7 +394,7 @@ public class viewPost {
 	purpose:
 		format post
 	*/
-    private void createPost(Stage primaryStage,GridPane post,String accountId, String courseId, String subject, String courseNum, String cName,
+    private void createPost(Stage primaryStage,GridPane post,boolean all,String accountId, String courseId, String subject, String courseNum, String cName,
             String pName, int stars, String reviewId, String create, String edit) throws SQLException, FileNotFoundException {
         //ResultSet (subject, courseNum, cName, pName, stars, creation, edit, reviewId, accountId,courseId)
 
@@ -378,18 +443,20 @@ public class viewPost {
                 }
 
                 // display course info
-                Label classLblBold = new Label("Class:");
+                /*Label classLblBold = new Label("Class:");
                 classLblBold.setStyle("-fx-font-weight: bold");
                 Label classLbl = new Label(String.format("%s %s: %s", subject, courseNum, cName));
                 HBox classBox = new HBox(classLblBold,classLbl);
-                post.add(classBox,0,i++);
+                post.add(classBox,0,i++);*/
 
                 //display professor name
-                Label profLblBold = new Label("Professor:");
-                profLblBold.setStyle("-fx-font-weight: bold");
-                Label profLbl = new Label(pName);
-                HBox profBox = new HBox(profLblBold,profLbl);
-                post.add(profBox,0,i++);
+                if (all) {
+                    Label profLblBold = new Label("Professor:");
+                    profLblBold.setStyle("-fx-font-weight: bold");
+                    Label profLbl = new Label(pName);
+                    HBox profBox = new HBox(profLblBold,profLbl);
+                    post.add(profBox,0,i++);
+                }
 
                 //display star count
                 HBox starGrid = createStars(stars);

@@ -52,7 +52,6 @@ public class searchCoursePage
       coursesPage.setGridLinesVisible(false);
 
       Label titleLbl = new Label(String.format("Welcome: %s", selectedSubject));
-      System.out.println("this.selected subject: " + selectedSubject);
       coursesPage.add(titleLbl, 0,0);
 
       //add combobox to order findings
@@ -97,7 +96,7 @@ public class searchCoursePage
    public void addClasses(GridPane grid, Stage primaryStage, String selectedSubject, String sort_by)  {
        //ourseNum, cname, courseId
        ResultSet rs = this.master.qp.selectCourseBySubject(selectedSubject,sort_by);
-      System.out.println(" searchCoursePage 107" + rs);
+     
         try {
             int row = 0;
             int x = 0;
@@ -177,7 +176,7 @@ public class searchCoursePage
            //   delete buttons
            //   replace with new order
             Object selectedItem = comboBox.getSelectionModel().getSelectedItem();
-            System.out.println(selectedItem);
+
             if(selectedItem.equals("Course Number"))
             {
                 deleteClasses(grid);

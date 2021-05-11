@@ -18,6 +18,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.GridPane;
@@ -34,6 +35,8 @@ import javafx.stage.Stage;
 public class PantherInspectProject extends Application
 {
     public Stage primaryStage;
+    
+    // pages
     SignupForm signupform;
     userHomePage userHome;
     forgotPassword toReset;
@@ -41,20 +44,13 @@ public class PantherInspectProject extends Application
     displayCourseRatings displayCourse;
     rateCoursePage rateCourse;
     SubmitCourseReview submitCourseReview;
-
     searchCoursePage searchCourse;
     viewPost view;
     profileSettings profileSetting;
     SettingsPage settings;
     ProfilePage profile;
     AccountSettings accountSettings;
-    public String selectedCourse = ""; // global in project
-
-
-
-    // enable and disable for editing post scene
-    //static final int EDIT_POST = 0;
-    //static final int NEW_POST = 1;
+    
 
     static final String NEW_POST = "create";
 
@@ -322,6 +318,7 @@ public class PantherInspectProject extends Application
         primaryStage.setScene(scene);
         primaryStage.show();
         SplashScreenLoader.splashScreen.hide();
+        primaryStage.getIcons().add(new Image("file:icon.png"));
     }
 
     @Override
