@@ -43,7 +43,7 @@ public class ProfilePage {
         backBtn.setOnAction(e -> primaryStage.setScene(this.master.userHome.userpage(primaryStage)));
         grid.add(backBtn, 0, 0);
         
-        ResultSet rs = this.master.qp.selectProfileDisplay(this.master.getAccountId());
+        ResultSet rs = this.master.qp.selectProfileDisplay(accountId);
         try {
             rs.next();
             //String desired = "Email, Username, Picture, Year, Semester, Graduated";
