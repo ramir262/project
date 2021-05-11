@@ -80,7 +80,7 @@ public class SubmitCourseReview {
         try {
             rs.next();
             String selectedSubject = rs.getString(1);
-            viewPost.setOnAction(e -> primaryStage.setScene(toViewPosting.viewPosting(primaryStage,selectedSubject,courseId,true)));
+            viewPost.setOnAction(e -> primaryStage.setScene(toViewPosting.viewPosting(primaryStage,selectedSubject,courseId,courseId,true)));
             viewPostHB.setAlignment(Pos.BOTTOM_RIGHT);
             viewPostHB.getChildren().add(viewPost);
       } catch (SQLException ex) {

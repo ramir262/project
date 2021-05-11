@@ -80,7 +80,7 @@ public class displayCourseRatings {
 
         table.getColumns().addAll(colDate, colName, colStars);
 
-        addButtonToTable(primaryStage,table,classes,toViewPost,selectedSubject);
+        addButtonToTable(primaryStage,table,classes,toViewPost,selectedSubject, courseId);
 
 
         // Back Button
@@ -94,7 +94,7 @@ public class displayCourseRatings {
         displayCourse.add(backButtonBox,0,0);
 
         Button viewAllProfessors = new Button("View all Professors");
-        viewAllProfessors.setOnAction(e -> primaryStage.setScene(toViewPost.viewPosting(primaryStage,selectedSubject,courseId,true)));
+        viewAllProfessors.setOnAction(e -> primaryStage.setScene(toViewPost.viewPosting(primaryStage,selectedSubject,courseId,courseId,true)));
         //
         HBox viewHB = new HBox(10);
         //=============================================================================
@@ -142,7 +142,7 @@ public class displayCourseRatings {
         return classes;
     }
 
-    public void addButtonToTable(Stage primaryStage, TableView<Data> table, List<String> classes, viewPost toViewPost, String selectedSubject) {
+    public void addButtonToTable(Stage primaryStage, TableView<Data> table, List<String> classes, viewPost toViewPost, String selectedSubject, String courseId) {
         TableColumn<Data, Void> colBtn = new TableColumn("View More Info");
 
         
@@ -157,8 +157,7 @@ public class displayCourseRatings {
 
                         btn.setOnAction((ActionEvent event) -> {
                             Data data = getTableView().getItems().get(getIndex());
-                            System.out.println("selectedData: " + data);
-                            primaryStage.setScene(toViewPost.viewPosting(primaryStage,selectedSubject,classes.get(getIndex()),false));
+                            primaryStage.setScene(toViewPost.viewPosting(primaryStage,selectedSubject,classes.get(getIndex()),courseId, false));
                         });
 
 
