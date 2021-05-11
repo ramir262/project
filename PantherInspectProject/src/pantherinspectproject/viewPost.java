@@ -52,7 +52,7 @@ public class viewPost {
     /*
     param: cId (classId or courseId, depending on boolean), all (if all classes in course selected)
     */
-    public Scene viewPosting(Stage primaryStage, String selectedSubject, String cId, boolean all)
+    public Scene viewPosting(Stage primaryStage, String selectedSubject, String cId, String courseId, boolean all)
     {
       this.postList = new ArrayList<>();
       
@@ -100,7 +100,7 @@ public class viewPost {
        HBox backHbox = new HBox();
        backHbox.setAlignment(Pos.TOP_RIGHT);
        backHbox.getChildren().add(backButton);
-       backButton.setOnAction(e -> primaryStage.setScene(master.getCourseDisplay().display(primaryStage, cId, selectedSubject)));
+       backButton.setOnAction(e -> primaryStage.setScene(master.getCourseDisplay().display(primaryStage, courseId, selectedSubject)));
        grid.add(backButton, 0, 0);
        
        
@@ -403,7 +403,7 @@ public class viewPost {
                 System.out.println(accountId);
                 ResultSet accountRs = this.master.qp.selectProfileDisplay(accountId);
                 accountRs.next();
-                //TODO: change to picture
+
                 int i = 1;
                 String imgPath = accountRs.getString(3);
                 ImageView imageView = new ImageView();
@@ -428,7 +428,7 @@ public class viewPost {
                 HBox picBox = new HBox(picBtn);
                 post.add(picBox,0,i++);
                 Label accountLbl = new Label(accountRs.getString(2));
-                //navigateToProfile(primaryStage,accountBtn,accountId);
+
                 HBox accountBox = new HBox(accountLbl);
                 post.add(accountBox,0,i++);
 
