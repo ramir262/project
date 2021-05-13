@@ -76,14 +76,14 @@ public class AccountSettings
         
       primaryStage.setTitle("Account Settings:  ");
       GridPane accountHome = new GridPane();
-      accountHome.setAlignment(Pos.CENTER);
+      accountHome.setAlignment(Pos.TOP_LEFT);
       accountHome.setHgap(15);
       accountHome.setVgap(15);
       accountHome.setGridLinesVisible(false);
       
        Text scenetitle = new Text("Change password ");
        scenetitle.setFont(Font.font("Tahoma", FontWeight.NORMAL, 20));
-       accountHome.add(scenetitle, 0, 0, 2, 1);
+       accountHome.add(scenetitle, 0, 0, 3, 4);
       
       /*Label changeEmailLabel = new Label("Change email");
       accountHome.add(changeEmailLabel, 0,1);
@@ -91,15 +91,15 @@ public class AccountSettings
       accountHome.add(changeEmailField, 1,2);*/
       
       Label changePasswordLabel = new Label("Change password");
-      accountHome.add(changePasswordLabel, 0,2);
+      accountHome.add(changePasswordLabel, 0,3);
       PasswordField changePasswordField = new PasswordField();
-      accountHome.add(changePasswordField, 1,1);
+      accountHome.add(changePasswordField, 1,3);
       
       // Add 1 button to submit changes; 1 to cancel (go back to userhome page?????)
       Button accSettingsCancelButton = new Button("Cancel");
       HBox cancelChangesHB = new HBox(accSettingsCancelButton);
       accSettingsCancelButton.setOnAction(e -> primaryStage.setScene(settingsPage.settingsPage(primaryStage)));
-      accountHome.add(cancelChangesHB, 0, 4);
+      accountHome.add(cancelChangesHB, 0, 0);
       
       Button accSettingsSaveButton = new Button("Save Changes");
       HBox saveChangesHB = new HBox(accSettingsSaveButton);
@@ -126,7 +126,7 @@ public class AccountSettings
       
       
       
-      Scene scene = new Scene(accountHome, 800, 800); 
+      Scene scene = new Scene(accountHome, 400, 400); 
       
       
       

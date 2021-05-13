@@ -103,7 +103,7 @@ public class displayCourseRatings {
         //viewAllProfessors.setOnAction(e -> primaryStage.setScene(master.getViewPost().viewPosting(primaryStage, selectedCourse)));
         viewHB.setAlignment(Pos.CENTER);
         viewHB.getChildren().add(viewAllProfessors);
-        displayCourse.add(viewHB,4,0);
+        displayCourse.add(viewHB,0,2);
 
         return scene;
 

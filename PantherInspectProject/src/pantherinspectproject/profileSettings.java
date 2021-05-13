@@ -34,13 +34,13 @@ public class profileSettings
         
       primaryStage.setTitle("Edit Profile Settings ");
       GridPane editprofileSettings = new GridPane();
-      editprofileSettings.setAlignment(Pos.CENTER);
+      editprofileSettings.setAlignment(Pos.TOP_LEFT);
       editprofileSettings.setHgap(15);
       editprofileSettings.setVgap(15);
       editprofileSettings.setGridLinesVisible(false);
       
       
-      Scene scene = new Scene(editprofileSettings, 800, 800); 
+      Scene scene = new Scene(editprofileSettings, 400, 400); 
       
       //Text profileSettings = new Text("Profile Settings");
       //profileSettings.setFont(Font.font("Tahoma", FontWeight.NORMAL, 16));
@@ -68,7 +68,7 @@ public class profileSettings
       cancelButton.setOnAction(e -> primaryStage.setScene(settingsPage.settingsPage(primaryStage)));
       //cancelChangesHB.setAlignment(Pos.BOTTOM_RIGHT);
       //cancelChangesHB.getChildren().add(cancelButton);
-      editprofileSettings.add(cancelChangesHB, 0, 4);
+      editprofileSettings.add(cancelChangesHB, 0, 0);
       
       // Save Changes Button 
       Button saveChangesButton = new Button("Save Changes");

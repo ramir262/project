@@ -33,13 +33,13 @@ public class ProfilePage {
     public Scene userpage(Stage primaryStage,String accountId)
     {
         GridPane grid = new GridPane();
-        grid.setAlignment(Pos.CENTER);
+        grid.setAlignment(Pos.TOP_LEFT);
         grid.setHgap(15);
         grid.setVgap(15);
         grid.setGridLinesVisible(false);
-        Scene scene = new Scene(grid, 800, 800);
+        Scene scene = new Scene(grid, 400, 400);
         
-        Button backBtn = new Button("Home Page");
+        Button backBtn = new Button("Back");
         backBtn.setOnAction(e -> primaryStage.setScene(this.master.userHome.userpage(primaryStage)));
         grid.add(backBtn, 0, 0);
         

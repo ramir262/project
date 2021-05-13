@@ -75,8 +75,8 @@ public class forgotPassword
           primaryStage.close();
           master.start(new Stage());
       });
+      logoutButton.setAlignment(Pos.TOP_RIGHT);
       resetPassword.add(logoutButton, 0, 0);
-      
       Label label = new Label("Enter email to reset password:");
       resetPassword.add(label, 0,4);
       
@@ -185,7 +185,7 @@ public class forgotPassword
       hbBtn.getChildren().add(resetButton);
       resetPassword.add(hbBtn, 1, 6);
       
-      Scene scene = new Scene(resetPassword, 800, 800); 
+      Scene scene = new Scene(resetPassword, 400, 400); 
       
       return scene;
     }

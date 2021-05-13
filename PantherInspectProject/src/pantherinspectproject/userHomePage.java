@@ -52,7 +52,7 @@ public class userHomePage
 
 
 
-      Scene scene = new Scene(homePage, 700, 600);
+      Scene scene = new Scene(homePage, 500, 400);
 
       //=========== Search Course Label ============
       Label searchCourseLabel = new Label("Search a Chapman Subject:");
@@ -89,8 +89,11 @@ public class userHomePage
       //homePage.add(rateCourseField, 1, 2);
 
       Label labelOR = new Label("OR");
-
       homePage.add(labelOR, 1,2);
+      
+      Label rateChapmanCourse = new Label("Rate a Chapman Course:");
+      homePage.add(rateChapmanCourse, 0,3);
+      
       Button rateButton = new Button("Rate a Chapman Course");
       HBox hRatebox = new HBox(rateButton);
       rateButton.setOnAction(e -> primaryStage.setScene(master.rateCourse.rateCourse(primaryStage, PantherInspectProject.NEW_POST)));
