@@ -33,19 +33,35 @@ import javafx.util.Callback;
  */
 
 
-public class displayCourseRatings {
+public class CourseMenu {
     PantherInspectProject master;
     
     
 
-    public displayCourseRatings(PantherInspectProject master){
+    public CourseMenu(PantherInspectProject master){
         this.master = master;
     }
 
-    public Scene display(Stage primaryStage, String courseId, String selectedSubject)
+    /*
+    ----------------------------------------
+    function: setupPage
+    ----------------------------------------
+    params:
+        Stage primaryStage
+        String courseId
+        String selectedSubject
+    purpose:
+        generate menu associated with course
+            links to navigate to entire course, or specific instructors
+    return:
+        Scene
+    */
+    public Scene setupPage(Stage primaryStage, String courseId, String selectedSubject)
     {
-        searchCoursePage toSearchCoursePage = this.master.getSearchCoursePage();
-        viewPost toViewPost = this.master.getViewPost();
+        //setup pages
+        SubjectMenu toSearchCoursePage = this.master.getSearchCoursePage();
+        ViewPostPage toViewPost = this.master.getViewPost();
+        
         //build table
         TableView<Data> table = new TableView<>();
         ObservableList<Data> tvObservableList = FXCollections.observableArrayList();
@@ -60,7 +76,7 @@ public class displayCourseRatings {
         Scene scene = new Scene(gridBox); //object to return
 
         //set table
-        setTableappearance(table);
+        setTableAppearance(table);
 
         //populate table
         List<String> classes = fillTableObservableListWithData(tvObservableList,courseId);
@@ -88,33 +104,56 @@ public class displayCourseRatings {
       
         Button backButton = new Button("Back");
         HBox backButtonBox = new HBox(10);
-        backButton.setOnAction(e -> primaryStage.setScene(toSearchCoursePage.toSearchCourse(primaryStage, selectedSubject)));
+        backButton.setOnAction(e -> primaryStage.setScene(toSearchCoursePage.setupPage(primaryStage, selectedSubject)));
         backButtonBox.setAlignment(Pos.TOP_LEFT);
         backButtonBox.getChildren().add(backButton);
         displayCourse.add(backButtonBox,0,0);
 
         Button viewAllProfessors = new Button("View all Professors");
-        viewAllProfessors.setOnAction(e -> primaryStage.setScene(toViewPost.viewPosting(primaryStage,selectedSubject,courseId,courseId,true)));
+        viewAllProfessors.setOnAction(e -> primaryStage.setScene(toViewPost.setupPage(primaryStage,selectedSubject,courseId,courseId,true)));
         //
         HBox viewHB = new HBox(10);
         //=============================================================================
         // Set action for Button to go to
         //=============================================================================
-        //viewAllProfessors.setOnAction(e -> primaryStage.setScene(master.getViewPost().viewPosting(primaryStage, selectedCourse)));
+
         viewHB.setAlignment(Pos.CENTER);
         viewHB.getChildren().add(viewAllProfessors);
         displayCourse.add(viewHB,14,9);
 
         return scene;
 
-}
-
-     public void setTableappearance(TableView<Data> table) {
+    }
+    /*
+    ----------------------------------------
+    function: setTableAppearance
+    ----------------------------------------
+    params:
+        TableView<Data> table
+    purpose:
+        setup table's appearance
+    */
+    public void setTableAppearance(TableView<Data> table) {
         table.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
         table.setPrefWidth(600);
         table.setPrefHeight(600);
     }
 
+    /*
+    ----------------------------------------
+    function: fillTableObservableListWithData
+    ----------------------------------------
+    params:
+        Observable<Data> tvObservableList
+        String courseId
+    purpose:
+        fill table with data associated with course
+            date of last post
+            professor name
+            average star count
+    return:
+        List classes
+    */
     public List fillTableObservableListWithData(ObservableList<Data> tvObservableList, String courseId) {
         List<String> classes = new ArrayList<>();
 
@@ -137,30 +176,41 @@ public class displayCourseRatings {
 
             }
         } catch (SQLException ex) {
-            Logger.getLogger(displayCourseRatings.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(CourseMenu.class.getName()).log(Level.SEVERE, null, ex);
         }
         return classes;
     }
 
-    public void addButtonToTable(Stage primaryStage, TableView<Data> table, List<String> classes, viewPost toViewPost, String selectedSubject, String courseId) {
+    /*
+    ----------------------------------------
+    function: addButtonToTable
+    ----------------------------------------
+    params:
+        Stage primaryStage
+        TableView<Data> table : table object which holds data
+        List<String> classes
+        ViewPost toViewPost
+        String selectedSubject
+        String courseId
+    purpose:
+        add button to right of each instance in table
+            view professor
+    */
+    public void addButtonToTable(Stage primaryStage, TableView<Data> table, List<String> classes, 
+            ViewPostPage toViewPost, String selectedSubject, String courseId) {
         TableColumn<Data, Void> colBtn = new TableColumn("View More Info");
 
-        
         Callback<TableColumn<Data, Void>, TableCell<Data, Void>> cellFactory = new Callback<TableColumn<Data, Void>, TableCell<Data, Void>>() {
             @Override
             public TableCell<Data, Void> call(final TableColumn<Data, Void> param) {
                 final TableCell<Data, Void> cell = new TableCell<Data, Void>() {
 
                     private final Button btn = new Button("Read More");
-
                     {
-
                         btn.setOnAction((ActionEvent event) -> {
                             Data data = getTableView().getItems().get(getIndex());
-                            primaryStage.setScene(toViewPost.viewPosting(primaryStage,selectedSubject,classes.get(getIndex()),courseId, false));
+                            primaryStage.setScene(toViewPost.setupPage(primaryStage,selectedSubject,classes.get(getIndex()),courseId, false));
                         });
-
-
                     }
 
                     @Override
@@ -179,8 +229,6 @@ public class displayCourseRatings {
 
         colBtn.setCellFactory(cellFactory);
         table.getColumns().add(colBtn);
-
-
     }
 
      public class Data {

@@ -941,7 +941,7 @@ public class QueryProcessor {
 		String where = String.format(this.WHERE, "ReviewId=?");
                 String tail = where + order_by;
 		String[] instance = new String[] {reviewId};
-		ResultSet rs = select(desired,tables,where,instance);
+		ResultSet rs = select(desired,tables,tail,instance);
 		return rs;
 	}
         /*
@@ -1098,14 +1098,16 @@ public class QueryProcessor {
 		ResultSet : subject,courseNum,cName,pName,stars,creation,edit,reviewId,accountId,courseId
 	*/
 	
-	public ResultSet selectClassReviewByStars(String stars, String classId) {
+	public ResultSet selectClassReviewByStars(String stars, String classId, String order) {
 		String desired = "subject,courseNum,cName,pName,stars,creation,edit,reviewId,accountId,courseId";
 		String[] tableNames = new String[] {"Review","Post","Class","Course","Professor"};
 		String tables = String.join(this.NATURAL_JOIN, tableNames);
 		String[] wheres = new String[] {"ClassId=?","Stars=?"};
 		String where = String.format(this.WHERE, String.join(this.AND, wheres));
+                String order_by = String.format(this.ORDER_BY,order);
+                String tail = where + order_by;
 		String[] instance = new String[] {classId,stars};
-		ResultSet rs = select(desired,tables,where,instance);
+		ResultSet rs = select(desired,tables,tail,instance);
 		return rs;
 	}
         /*
@@ -1118,14 +1120,16 @@ public class QueryProcessor {
 		ResultSet : subject,courseNum,cName,pName,stars,creation,edit,reviewId,accountId,courseId
 	*/
 	
-	public ResultSet selectCourseReviewByStars(String stars, String courseId) {
+	public ResultSet selectCourseReviewByStars(String stars, String courseId, String order) {
 		String desired = "subject,courseNum,cName,pName,stars,creation,edit,reviewId,accountId,courseId";
 		String[] tableNames = new String[] {"Review","Post","Class","Course","Professor"};
 		String tables = String.join(this.NATURAL_JOIN, tableNames);
 		String[] wheres = new String[] {"CourseId=?","Stars=?"};
 		String where = String.format(this.WHERE, String.join(this.AND, wheres));
+                String order_by = String.format(this.ORDER_BY,order);
+                String tail = where + order_by;
 		String[] instance = new String[] {courseId,stars};
-		ResultSet rs = select(desired,tables,where,instance);
+		ResultSet rs = select(desired,tables,tail,instance);
 		return rs;
 	}
 	/*
@@ -1342,8 +1346,8 @@ public class QueryProcessor {
 	private boolean executeUpdate(PreparedStatement stmt) {
 		try {
 			int i = stmt.executeUpdate();
-                        System.out.println("HERE");
-			this.conn.commit();
+                        //commit to save entry
+                        this.conn.commit();
 			if (i > 0) {
 				return true;
 			}

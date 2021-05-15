@@ -31,92 +31,93 @@ import javafx.stage.Stage;
  *
  * @author allis
  */
-public class viewPost {
-
-
-
-    // view all professors views in scroll view
-
+public class ViewPostPage {
 
     PantherInspectProject master;
     List<GridPane> postList;
-    //public String selectedSubject = "";
-
-
-    viewPost(PantherInspectProject master) {
+    
+    ViewPostPage(PantherInspectProject master) {
         this.master = master;
     }
 
-    userHomePage user;
     
     /*
-    param: cId (classId or courseId, depending on boolean), all (if all classes in course selected)
+    ----------------------------------------
+    function: setupPage
+    ----------------------------------------
+    params:
+        Stage primaryStage
+        String selectedSubject
+        String cId (classId or courseId, depending on boolean), all (if all classes in course selected)
+        String courseId
+        boolean all
+    purpose:
+        setup page to view all posts associated with class or course
+    return:
+        Scene
     */
-    public Scene viewPosting(Stage primaryStage, String selectedSubject, String cId, String courseId, boolean all)
+    public Scene setupPage(Stage primaryStage, String selectedSubject, String cId, String courseId, boolean all)
     {
-      this.postList = new ArrayList<>();
-      
-      primaryStage.setTitle("Select Post ");
-      
-      GridPane posts = new GridPane();
-      posts.setAlignment(Pos.CENTER);
-      posts.setHgap(15);
-      posts.setVgap(15);
-      posts.setGridLinesVisible(false);
+        this.postList = new ArrayList<>();
 
-      GridPane grid = new GridPane();
-      grid.setAlignment(Pos.CENTER);
-      grid.setHgap(15);
-      grid.setVgap(15);
-      grid.setGridLinesVisible(false);
+        primaryStage.setTitle("Select Post ");
 
-      grid.setPrefSize(800, 700); 
-      
-      ScrollPane scroll = addScrollPane(posts);
-      scroll.setContent(grid);
-      
-      posts.add(scroll, 0, 0); //0,0
-      
-       
-       // Cindy: VBOX 
+        //setup grid
+        GridPane posts = new GridPane();
+        posts.setAlignment(Pos.CENTER);
+        posts.setHgap(15);
+        posts.setVgap(15);
+        posts.setGridLinesVisible(false);
+
+        GridPane grid = new GridPane();
+        grid.setAlignment(Pos.CENTER);
+        grid.setHgap(15);
+        grid.setVgap(15);
+        grid.setGridLinesVisible(false);
+
+        grid.setPrefSize(800, 700); 
+
+        ScrollPane scroll = addScrollPane(posts);
+        scroll.setContent(grid);
+
+        posts.add(scroll, 0, 0); //0,0
+
        VBox vbox = new VBox();
        vbox.setAlignment(Pos.CENTER);
        vbox.getChildren().addAll(posts, grid, scroll);
-       //scroll.setFitToHeight(true);
        
+       // setup page title
        Label displayCourseName = new Label("Course Name:");
        displayCourseName.setStyle("-fx-font-weight:bold");
        grid.add(displayCourseName, 0,1); // posts
-       // Label to display course name - userhome page 
        
-       
+       // setup combo box to filter reviews by star count
        Label rateByStars = new Label("Filter by Star Ratings:");
        grid.add(rateByStars, 5,1);
        
-       ComboBox starBox = addStarComboBox(primaryStage, grid, all, cId);
+       addStarComboBox(primaryStage, grid, all, cId);
        
-       
+       // setup back button
        Button backButton = new Button("Back");
        HBox backHbox = new HBox();
        backHbox.setAlignment(Pos.TOP_RIGHT);
        backHbox.getChildren().add(backButton);
-       backButton.setOnAction(e -> primaryStage.setScene(master.getCourseDisplay().display(primaryStage, courseId, selectedSubject)));
+       backButton.setOnAction(e -> primaryStage.setScene(master.getCourseDisplay().setupPage(primaryStage, courseId, selectedSubject)));
        grid.add(backButton, 0, 0);
        
        
-        if (all == true) { // display ALL course reviews
-            // Label: Display Course Name
+        if (all == true) { // setupPage ALL course reviews
           
             ResultSet courseRs = this.master.qp.getCourseName(cId);
             try {
                 courseRs.next();
                 displayTitle(grid,courseRs);
             } catch (SQLException ex) {
-                Logger.getLogger(viewPost.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(ViewPostPage.class.getName()).log(Level.SEVERE, null, ex);
             }
             
         }
-        else { // display class reviews (determined by professor)
+        else { // setupPage class reviews (determined by professor)
              ResultSet courseRs = this.master.qp.getClassName(cId);
             try {
                 courseRs.next();
@@ -127,14 +128,14 @@ public class viewPost {
                 grid.add(displayProfName, 0,3);
 
             } catch (SQLException ex) {
-                Logger.getLogger(viewPost.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(ViewPostPage.class.getName()).log(Level.SEVERE, null, ex);
             }
             
         }
       
         displayUnfilteredReviews(primaryStage, grid, all, cId);
-        //Scene scene = new Scene(posts, 400, 600);
-        Scene scene = new Scene(vbox,900,900); // Cindy : VBOX
+
+        Scene scene = new Scene(vbox,900,900); 
         return scene;
 
     }
@@ -231,11 +232,11 @@ public class viewPost {
     private void displayUnfilteredReviews(Stage primaryStage, GridPane grid, boolean all, String cId) {
         
         ResultSet rs;
-        if (all == true) { // display ALL course reviews
+        if (all == true) { // setupPage ALL course reviews
             rs = this.master.qp.selectPost(cId, "Creation DESC");
             
         }
-        else { // display class reviews (determined by professor)
+        else { // setupPage class reviews (determined by professor)
           rs = this.master.qp.selectPostByClass(cId, "Creation DESC");
           
         }
@@ -259,12 +260,12 @@ public class viewPost {
     private void displayFilteredReviews(Stage primaryStage, GridPane grid, boolean all, String cId, String star) {
         
         ResultSet rs;
-        if (all == true) { // display ALL course reviews
-            rs = this.master.qp.selectCourseReviewByStars(star,cId);
+        if (all == true) { // setupPage ALL course reviews
+            rs = this.master.qp.selectCourseReviewByStars(star,cId, "Creation DESC");
             
         }
-        else { // display class reviews (determined by professor)
-          rs = this.master.qp.selectClassReviewByStars(star,cId);
+        else { // setupPage class reviews (determined by professor)
+          rs = this.master.qp.selectClassReviewByStars(star,cId, "Creation DESC");
           
         }
 
@@ -340,7 +341,7 @@ public class viewPost {
 
             // navigate to profile page for user
             ProfilePage profilePage = new ProfilePage(this.master);
-            primaryStage.setScene(profilePage.userpage(primaryStage,accountId));
+            primaryStage.setScene(profilePage.setupPage(primaryStage,accountId));
 
         });
     }
@@ -359,8 +360,8 @@ public class viewPost {
         btn.setOnAction((ActionEvent event) -> {
 
             // navigate to profile page for user
-            rateCoursePage ratePage = this.master.getRateCoursePage();
-            primaryStage.setScene(ratePage.rateCourse(primaryStage,reviewId));
+            RateCoursePage ratePage = this.master.getRateCoursePage();
+            primaryStage.setScene(ratePage.setupPage(primaryStage,reviewId));
 
         });
     }
@@ -379,8 +380,8 @@ public class viewPost {
         btn.setOnAction((ActionEvent event) -> {
 
             // navigate to profile page for user
-            deletePost deletePage = this.master.getDeletePost();
-            primaryStage.setScene(deletePage.deletePosting(primaryStage,courseId,reviewId));
+            DeletePostPage deletePage = this.master.getDeletePost();
+            primaryStage.setScene(deletePage.setupPage(primaryStage,courseId,reviewId));
 
         });
     }
@@ -418,7 +419,7 @@ public class viewPost {
                         imageView.setImage(imagestream);
 
                     } catch (FileNotFoundException ex) {
-                        Logger.getLogger(SignupForm.class.getName()).log(Level.SEVERE, null, ex);
+                        Logger.getLogger(SignupPage.class.getName()).log(Level.SEVERE, null, ex);
 
                     }
                 }
@@ -441,14 +442,7 @@ public class viewPost {
                     HBox actionBox = new HBox(editBtn,deleteBtn);
                     post.add(actionBox,0,i++);
                 }
-
-                // display course info
-                /*Label classLblBold = new Label("Class:");
-                classLblBold.setStyle("-fx-font-weight: bold");
-                Label classLbl = new Label(String.format("%s %s: %s", subject, courseNum, cName));
-                HBox classBox = new HBox(classLblBold,classLbl);
-                post.add(classBox,0,i++);*/
-
+                
                 //display professor name
                 if (all) {
                     Label profLblBold = new Label("Professor:");

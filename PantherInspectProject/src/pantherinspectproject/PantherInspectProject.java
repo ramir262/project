@@ -37,19 +37,19 @@ public class PantherInspectProject extends Application
     public Stage primaryStage;
     
     // pages
-    SignupForm signupform;
-    userHomePage userHome;
-    forgotPassword toReset;
-    deletePost delete;
-    displayCourseRatings displayCourse;
-    rateCoursePage rateCourse;
-    SubmitCourseReview submitCourseReview;
-    searchCoursePage searchCourse;
-    viewPost view;
-    profileSettings profileSetting;
+    SignupPage signupform;
+    HomePage userHome;
+    ForgotPasswordPage toReset;
+    DeletePostPage delete;
+    CourseMenu displayCourse;
+    RateCoursePage rateCourse;
+    SubmitMenu submitCourseReview;
+    SubjectMenu searchCourse;
+    ViewPostPage view;
+    ProfileSettingsPage profileSetting;
     SettingsPage settings;
     ProfilePage profile;
-    AccountSettings accountSettings;
+    AccountSettingsPage accountSettings;
     
 
     static final String NEW_POST = "create";
@@ -76,23 +76,63 @@ public class PantherInspectProject extends Application
     public QueryProcessor qp;
     public Connection conn = null;
 
-    public void setAccountId(String id) {
-        accountId = id;
-    }
-    public String getAccountId() {
-        return accountId;
-    }
-    public void setUserEmail(String email) {
-        userEmail = email;
-    }
-    public String getUserEmail() {
-        return userEmail;
-    }
+    @Override
+    public void start(Stage primaryStage)
+    {
+        this.primaryStage = primaryStage;
+        setupPages();
+        //get environment variables
 
-    public void getEnvironmentVariables() {
-        env = new Env();
-    }
+        //set up database and query processor
+        setupDB();
 
+        //set up GUI
+        GridPane grid = createGrid();
+
+        //create title
+        Text scenetitle = createTitle(primaryStage,"PantherInspect");
+        grid.add(scenetitle, 0, 0, 2, 1);
+
+        //create email entry
+        Label userName = new Label("Email:");
+        grid.add(userName, 0, 1);
+
+        TextField userTextField = new TextField();
+        grid.add(userTextField, 1, 1);
+
+        //create password entry
+        Label pw = new Label("Password:");
+        grid.add(pw, 0, 2);
+
+        PasswordField pwBox = createPasswordField(userTextField);
+        grid.add(pwBox, 1, 2);
+
+        //create signin button
+        Button signinBtn = createSigninButton(userTextField,pwBox,primaryStage);
+        HBox hbBtn = createBox(signinBtn,Pos.BOTTOM_RIGHT);
+        grid.add(hbBtn, 1, 4);
+
+        //create signup button
+        Button SUbtn = createSignupButton(primaryStage);
+        HBox suhbBtn = createBox(SUbtn,Pos.BOTTOM_CENTER);
+        grid.add(suhbBtn, 1, 8);
+
+        //forgot password label
+        Button forgotPassword = new Button("Forgot Password?");
+        forgotPassword.setOnAction((ActionEvent e) -> {
+
+            primaryStage.setScene(toReset.setupPage(primaryStage));
+
+        });
+        grid.add(forgotPassword, 0, 4);
+
+        final Text actiontarget = new Text();
+        grid.add(actiontarget, 1, 6);
+
+        //complete setup
+        setupScene(primaryStage,grid);
+    }
+    
     /*
 	-------------------------------
 	function: setupDB
@@ -155,9 +195,33 @@ public class PantherInspectProject extends Application
             qp.createTables(COURSE_FILE);
             qp.createTables(POST_FILE);
         }
-
-
-
+    }
+    
+     /*
+	-------------------------------
+	function: createPasswordField
+	-------------------------------
+        params:
+                TextField userTextField : text field for email input
+	purpose:
+		create password field and related handle
+                if enter is pressed, act as if sign in button is pressed
+	*/
+    private PasswordField createPasswordField(TextField userTextField) {
+        PasswordField pwBox = new PasswordField();
+        pwBox.setOnKeyPressed(new EventHandler<KeyEvent>() {
+            @Override
+            public void handle(KeyEvent k) {
+                if(k.getCode().equals(KeyCode.ENTER)) {
+                    System.out.println("signing in..");
+                    Boolean check = checkPassword(userTextField.getText(),pwBox.getText());
+                    if(check) {
+                        primaryStage.setScene(userHome.setupPage(primaryStage));
+                    }
+                }
+            }
+        });
+        return pwBox;
     }
 
     /*
@@ -215,14 +279,9 @@ public class PantherInspectProject extends Application
         btn.setOnAction((ActionEvent event) -> {
 
             System.out.println("signing in..");
-
-            //temp fix: not running this in a thread as it should be locking and should freeze gui
-            //run check password as thread
-            //Thread thr = new Thread(() -> checkPassword(emailField.getText(),pwField.getText()));
-            //thr.start();
             Boolean check = checkPassword(emailField.getText(),pwField.getText());
             if(check) {
-                primaryStage.setScene(userHome.userpage(primaryStage));
+                primaryStage.setScene(userHome.setupPage(primaryStage));
             }
 
         });
@@ -237,7 +296,7 @@ public class PantherInspectProject extends Application
                 Stage primaryStage
 	purpose:
 		create signup button with action:
-                    open signup form
+                    open signup setupPage
 	return:
 		Button
 	*/
@@ -245,7 +304,7 @@ public class PantherInspectProject extends Application
         Button SUbtn = new Button("Sign Up to get an Account! ");
         SUbtn.setOnAction((ActionEvent e) -> {
 
-            primaryStage.setScene(signupform.form(primaryStage));
+            primaryStage.setScene(signupform.setupPage(primaryStage));
 
         });
         return SUbtn;
@@ -320,165 +379,106 @@ public class PantherInspectProject extends Application
         SplashScreenLoader.splashScreen.hide();
         primaryStage.getIcons().add(new Image("file:icon.png"));
     }
-
-    @Override
-    public void start(Stage primaryStage)
+    
+    /*
+	-------------------------------
+	function: setupPages
+	-------------------------------
+        purpose:
+		setup pages for access later
+	*/
+    public void setupPages()
     {
-        this.primaryStage = primaryStage;
-        setClasses();
-        //get environment variables
+        signupform = new SignupPage(this);
+        userHome = new HomePage(this);
+        toReset = new ForgotPasswordPage(this);
+        delete = new DeletePostPage(this);
+        displayCourse = new CourseMenu(this);
+        rateCourse = new RateCoursePage(this);
+        submitCourseReview =  new SubmitMenu(this);
+        searchCourse = new SubjectMenu(this);
+        view = new ViewPostPage(this);
+        profileSetting = new ProfileSettingsPage(this);
+        settings = new SettingsPage(this);
+        profile = new ProfilePage(this);
+        accountSettings = new AccountSettingsPage(this);
 
-        //set up database and query processor
-        setupDB();
+    }
+    
+    // get and set account details
 
-        //set up GUI
-        GridPane grid = createGrid();
-
-        //create title
-        Text scenetitle = createTitle(primaryStage,"PantherInspect");
-        grid.add(scenetitle, 0, 0, 2, 1);
-
-        //create email entry
-        Label userName = new Label("Email:");
-        grid.add(userName, 0, 1);
-
-        TextField userTextField = new TextField();
-        grid.add(userTextField, 1, 1);
-
-        //create password entry
-        Label pw = new Label("Password:");
-        grid.add(pw, 0, 2);
-
-        //PantherInspectProject panther = this;
-        PasswordField pwBox = new PasswordField();
-        pwBox.setOnKeyPressed(new EventHandler<KeyEvent>() {
-            @Override
-            public void handle(KeyEvent k) {
-                if(k.getCode().equals(KeyCode.ENTER)) {
-                    System.out.println("signing in..");
-
-                    //temp fix: not running this in a thread as it should be locking and should freeze gui
-                    //run check password as thread
-                    //Thread thr = new Thread(() -> checkPassword(emailField.getText(),pwField.getText()));
-                    //thr.start();
-                    Boolean check = checkPassword(userTextField.getText(),pwBox.getText());
-                    if(check) {
-                        primaryStage.setScene(userHome.userpage(primaryStage));
-                    }
-                }
-            }
-        });
-        grid.add(pwBox, 1, 2);
-
-        //create signin button
-        Button signinBtn = createSigninButton(userTextField,pwBox,primaryStage);
-        HBox hbBtn = createBox(signinBtn,Pos.BOTTOM_RIGHT);
-        grid.add(hbBtn, 1, 4);
-
-        //create signup button
-        Button SUbtn = createSignupButton(primaryStage);
-        HBox suhbBtn = createBox(SUbtn,Pos.BOTTOM_CENTER);
-        grid.add(suhbBtn, 1, 8);
-
-        //forgot password label
-        //TODO: forgot password button + logic
-        Button forgotPassword = new Button("Forgot Password?");
-        forgotPassword.setOnAction((ActionEvent e) -> {
-
-            primaryStage.setScene(toReset.toResetPassword(primaryStage));
-
-        });
-        grid.add(forgotPassword, 0, 4);
-
-        final Text actiontarget = new Text();
-        grid.add(actiontarget, 1, 6);
-
-        //complete setup
-        setupScene(primaryStage,grid);
+    public void setAccountId(String id) {
+        accountId = id;
+    }
+    public String getAccountId() {
+        return accountId;
+    }
+    public void setUserEmail(String email) {
+        userEmail = email;
+    }
+    public String getUserEmail() {
+        return userEmail;
     }
 
+    // get environmental variables
+    public void getEnvironmentVariables() {
+        env = new Env();
+    }
 
-
-    public static void main(String[] args) {
-      LauncherImpl.launchApplication(PantherInspectProject.class, SplashScreenLoader.class, args);
-   }
-    
-    public rateCoursePage getRateCoursePage() {
+    // get pages
+    public RateCoursePage getRateCoursePage() {
         return rateCourse;
     }
     
-    public deletePost getDeletePost() {
+    public DeletePostPage getDeletePost() {
         return delete;
     }
 
-    public userHomePage getUserHomePage()
+    public HomePage getUserHomePage()
     {
         return userHome;
     }
 
-    public displayCourseRatings getCourseDisplay() {
+    public CourseMenu getCourseDisplay() {
         return displayCourse;
 
     }
 
-    public rateCoursePage getCoursePage() {
+    public RateCoursePage getCoursePage() {
         return rateCourse;
 
     }
 
-    public SubmitCourseReview getCourseReview()
+    public SubmitMenu getCourseReview()
     {
         return submitCourseReview;
     }
-
    
-    public searchCoursePage getSearchCoursePage()
+    public SubjectMenu getSearchCoursePage()
     {
         return searchCourse;
     }
 
-    public viewPost getViewPost()
+    public ViewPostPage getViewPost()
     {
         return view;
     }
     public ProfilePage getProfilePage() {
         return profile;
     }
-    public profileSettings getProfileSettings() {
+    public ProfileSettingsPage getProfileSettings() {
         return profileSetting;
     }
     public SettingsPage getSettings() {
         return settings;
     }
     
-    public AccountSettings getAccountSettings() {
+    public AccountSettingsPage getAccountSettings() {
         return accountSettings;
     }
 
-    public void setClasses()
-    {
-
-        signupform = new SignupForm(this);
-        userHome = new userHomePage(this);
-        toReset = new forgotPassword(this);
-        delete = new deletePost(this);
-        displayCourse = new displayCourseRatings(this);
-        rateCourse = new rateCoursePage(this);
-        submitCourseReview =  new SubmitCourseReview(this);
-
-        searchCourse = new searchCoursePage(this);
-        view = new viewPost(this);
-        profileSetting = new profileSettings(this);
-        settings = new SettingsPage(this);
-        profile = new ProfilePage(this);
-        accountSettings = new AccountSettings(this);
-
-    }
-
-
-
-
-
-
-
+    public static void main(String[] args) {
+      LauncherImpl.launchApplication(PantherInspectProject.class, SplashScreenLoader.class, args);
+   }
+    
 }

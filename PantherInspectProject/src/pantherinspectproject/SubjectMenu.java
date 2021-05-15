@@ -25,7 +25,7 @@ import javafx.stage.Stage;
  *
  * @author cindyramirez
  */
-public class searchCoursePage
+public class SubjectMenu
 {
     PantherInspectProject master;
    
@@ -35,13 +35,26 @@ public class searchCoursePage
 
     String selectedOrder = "courseNum";
 
-    public searchCoursePage(PantherInspectProject master)
+    public SubjectMenu(PantherInspectProject master)
     {
         this.master = master;
 
 
     }
-   public Scene toSearchCourse(Stage primaryStage, String selectedSubject)
+    /*
+    ----------------------------------------
+    function: setupPage
+    ----------------------------------------
+    params:
+        Stage primaryStage
+        String selectedSubject
+    purpose:
+        create a page which takes in a subject and outputs buttons associated with courses
+        order courses
+    return:
+        Scene
+    */
+   public Scene setupPage(Stage primaryStage, String selectedSubject)
     {
 
       primaryStage.setTitle("Search Courses ");
@@ -65,7 +78,7 @@ public class searchCoursePage
       Button backButton = new Button("Back");
 
       HBox backButtonBox = new HBox(10);
-      backButton.setOnAction(e -> primaryStage.setScene(master.getUserHomePage().userpage(primaryStage)));
+      backButton.setOnAction(e -> primaryStage.setScene(master.getUserHomePage().setupPage(primaryStage)));
       backButtonBox.setAlignment(Pos.BOTTOM_RIGHT);
       backButtonBox.getChildren().add(backButton);
       coursesPage.add(backButtonBox,0,1);
@@ -89,7 +102,7 @@ public class searchCoursePage
             "courseNum" or "cName"
     purpose:
         call all classes in database
-        display course number and course name
+        setupPage course number and course name
         dynamically generate buttons
 
     */
@@ -114,7 +127,7 @@ public class searchCoursePage
                 row++;
 
             }} catch (SQLException ex) {
-                Logger.getLogger(searchCoursePage.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(SubjectMenu.class.getName()).log(Level.SEVERE, null, ex);
         }
    }
 
@@ -198,8 +211,8 @@ public class searchCoursePage
         Button btn = new Button((String.format("%s: %s", courseNum, courseName)));
         btn.setMinWidth(180);
         HBox hbBtn = new HBox(10);
-        displayCourseRatings courseRatings = this.master.getCourseDisplay();
-        btn.setOnAction(e -> primaryStage.setScene(courseRatings.display(primaryStage, courseId, selectedSubject)));
+        CourseMenu courseRatings = this.master.getCourseDisplay();
+        btn.setOnAction(e -> primaryStage.setScene(courseRatings.setupPage(primaryStage, courseId, selectedSubject)));
         hbBtn.setAlignment(Pos.BASELINE_LEFT);
         hbBtn.getChildren().add(btn);
         grid.add(hbBtn, x, y);

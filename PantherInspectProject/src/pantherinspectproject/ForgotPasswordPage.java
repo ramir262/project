@@ -23,73 +23,52 @@ import javafx.stage.Stage;
  *
  * @author cindyramirez
  */
-public class forgotPassword 
+public class ForgotPasswordPage 
 {
     PantherInspectProject master;
     private String hash;
-    public forgotPassword(PantherInspectProject master) {
+    public ForgotPasswordPage(PantherInspectProject master) {
          this.master = master;
      }
     
-    public boolean verifyPassword(String pass) {
-        //check length
-        if(pass.length() < 8)
-            return false;
-        
-        //check for spaces
-        if (pass.contains(" "))
-            return false;
-
-        
-  
-        // check for #
-        int count = 0;
-        for (int i = 0; i < 10; i++) {
-
-            // to convert int to string
-            String str = Integer.toString(i);
-
-            if (pass.contains(str)) {
-                count += 1;
-            }
-        }
-        if (count < 1) {
-            return false;
-        };
-        
-        return true;
-    }
-    
-    public Scene toResetPassword(Stage primaryStage)
+    /*
+    ----------------------------------------
+    function: setupPage
+    ----------------------------------------
+    params:
+        Stage primaryStage
+    purpose:
+        create page to reset password
+    return:
+        Scene
+    */
+    public Scene setupPage(Stage primaryStage)
     {
-      primaryStage.setTitle("Reset password ");
-      GridPane resetPassword = new GridPane();
-      resetPassword.setAlignment(Pos.CENTER);
-      resetPassword.setHgap(15);
-      resetPassword.setVgap(15);
-      resetPassword.setGridLinesVisible(false);
-      
-      //cancel button
-      Button logoutButton = new Button("Cancel");
-      logoutButton.setOnAction(e -> {
-          primaryStage.close();
-          master.start(new Stage());
-      });
-      resetPassword.add(logoutButton, 0, 0);
-      
-      Label label = new Label("Enter email to reset password:");
-      resetPassword.add(label, 0,4);
-      
-      TextField emailtoResetpassword = new TextField();
-      resetPassword.add(emailtoResetpassword, 1, 4);
-      
+        primaryStage.setTitle("Reset password ");
+        GridPane resetPassword = new GridPane();
+        resetPassword.setAlignment(Pos.CENTER);
+        resetPassword.setHgap(15);
+        resetPassword.setVgap(15);
+        resetPassword.setGridLinesVisible(false);
 
+        //cancel button
+        Button logoutButton = new Button("Cancel");
+        logoutButton.setOnAction(e -> {
+            primaryStage.close();
+            master.start(new Stage());
+        });
+        resetPassword.add(logoutButton, 0, 0);
+
+        Label label = new Label("Enter email to reset password:");
+        resetPassword.add(label, 0,4);
+
+        TextField emailtoResetpassword = new TextField();
+        resetPassword.add(emailtoResetpassword, 1, 4);
+        
+        Button resetButton = new Button("reset password");
+        HBox hbBtn = new HBox(10);
       
-      Button resetButton = new Button("reset password");
-      HBox hbBtn = new HBox(10);
-      
-      
-      //get security question
+        //get security question
         Label securityQuestion = new Label("*Filler security question*");
         securityQuestion.setVisible(false);
         resetPassword.add(securityQuestion,0,7);
@@ -112,9 +91,8 @@ public class forgotPassword
         
         Button changePassword = new Button("Reset Password");
         changePassword.setVisible(false);
+        
         resetPassword.add(changePassword, 1, 10);
-      
-      
         resetButton.setOnAction((ActionEvent e) -> {
             int accountId = getAccountId(emailtoResetpassword.getText());
             String question;
@@ -131,7 +109,7 @@ public class forgotPassword
                         securityQuestion.setText(question);
                     }
                 } catch (SQLException ex) {
-                    Logger.getLogger(userHomePage.class.getName()).log(Level.SEVERE, null, ex);
+                    Logger.getLogger(HomePage.class.getName()).log(Level.SEVERE, null, ex);
                 }
                 
                 securityQuestion.setVisible(true);
@@ -190,24 +168,50 @@ public class forgotPassword
       return scene;
     }
     
-    private void getQuestion(int aid) {
-        //ResultSet rs = this.master.qp.selectQuestions();
-        ResultSet rs = this.master.qp.selectSecurityAnswer(Integer.toString(aid));
-        //String[] questions = new ComboBox();
+    /*
+    ----------------------------------------
+    function: verifyPassword
+    ----------------------------------------
+    params:
+        String pass : new password
+    purpose:
+        verify that new password is valid
+            must contain >= 8 characters
+            must not contain spaces
+            must contain at least 1 number
+    return:
+        boolean :
+            if valid, return true
+            if invalid, return false
+    
+    */
+    public boolean verifyPassword(String pass) {
+        //check length
+        if(pass.length() < 8)
+            return false;
+        
+        //check for spaces
+        if (pass.contains(" "))
+            return false;
 
-        try {
-            while(rs.next()) {
-                //comboBox.getItems().add(rs.getString(1));
-                System.out.println(rs.getString(1));
-                System.out.println(rs.getString(2));
-                System.out.println();
+        // check for #
+        int count = 0;
+        for (int i = 0; i < 10; i++) {
+
+            // to convert int to string
+            String str = Integer.toString(i);
+
+            if (pass.contains(str)) {
+                count += 1;
             }
-        } catch (SQLException ex) {
-            Logger.getLogger(userHomePage.class.getName()).log(Level.SEVERE, null, ex);
         }
-
-        //return comboBox;
+        if (count < 1) {
+            return false;
+        }
+        
+        return true;
     }
+    
     
     private int getAccountId(String email) {
         String id = this.master.qp.getAccountId(email);

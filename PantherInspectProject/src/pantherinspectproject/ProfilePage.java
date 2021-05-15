@@ -30,7 +30,20 @@ public class ProfilePage {
     public ProfilePage(PantherInspectProject master) {
         this.master = master;
     }
-    public Scene userpage(Stage primaryStage,String accountId)
+    
+    /*
+    ----------------------------------------
+    function: setupPage
+    ----------------------------------------
+    params:
+        Stage primaryStage
+        String accountId
+    purpose:
+        create profile page
+    return:
+        Scene
+    */
+    public Scene setupPage(Stage primaryStage,String accountId)
     {
         GridPane grid = new GridPane();
         grid.setAlignment(Pos.CENTER);
@@ -40,13 +53,13 @@ public class ProfilePage {
         Scene scene = new Scene(grid, 800, 800);
         
         Button backBtn = new Button("Home Page");
-        backBtn.setOnAction(e -> primaryStage.setScene(this.master.userHome.userpage(primaryStage)));
+        backBtn.setOnAction(e -> primaryStage.setScene(this.master.userHome.setupPage(primaryStage)));
         grid.add(backBtn, 0, 0);
         
         ResultSet rs = this.master.qp.selectProfileDisplay(accountId);
         try {
             rs.next();
-            //String desired = "Email, Username, Picture, Year, Semester, Graduated";
+            //ResultSet = Email, Username, Picture, Year, Semester, Graduated
             // username
             Label usernameLbl = new Label("Username: ");
             usernameLbl.setStyle("-fx-font-weight: bold");
@@ -70,7 +83,7 @@ public class ProfilePage {
                     grid.add(imageView,0,3);
 
                 } catch (FileNotFoundException ex) {
-                    Logger.getLogger(SignupForm.class.getName()).log(Level.SEVERE, null, ex);
+                    Logger.getLogger(SignupPage.class.getName()).log(Level.SEVERE, null, ex);
                     
                 }
             }

@@ -24,67 +24,66 @@ public class SettingsPage
     PantherInspectProject master;
     public SettingsPage(PantherInspectProject master) {
          this.master = master;
-     }
-    
-    public Scene settingsPage(Stage primaryStage)
+    }
+    /*
+    ----------------------------------------
+    function: setupPage
+    ----------------------------------------
+    params:
+        Stage primaryStage
+    purpose:
+        create settings page
+    return:
+        Scene
+    */
+    public Scene setupPage(Stage primaryStage)
     {
-        userHomePage homePage = this.master.getUserHomePage();
-        profileSettings editProfileSetting = this.master.getProfileSettings();//new profileSettings(master);
-        AccountSettings accountSetting = this.master.getAccountSettings();
+        //setup pages
+        HomePage homePage = this.master.getUserHomePage();
+        ProfileSettingsPage editProfileSetting = this.master.getProfileSettings();//new ProfileSettingsPage(master);
+        AccountSettingsPage accountSetting = this.master.getAccountSettings();
         
-      primaryStage.setTitle("Settings Page ");
-      GridPane settings = new GridPane();
-      settings.setAlignment(Pos.CENTER);
-      settings.setHgap(15);
-      settings.setVgap(15);
-      settings.setGridLinesVisible(false);
-      
-      
-      Scene scene = new Scene(settings, 800, 800); 
-      
-      Text settingsTitle = new Text("Settings");
-      settingsTitle.setFont(Font.font("Tahoma", FontWeight.NORMAL, 20));
-      settings.add(settingsTitle, 0, 0, 2, 1);
-      
-      // 3 buttons for three pages
-      // Button to edit profile settings - grad status, year, semester
-      Button profileSettings = new Button("Edit Profile:");
-      HBox profileSettingsHB = new HBox(10);
-      profileSettings.setOnAction(e -> primaryStage.setScene(editProfileSetting.editProfile(primaryStage)));
-      profileSettingsHB.setAlignment(Pos.BOTTOM_RIGHT);
-      profileSettingsHB.getChildren().add(profileSettings);
-      settings.add(profileSettingsHB, 1, 4);
-      
-      // Button to edit account settings - email and password
-      
-      Button accountSettingsButton = new Button("Edit Account Settings");
-      HBox accSettingshbBtn = new HBox(10);
-      accountSettingsButton.setOnAction(e -> primaryStage.setScene(accountSetting.accountPage(primaryStage)));
-      accSettingshbBtn.setAlignment(Pos.BOTTOM_RIGHT);
-      accSettingshbBtn.getChildren().add(accountSettingsButton);
-      settings.add(accSettingshbBtn,0,4);
-      
-      // Back Button
-      
-      Button backButton = new Button("Back");
-      HBox backButtonBox = new HBox(10);
-      backButton.setOnAction(e -> primaryStage.setScene(homePage.userpage(primaryStage)));
-      backButtonBox.setAlignment(Pos.BOTTOM_RIGHT);
-      backButtonBox.getChildren().add(backButton);
-      settings.add(backButtonBox,0,0);
-      
-      
-    
-      
-      
-      
-      
-      
-      
-      
-      
-    
-      return scene;
+        //setup grid
+        primaryStage.setTitle("Settings Page ");
+        GridPane settings = new GridPane();
+        settings.setAlignment(Pos.CENTER);
+        settings.setHgap(15);
+        settings.setVgap(15);
+        settings.setGridLinesVisible(false);
+
+        Scene scene = new Scene(settings, 800, 800); 
+
+        Text settingsTitle = new Text("Settings");
+        settingsTitle.setFont(Font.font("Tahoma", FontWeight.NORMAL, 20));
+        settings.add(settingsTitle, 0, 0, 2, 1);
+
+        // 3 buttons for three pages
+        // Button to edit profile settings - grad status, year, semester
+        Button profileSettings = new Button("Edit Profile:");
+        HBox profileSettingsHB = new HBox(10);
+        profileSettings.setOnAction(e -> primaryStage.setScene(editProfileSetting.setupPage(primaryStage)));
+        profileSettingsHB.setAlignment(Pos.BOTTOM_RIGHT);
+        profileSettingsHB.getChildren().add(profileSettings);
+        settings.add(profileSettingsHB, 1, 4);
+
+        // Button to edit account settings - email and password
+
+        Button accountSettingsButton = new Button("Edit Account Settings");
+        HBox accSettingshbBtn = new HBox(10);
+        accountSettingsButton.setOnAction(e -> primaryStage.setScene(accountSetting.setupPage(primaryStage)));
+        accSettingshbBtn.setAlignment(Pos.BOTTOM_RIGHT);
+        accSettingshbBtn.getChildren().add(accountSettingsButton);
+        settings.add(accSettingshbBtn,0,4);
+
+        // Back Button
+        Button backButton = new Button("Back");
+        HBox backButtonBox = new HBox(10);
+        backButton.setOnAction(e -> primaryStage.setScene(homePage.setupPage(primaryStage)));
+        backButtonBox.setAlignment(Pos.BOTTOM_RIGHT);
+        backButtonBox.getChildren().add(backButton);
+        settings.add(backButtonBox,0,0);
+        
+        return scene;
     }
 
 }

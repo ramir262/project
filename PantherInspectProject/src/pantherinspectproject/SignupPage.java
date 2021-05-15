@@ -36,18 +36,109 @@ import javafx.stage.Stage;
  *
  * @author cindyramirez
  */
-public class SignupForm {
+public class SignupPage {
 
     PantherInspectProject master;
      FileChooser fileChooser = new FileChooser();
 
     String profileImagePath = "";
 
-     public SignupForm(PantherInspectProject master) {
+     public SignupPage(PantherInspectProject master) {
          this.master = master;
      }
 
      /*
+    ----------------------------------------
+    function: setupPage
+    ----------------------------------------
+    params:
+        Stage primaryStage
+    purpose:
+        create page to let a user signup
+            set up account and profile information
+            select an image
+    return:
+        Scene
+    */
+    public Scene setupPage(Stage primaryStage)
+    {
+
+      //setup grid
+      GridPane signup = createGrid();
+
+      //create username entry
+      Label userName = new Label("Username: ");
+      signup.add(userName,0,0);
+      TextField username = new TextField();
+      signup.add(username, 1, 0);
+
+      //create email entry
+      Label Email = new Label("Email: ");
+      signup.add(Email,0,1);
+      TextField email = new TextField();
+      signup.add(email, 1,1);
+
+      //create password entry
+      Label Password = new Label("Password: ");
+      signup.add(Password,0,2);
+      PasswordField pwBox = new PasswordField();
+      signup.add(pwBox, 1,2);
+      
+      //security question
+      Label securityQuestionLabel = new Label("Security Question: ");
+      signup.add(securityQuestionLabel,0,3);
+      ComboBox questions = addQuestions();
+      questions.getSelectionModel().selectFirst();
+      signup.add(questions,1,3);
+      
+      //security answer
+      Label securityAnswerLabel = new Label("Answer: ");
+      signup.add(securityAnswerLabel,0,4);
+      TextField securityAnswer = new TextField();
+      signup.add(securityAnswer,1,4);
+
+      //create grad semester entry
+      Label gradSemester = new Label("Graduation Semester: ");
+      signup.add(gradSemester,0,5);
+      TextField gradsemester = new TextField();
+      signup.add(gradsemester, 1,5);
+
+      //create grad year entry
+      Label gradYear = new Label("Graduation Year: ");
+      signup.add(gradYear,0,6);
+      TextField gradyear = new TextField();
+      signup.add(gradyear, 1,6);
+
+
+      Label gradStatus = new Label("Graduated: ");
+      signup.add(gradStatus,0,7);
+      CheckBox gradstatus = new CheckBox();
+      signup.add(gradstatus, 1,7);
+
+      //create picture for profile photo entry
+      HBox picBtn = setupPicture(primaryStage);
+      signup.add(picBtn, 0, 8); //1,8
+      
+      //cancel button
+      Button logoutButton = new Button("Cancel");
+      logoutButton.setOnAction(e -> {
+          primaryStage.close();
+          master.start(new Stage());
+      });
+      signup.add(logoutButton, 0, 9);
+
+      //create signup functionality
+      Button btn = createSignupButton(primaryStage, email, pwBox, username, gradyear, gradsemester, gradstatus ,questions, securityAnswer);
+      //HBox hbBtn = createBox(btn);
+      //signup.add(hbBtn,1,8); // btn UI 
+      signup.add(btn,1,9); //0,8
+
+      Scene scene = new Scene(signup, 770, 700); //object to return
+      return scene;
+
+    }
+    
+    /*
 	-------------------------------
 	function: createGrid
 	-------------------------------
@@ -64,22 +155,7 @@ public class SignupForm {
         grid.setGridLinesVisible(false);
         return grid;
     }
-    /*
-	-------------------------------
-	function: createBox
-	-------------------------------
-	purpose:
-		create signup button
-	return:
-		HBox
-	*/
-    private HBox createBox(Button btn) {
-
-        HBox hbBtn = new HBox(10);
-        hbBtn.setAlignment(Pos.BOTTOM_RIGHT);
-        hbBtn.getChildren().add(btn);
-        return hbBtn;
-    }
+    
 
     /*
 	-------------------------------
@@ -98,21 +174,20 @@ public class SignupForm {
     private Button createSignupButton(Stage primaryStage, TextField email, PasswordField pwBox, TextField username, TextField gradyear, TextField gradsemester, CheckBox gradstatus, ComboBox questions, TextField answer) {
         Button btn = new Button("Sign Up");
         btn.setOnAction((ActionEvent event) -> {
-            //run account creation
+        //run account creation
         if(verifyPassword(pwBox.getText())) {
             try {
-            String aid = master.qp.getAccountId(email.getText());
-            if (aid.equals("0")) {
-                int questionId = questions.getSelectionModel().getSelectedIndex() + 1;
-                Thread thr = new Thread(() -> createSignupEvent(email.getText(),username.getText(),pwBox.getText(),gradyear.getText(),gradsemester.getText(),gradstatus.isSelected(),questionId,answer.getText()));
-								thr.start();
-                //return to initial scene
-                master.start(primaryStage);
-            }
-            else {
-                //TODO: setup alert for user interface
-                System.out.println("This email is already taken.  Please attempt to reset your password.");
-            }
+                String aid = master.qp.getAccountId(email.getText());
+                if (aid.equals("0")) {
+                    int questionId = questions.getSelectionModel().getSelectedIndex() + 1;
+                    Thread thr = new Thread(() -> createSignupEvent(email.getText(),username.getText(),pwBox.getText(),gradyear.getText(),gradsemester.getText(),gradstatus.isSelected(),questionId,answer.getText()));
+                                                                    thr.start();
+                    //return to initial scene
+                    master.start(primaryStage);
+                }
+                else {
+                    ErrorPopup.Pop("This email is already taken.  Please attempt to reset your password.");
+                }
 
             } catch(Exception e) {
                 System.out.println("Error: " + e.getMessage());
@@ -125,6 +200,24 @@ public class SignupForm {
         });
         return btn;
     }
+    
+    /*
+    ----------------------------------------
+    function: verifyPassword
+    ----------------------------------------
+    params:
+        String pass : new password
+    purpose:
+        verify that new password is valid
+            must contain >= 8 characters
+            must not contain spaces
+            must contain at least 1 number
+    return:
+        boolean :
+            if valid, return true
+            if invalid, return false
+    
+    */
     public boolean verifyPassword(String pass) {
         //check length
         if(pass.length() < 8)
@@ -134,8 +227,6 @@ public class SignupForm {
         if (pass.contains(" "))
             return false;
 
-        
-  
         // check for #
         int count = 0;
         for (int i = 0; i < 10; i++) {
@@ -239,8 +330,8 @@ public class SignupForm {
 		setup file upload
                 enable png and jpg images in file chooser
 	*/
-  public String image(Stage primaryStage, ImageView imageView)
-  {
+    public String image(Stage primaryStage, ImageView imageView)
+    {
         fileChooser.setTitle("Upload Picture");
         fileChooser.getExtensionFilters().addAll(
         new ExtensionFilter("Image Files", "*.png", "*.jpg"));
@@ -257,91 +348,13 @@ public class SignupForm {
 
 
         } catch (FileNotFoundException ex) {
-            Logger.getLogger(SignupForm.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(SignupPage.class.getName()).log(Level.SEVERE, null, ex);
             Dialog<String> dialog = new Dialog<String>();
             //Setting the title
             dialog.setTitle("error");
             dialog.showAndWait();
         }
         return selectedFilePath;
-  }
-
-    public Scene form(Stage primaryStage)
-    {
-
-      //setup grid
-      GridPane signup = createGrid();
-
-      //create username entry
-      Label userName = new Label("Username: ");
-      signup.add(userName,0,0);
-      TextField username = new TextField();
-      signup.add(username, 1, 0);
-
-      //create email entry
-      Label Email = new Label("Email: ");
-      signup.add(Email,0,1);
-      TextField email = new TextField();
-      signup.add(email, 1,1);
-
-      //create password entry
-      Label Password = new Label("Password: ");
-      signup.add(Password,0,2);
-      PasswordField pwBox = new PasswordField();
-      signup.add(pwBox, 1,2);
-      
-      //security question
-      Label securityQuestionLabel = new Label("Security Question: ");
-      signup.add(securityQuestionLabel,0,3);
-      ComboBox questions = addQuestions();
-      questions.getSelectionModel().selectFirst();
-      signup.add(questions,1,3);
-      
-      //security answer
-      Label securityAnswerLabel = new Label("Answer: ");
-      signup.add(securityAnswerLabel,0,4);
-      TextField securityAnswer = new TextField();
-      signup.add(securityAnswer,1,4);
-
-      //create grad semester entry
-      Label gradSemester = new Label("Graduation Semester: ");
-      signup.add(gradSemester,0,5);
-      TextField gradsemester = new TextField();
-      signup.add(gradsemester, 1,5);
-
-      //create grad year entry
-      Label gradYear = new Label("Graduation Year: ");
-      signup.add(gradYear,0,6);
-      TextField gradyear = new TextField();
-      signup.add(gradyear, 1,6);
-
-
-      Label gradStatus = new Label("Graduated: ");
-      signup.add(gradStatus,0,7);
-      CheckBox gradstatus = new CheckBox();
-      signup.add(gradstatus, 1,7);
-
-      //create picture for profile photo entry
-      HBox picBtn = setupPicture(primaryStage);
-      signup.add(picBtn, 0, 8); //1,8
-      
-      //cancel button
-      Button logoutButton = new Button("Cancel");
-      logoutButton.setOnAction(e -> {
-          primaryStage.close();
-          master.start(new Stage());
-      });
-      signup.add(logoutButton, 0, 9);
-
-      //create signup functionality
-      Button btn = createSignupButton(primaryStage, email, pwBox, username, gradyear, gradsemester, gradstatus ,questions, securityAnswer);
-      //HBox hbBtn = createBox(btn);
-      //signup.add(hbBtn,1,8); // btn UI 
-      signup.add(btn,1,9); //0,8
-
-      Scene scene = new Scene(signup, 770, 700); //object to return
-      return scene;
-
     }
     
     private ComboBox addQuestions() {
@@ -354,7 +367,7 @@ public class SignupForm {
                 comboBox.getItems().add(rs.getString(1));
             }
         } catch (SQLException ex) {
-            Logger.getLogger(userHomePage.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(HomePage.class.getName()).log(Level.SEVERE, null, ex);
         }
 
         return comboBox;

@@ -5,7 +5,6 @@
  */
 package pantherinspectproject;
 
-import com.sun.javafx.application.LauncherImpl;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.logging.Level;
@@ -23,34 +22,45 @@ import javafx.stage.Stage;
  * @author cindyramirez
  */
 
-public class userHomePage
+public class HomePage
 {
    
     public String selectedSubject = "";
     PantherInspectProject master;
 
-    public userHomePage(PantherInspectProject master) {
+    public HomePage(PantherInspectProject master) {
         this.master = master;
      }
 
 
-
-    public Scene userpage(Stage primaryStage)
+    /*
+    ----------------------------------------
+    function: setupPage
+    ----------------------------------------
+    params:
+        Stage primaryStage
+    purpose:
+        create home page
+            select subject to view
+            submit review
+            view profile
+            navigate to settings
+            logout
+    return:
+        Scene
+    */
+    public Scene setupPage(Stage primaryStage)
     {
-      rateCoursePage rate = this.master.getRateCoursePage();
+      RateCoursePage rate = this.master.getRateCoursePage();
       SettingsPage settings = this.master.getSettings();
       ProfilePage profile = this.master.getProfilePage();
       
-      
-
       primaryStage.setTitle("User Home Page ");
       GridPane homePage = new GridPane();
       homePage.setAlignment(Pos.CENTER);
       homePage.setHgap(15);
       homePage.setVgap(15);
       homePage.setGridLinesVisible(false);
-
-
 
       Scene scene = new Scene(homePage, 700, 600);
 
@@ -70,8 +80,8 @@ public class userHomePage
             if(selectedItem != null)
             {
                 selectedSubject = selectedItem.toString();
-                searchCoursePage searchCourse = this.master.getSearchCoursePage();//new searchCoursePage(this.master,this.selectedCourse);
-                searchButton.setOnAction(e -> primaryStage.setScene(searchCourse.toSearchCourse(primaryStage,selectedSubject)));
+                SubjectMenu searchCourse = this.master.getSearchCoursePage();//new SubjectMenu(this.master,this.selectedCourse);
+                searchButton.setOnAction(e -> primaryStage.setScene(searchCourse.setupPage(primaryStage,selectedSubject)));
 
             }
       });
@@ -83,36 +93,27 @@ public class userHomePage
 
 
       //============ Rate Course Label ====================
-      //Label rateCourseLabel = new Label("Rate a Chapman Course:");
-      //homePage.add(rateCourseLabel, 0, 2);
-      //TextField rateCourseField = new TextField();
-      //homePage.add(rateCourseField, 1, 2);
 
       Label labelOR = new Label("OR");
 
       homePage.add(labelOR, 1,2);
       Button rateButton = new Button("Rate a Chapman Course");
       HBox hRatebox = new HBox(rateButton);
-      rateButton.setOnAction(e -> primaryStage.setScene(master.rateCourse.rateCourse(primaryStage, PantherInspectProject.NEW_POST)));
+      rateButton.setOnAction(e -> primaryStage.setScene(master.rateCourse.setupPage(primaryStage, PantherInspectProject.NEW_POST)));
       homePage.add(hRatebox, 1, 3);
       //=========================================
 
-
-
-
       Button settingsButton = new Button("Settings");
       HBox hbox = new HBox(settingsButton);
-      settingsButton.setOnAction(e -> primaryStage.setScene(settings.settingsPage(primaryStage)));
+      settingsButton.setOnAction(e -> primaryStage.setScene(settings.setupPage(primaryStage)));
       homePage.add(hbox, 0, 10);
 
       Button profileButton = new Button("Profile");
       HBox profileBox = new HBox(profileButton);
-      profileButton.setOnAction(e -> primaryStage.setScene(profile.userpage(primaryStage,this.master.getAccountId())));
+      profileButton.setOnAction(e -> primaryStage.setScene(profile.setupPage(primaryStage,this.master.getAccountId())));
       homePage.add(profileBox, 0, 11);
       
-      //ToDo: Naviagate to PantherInspectProject 
-      // LogOut 
-      //PantherInspectProject panther = this;
+      //logout
       Button logoutButton = new Button("Log Out");
       logoutButton.setOnAction(e -> {
           primaryStage.close();
@@ -148,7 +149,7 @@ public class userHomePage
                 comboBox.getItems().add(rs.getString(1));
             }
         } catch (SQLException ex) {
-            Logger.getLogger(userHomePage.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(HomePage.class.getName()).log(Level.SEVERE, null, ex);
         }
 
         return comboBox;
