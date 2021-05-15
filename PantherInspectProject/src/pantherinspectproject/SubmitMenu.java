@@ -55,7 +55,7 @@ public class SubmitMenu {
         // set up other pages
         DeletePostPage toDeletePosting = this.master.getDeletePost();
         HomePage toHomePage = this.master.getUserHomePage();
-        RateACoursePage toRateCourse = this.master.getRateCoursePage();
+        RateCoursePage toRateCourse = this.master.getRateCoursePage();
         ViewPostPage toViewPosting = this.master.getViewPost();
 
         primaryStage.setTitle("Submission Menu");

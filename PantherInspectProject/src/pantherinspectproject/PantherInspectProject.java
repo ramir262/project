@@ -42,7 +42,7 @@ public class PantherInspectProject extends Application
     ForgotPasswordPage toReset;
     DeletePostPage delete;
     CourseMenu displayCourse;
-    RateACoursePage rateCourse;
+    RateCoursePage rateCourse;
     SubmitMenu submitCourseReview;
     SubjectMenu searchCourse;
     ViewPostPage view;
@@ -395,7 +395,7 @@ public class PantherInspectProject extends Application
         toReset = new ForgotPasswordPage(this);
         delete = new DeletePostPage(this);
         displayCourse = new CourseMenu(this);
-        rateCourse = new RateACoursePage(this);
+        rateCourse = new RateCoursePage(this);
         submitCourseReview =  new SubmitMenu(this);
         searchCourse = new SubjectMenu(this);
         view = new ViewPostPage(this);
@@ -427,7 +427,7 @@ public class PantherInspectProject extends Application
     }
 
     // get pages
-    public RateACoursePage getRateCoursePage() {
+    public RateCoursePage getRateCoursePage() {
         return rateCourse;
     }
     
@@ -445,7 +445,7 @@ public class PantherInspectProject extends Application
 
     }
 
-    public RateACoursePage getCoursePage() {
+    public RateCoursePage getCoursePage() {
         return rateCourse;
 
     }

@@ -51,7 +51,7 @@ public class HomePage
     */
     public Scene setupPage(Stage primaryStage)
     {
-      RateACoursePage rate = this.master.getRateCoursePage();
+      RateCoursePage rate = this.master.getRateCoursePage();
       SettingsMenu settings = this.master.getSettings();
       ProfilePage profile = this.master.getProfilePage();
       

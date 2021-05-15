@@ -38,7 +38,7 @@ import javafx.stage.Stage;
  *
  * @author cindyramirez
  */
-public class RateACoursePage
+public class RateCoursePage
 {
      PantherInspectProject master;
      ComboBox comboBoxCourse;
@@ -51,7 +51,7 @@ public class RateACoursePage
      String classId;
      String courseId;
      
-     public RateACoursePage(PantherInspectProject master) {
+     public RateCoursePage(PantherInspectProject master) {
         this.master = master;
         this.starCount = 0;
         this.classId = "0";
@@ -112,7 +112,7 @@ public class RateACoursePage
             //setup stars
             createStars(ratePage);
         } catch (FileNotFoundException ex) {
-            Logger.getLogger(RateACoursePage.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(RateCoursePage.class.getName()).log(Level.SEVERE, null, ex);
         }
 
         
@@ -177,7 +177,7 @@ public class RateACoursePage
              
              
          } catch (SQLException ex) {
-             Logger.getLogger(RateACoursePage.class.getName()).log(Level.SEVERE, null, ex);
+             Logger.getLogger(RateCoursePage.class.getName()).log(Level.SEVERE, null, ex);
          }
     }
 
@@ -228,7 +228,7 @@ public class RateACoursePage
                 }
             });
             } catch (SQLException ex) {
-                Logger.getLogger(RateACoursePage.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(RateCoursePage.class.getName()).log(Level.SEVERE, null, ex);
             }
 
         grid.add(comboBoxSubject, 0,2);
@@ -338,7 +338,7 @@ public class RateACoursePage
                     loc = loc+2;
                 }
             } catch (SQLException ex) {
-                Logger.getLogger(RateACoursePage.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(RateCoursePage.class.getName()).log(Level.SEVERE, null, ex);
             }
             return qGrid;
     }
@@ -364,7 +364,7 @@ public class RateACoursePage
                  courseMap.put(course,courseRs.getString(3));
                  comboBoxCourse.getItems().add(course);
              }} catch (SQLException ex) {
-             Logger.getLogger(RateACoursePage.class.getName()).log(Level.SEVERE, null, ex);
+             Logger.getLogger(RateCoursePage.class.getName()).log(Level.SEVERE, null, ex);
          }
 
         comboBoxCourse.setOnAction((event) -> {
@@ -400,7 +400,7 @@ public class RateACoursePage
                  professorMap.put(name,info);
                  comboBoxProfessor.getItems().add(name);
              }} catch (SQLException ex) {
-             Logger.getLogger(RateACoursePage.class.getName()).log(Level.SEVERE, null, ex);
+             Logger.getLogger(RateCoursePage.class.getName()).log(Level.SEVERE, null, ex);
          }
          comboBoxProfessor.setOnAction((event) -> {
             int selectedIndex = comboBoxProfessor.getSelectionModel().getSelectedIndex();
