@@ -23,14 +23,14 @@ import javafx.stage.Stage;
  *
  * @author cindyramirez
  */
-public class ForgotPasswordPage 
+public class ForgotPasswordPage
 {
     PantherInspectProject master;
     private String hash;
     public ForgotPasswordPage(PantherInspectProject master) {
          this.master = master;
      }
-    
+
     /*
     ----------------------------------------
     function: setupPage
@@ -44,7 +44,7 @@ public class ForgotPasswordPage
     */
     public Scene setupPage(Stage primaryStage)
     {
-        primaryStage.setTitle("Reset password");
+        primaryStage.setTitle("Reset password ");
         GridPane resetPassword = new GridPane();
         resetPassword.setAlignment(Pos.CENTER);
         resetPassword.setHgap(15);
@@ -57,17 +57,17 @@ public class ForgotPasswordPage
             primaryStage.close();
             master.start(new Stage());
         });
+        logoutButton.setAlignment(Pos.TOP_RIGHT);
         resetPassword.add(logoutButton, 0, 0);
-
         Label label = new Label("Enter email to reset password:");
         resetPassword.add(label, 0,4);
 
         TextField emailtoResetpassword = new TextField();
         resetPassword.add(emailtoResetpassword, 1, 4);
-        
+
         Button resetButton = new Button("reset password");
         HBox hbBtn = new HBox(10);
-      
+
         //get security question
         Label securityQuestion = new Label("*Filler security question*");
         securityQuestion.setVisible(false);
@@ -80,18 +80,18 @@ public class ForgotPasswordPage
         Button submitQuestion = new Button("Submit");
         submitQuestion.setVisible(false);
         resetPassword.add(submitQuestion,1,8);
-        
+
         Label newPasswordLabel = new Label("New Password");
         newPasswordLabel.setVisible(false);
         resetPassword.add(newPasswordLabel,0,9);
-        
+
         PasswordField newPassword = new PasswordField();
         newPassword.setVisible(false);
         resetPassword.add(newPassword,1,9);
-        
+
         Button changePassword = new Button("Reset Password");
         changePassword.setVisible(false);
-        
+
         resetPassword.add(changePassword, 1, 10);
         resetButton.setOnAction((ActionEvent e) -> {
             int accountId = getAccountId(emailtoResetpassword.getText());
@@ -105,23 +105,23 @@ public class ForgotPasswordPage
                     while(rs.next()) {
                         //comboBox.getItems().add(rs.getString(1));
                         question = rs.getString(1);
-                        hash = rs.getString(2); 
+                        hash = rs.getString(2);
                         securityQuestion.setText(question);
                     }
                 } catch (SQLException ex) {
                     Logger.getLogger(HomePage.class.getName()).log(Level.SEVERE, null, ex);
                 }
-                
+
                 securityQuestion.setVisible(true);
                 securityAnswer.setVisible(true);
                 submitQuestion.setVisible(true);
             } else {
                 ErrorPopup.Pop("No account exists.");
             }
-            
+
 
         });
-        
+
         submitQuestion.setOnAction((ActionEvent e) -> {
             String answer = securityAnswer.getText();
             String salt = BCrypt.gensalt(10);
@@ -139,10 +139,10 @@ public class ForgotPasswordPage
             } else {
                 ErrorPopup.Pop("Incorrect answer.");
             }
-            
-            
+
+
         });
-        
+
         changePassword.setOnAction((ActionEvent e) -> {
             if(verifyPassword(newPassword.getText())) {
                int accountId = getAccountId(emailtoResetpassword.getText());
@@ -152,22 +152,22 @@ public class ForgotPasswordPage
                 Boolean succ = master.qp.updateAccount(Integer.toString(accountId),emailtoResetpassword.getText(),hash);
                 if(succ) {
                 master.start(primaryStage);
-                } 
+                }
             } else {
                 ErrorPopup.Pop("Password must be 8 characters or longer and contain numbers and letters.");
             }
-            
+
 
         });
       hbBtn.setAlignment(Pos.BOTTOM_RIGHT);
       hbBtn.getChildren().add(resetButton);
       resetPassword.add(hbBtn, 1, 6);
-      
-      Scene scene = new Scene(resetPassword, 800, 800); 
-      
+
+      Scene scene = new Scene(resetPassword, 400, 400);
+
       return scene;
     }
-    
+
     /*
     ----------------------------------------
     function: verifyPassword
@@ -183,13 +183,13 @@ public class ForgotPasswordPage
         boolean :
             if valid, return true
             if invalid, return false
-    
+
     */
     public boolean verifyPassword(String pass) {
         //check length
         if(pass.length() < 8)
             return false;
-        
+
         //check for spaces
         if (pass.contains(" "))
             return false;
@@ -208,15 +208,15 @@ public class ForgotPasswordPage
         if (count < 1) {
             return false;
         }
-        
+
         return true;
     }
-    
-    
+
+
     private int getAccountId(String email) {
         String id = this.master.qp.getAccountId(email);
 
         return Integer.parseInt(id);
     }
-    
+
 }

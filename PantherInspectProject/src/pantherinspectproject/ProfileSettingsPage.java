@@ -49,12 +49,12 @@ public class ProfileSettingsPage
         
         primaryStage.setTitle("Edit Profile Settings ");
         GridPane editprofileSettings = new GridPane();
-        editprofileSettings.setAlignment(Pos.CENTER);
+        editprofileSettings.setAlignment(Pos.TOP_LEFT);
         editprofileSettings.setHgap(15);
         editprofileSettings.setVgap(15);
         editprofileSettings.setGridLinesVisible(false);
 
-        Scene scene = new Scene(editprofileSettings, 800, 800); 
+        Scene scene = new Scene(editprofileSettings, 400, 400); 
 
         // edit graduation semester in textfield
         Label eGradSemester = new Label("Edit graduation semester: ");
@@ -81,7 +81,7 @@ public class ProfileSettingsPage
         HBox cancelChangesHB = new HBox(cancelButton);
         
         cancelButton.setOnAction(e -> primaryStage.setScene(settingsPage.setupPage(primaryStage)));
-        editprofileSettings.add(cancelChangesHB, 0, 4);
+        editprofileSettings.add(cancelChangesHB, 0, 0);
 
         // Save Changes Button 
         Button saveChangesButton = new Button("Save Changes");

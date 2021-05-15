@@ -36,7 +36,7 @@ import javafx.util.Callback;
 
 public class CourseMenu {
     PantherInspectProject master;
-    
+
     public CourseMenu(PantherInspectProject master){
         this.master = master;
     }
@@ -60,12 +60,12 @@ public class CourseMenu {
         //setup pages
         SubjectMenu toSearchCoursePage = this.master.getSearchCoursePage();
         ViewPostPage toViewPost = this.master.getViewPost();
-        
+
         //build table
         TableView<Data> table = new TableView<>();
         ObservableList<Data> tvObservableList = FXCollections.observableArrayList();
 
-        GridPane displayCourse = new GridPane(); 
+        GridPane displayCourse = new GridPane();
 
         VBox gridBox = new VBox();
         gridBox.setAlignment(Pos.CENTER);
@@ -100,7 +100,7 @@ public class CourseMenu {
 
         // Back Button
 
-      
+
         Button backButton = new Button("Back");
         HBox backButtonBox = new HBox(10);
         backButton.setOnAction(e -> primaryStage.setScene(toSearchCoursePage.setupPage(primaryStage, selectedSubject)));
@@ -113,23 +113,23 @@ public class CourseMenu {
         //=============================================================================
         // Set action for Button to go to
         //=============================================================================
-
+        
         Label starLbl = new Label("Average Rating: ");
         starLbl.setStyle("-fx-font-weight:bold");
         viewHB.getChildren().add(starLbl);
-        
+
         String stars = this.master.qp.selectAvgOfCourse(courseId);
         if (stars == null) {
             stars = "N/A" + "    ";
         }
-        
-        Label avgStars = new Label(stars + "                                                                                     ");
+
+        Label avgStars = new Label(stars + "                                                                                            ");
         viewHB.getChildren().add(avgStars);
-        
+
         Button viewAllProfessors = new Button("View all Professors");
         viewAllProfessors.setOnAction(e -> primaryStage.setScene(toViewPost.setupPage(primaryStage,selectedSubject,courseId,courseId,true)));
         viewHB.getChildren().add(viewAllProfessors);
-        displayCourse.add(viewHB,1,1);
+        displayCourse.add(viewHB,0,2);
         return scene;
 
     }
@@ -204,7 +204,7 @@ public class CourseMenu {
         add button to right of each instance in table
             view professor
     */
-    public void addButtonToTable(Stage primaryStage, TableView<Data> table, List<String> classes, 
+    public void addButtonToTable(Stage primaryStage, TableView<Data> table, List<String> classes,
             ViewPostPage toViewPost, String selectedSubject, String courseId) {
         TableColumn<Data, Void> colBtn = new TableColumn("View More Info");
 

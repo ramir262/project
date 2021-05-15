@@ -30,7 +30,7 @@ public class ProfilePage {
     public ProfilePage(PantherInspectProject master) {
         this.master = master;
     }
-    
+
     /*
     ----------------------------------------
     function: setupPage
@@ -46,16 +46,16 @@ public class ProfilePage {
     public Scene setupPage(Stage primaryStage,String accountId)
     {
         GridPane grid = new GridPane();
-        grid.setAlignment(Pos.CENTER);
+        grid.setAlignment(Pos.TOP_LEFT);
         grid.setHgap(15);
         grid.setVgap(15);
         grid.setGridLinesVisible(false);
-        Scene scene = new Scene(grid, 800, 800);
-        
+        Scene scene = new Scene(grid, 400, 400);
+
         Button backBtn = new Button("Home Page");
         backBtn.setOnAction(e -> primaryStage.setScene(this.master.userHome.setupPage(primaryStage)));
         grid.add(backBtn, 0, 0);
-        
+
         ResultSet rs = this.master.qp.selectProfileDisplay(accountId);
         try {
             rs.next();
@@ -66,7 +66,7 @@ public class ProfilePage {
             Label userLbl = new Label(rs.getString(2));
             HBox userBox = new HBox(usernameLbl,userLbl);
             grid.add(userBox,0,1);
-            
+
             // profile picture
             ImageView imageView = new ImageView();
             imageView.setFitHeight(256);
@@ -84,10 +84,10 @@ public class ProfilePage {
 
                 } catch (FileNotFoundException ex) {
                     Logger.getLogger(SignupPage.class.getName()).log(Level.SEVERE, null, ex);
-                    
+
                 }
             }
-            
+
             // graduation status
             Label graduatedLbl = new Label("Graduation Status: ");
             graduatedLbl.setStyle("-fx-font-weight: bold");
@@ -98,12 +98,12 @@ public class ProfilePage {
             Label gradLbl = new Label(graduated);
             HBox gradBox = new HBox(graduatedLbl,gradLbl);
             grid.add(gradBox, 0, 2);
-            
+
         } catch (SQLException ex) {
             Logger.getLogger(ProfilePage.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
-        
+
+
         return scene;
     }
 }

@@ -24,7 +24,7 @@ import javafx.stage.Stage;
 
 public class HomePage
 {
-   
+
     public String selectedSubject = "";
     PantherInspectProject master;
 
@@ -54,7 +54,7 @@ public class HomePage
       RateCoursePage rate = this.master.getRateCoursePage();
       SettingsMenu settings = this.master.getSettings();
       ProfilePage profile = this.master.getProfilePage();
-      
+
       primaryStage.setTitle("Home Page");
       GridPane homePage = new GridPane();
       homePage.setAlignment(Pos.CENTER);
@@ -62,7 +62,9 @@ public class HomePage
       homePage.setVgap(15);
       homePage.setGridLinesVisible(false);
 
-      Scene scene = new Scene(homePage, 700, 600);
+
+
+      Scene scene = new Scene(homePage, 500, 400);
 
       //=========== Search Course Label ============
       Label searchCourseLabel = new Label("Search a Chapman Subject:");
@@ -95,8 +97,11 @@ public class HomePage
       //============ Rate Course Label ====================
 
       Label labelOR = new Label("OR");
-
       homePage.add(labelOR, 1,2);
+
+      Label rateChapmanCourse = new Label("Rate a Chapman Course:");
+      homePage.add(rateChapmanCourse, 0,3);
+
       Button rateButton = new Button("Rate a Chapman Course");
       HBox hRatebox = new HBox(rateButton);
       rateButton.setOnAction(e -> primaryStage.setScene(master.rateCourse.setupPage(primaryStage, PantherInspectProject.NEW_POST)));
@@ -112,7 +117,7 @@ public class HomePage
       HBox profileBox = new HBox(profileButton);
       profileButton.setOnAction(e -> primaryStage.setScene(profile.setupPage(primaryStage,this.master.getAccountId())));
       homePage.add(profileBox, 0, 11);
-      
+
       //logout
       Button logoutButton = new Button("Log Out");
       logoutButton.setOnAction(e -> {

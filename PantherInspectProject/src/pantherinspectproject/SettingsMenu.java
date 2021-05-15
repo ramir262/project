@@ -46,16 +46,16 @@ public class SettingsMenu
         //setup grid
         primaryStage.setTitle("Settings Page ");
         GridPane settings = new GridPane();
-        settings.setAlignment(Pos.CENTER);
+        settings.setAlignment(Pos.TOP_LEFT);
         settings.setHgap(15);
         settings.setVgap(15);
         settings.setGridLinesVisible(false);
 
-        Scene scene = new Scene(settings, 800, 800); 
+        Scene scene = new Scene(settings, 400, 400); 
 
         Text settingsTitle = new Text("Settings");
         settingsTitle.setFont(Font.font("Tahoma", FontWeight.NORMAL, 20));
-        settings.add(settingsTitle, 0, 0, 2, 1);
+        settings.add(settingsTitle, 0, 0, 4, 5);
 
         // 3 buttons for three pages
         // Button to edit profile settings - grad status, year, semester
@@ -79,7 +79,7 @@ public class SettingsMenu
         Button backButton = new Button("Back");
         HBox backButtonBox = new HBox(10);
         backButton.setOnAction(e -> primaryStage.setScene(homePage.setupPage(primaryStage)));
-        backButtonBox.setAlignment(Pos.BOTTOM_RIGHT);
+        backButtonBox.setAlignment(Pos.TOP_LEFT);
         backButtonBox.getChildren().add(backButton);
         settings.add(backButtonBox,0,0);
         
