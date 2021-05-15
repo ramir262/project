@@ -60,7 +60,7 @@ public class ViewPostPage {
     {
         this.postList = new ArrayList<>();
 
-        primaryStage.setTitle("Select Post ");
+        primaryStage.setTitle("View Post");
 
         //setup grid
         GridPane posts = new GridPane();

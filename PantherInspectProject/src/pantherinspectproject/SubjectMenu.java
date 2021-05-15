@@ -29,8 +29,6 @@ public class SubjectMenu
 {
     PantherInspectProject master;
    
-
-    
     List<HBox> buttonList = new ArrayList<>();
 
     String selectedOrder = "courseNum";
@@ -38,8 +36,6 @@ public class SubjectMenu
     public SubjectMenu(PantherInspectProject master)
     {
         this.master = master;
-
-
     }
     /*
     ----------------------------------------
@@ -57,7 +53,7 @@ public class SubjectMenu
    public Scene setupPage(Stage primaryStage, String selectedSubject)
     {
 
-      primaryStage.setTitle("Search Courses ");
+      primaryStage.setTitle("Course Menu");
       GridPane coursesPage = new GridPane();
       coursesPage.setAlignment(Pos.TOP_LEFT);
       coursesPage.setHgap(15);

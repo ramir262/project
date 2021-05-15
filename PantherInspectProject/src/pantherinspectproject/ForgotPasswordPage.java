@@ -44,7 +44,7 @@ public class ForgotPasswordPage
     */
     public Scene setupPage(Stage primaryStage)
     {
-        primaryStage.setTitle("Reset password ");
+        primaryStage.setTitle("Reset password");
         GridPane resetPassword = new GridPane();
         resetPassword.setAlignment(Pos.CENTER);
         resetPassword.setHgap(15);

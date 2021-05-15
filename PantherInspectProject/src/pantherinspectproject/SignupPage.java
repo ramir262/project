@@ -62,7 +62,7 @@ public class SignupPage {
     */
     public Scene setupPage(Stage primaryStage)
     {
-
+        primaryStage.setTitle("Sign Up");
       //setup grid
       GridPane signup = createGrid();
 

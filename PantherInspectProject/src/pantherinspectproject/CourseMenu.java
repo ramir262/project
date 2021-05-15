@@ -17,6 +17,7 @@ import javafx.event.ActionEvent;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
@@ -36,8 +37,6 @@ import javafx.util.Callback;
 public class CourseMenu {
     PantherInspectProject master;
     
-    
-
     public CourseMenu(PantherInspectProject master){
         this.master = master;
     }
@@ -72,7 +71,7 @@ public class CourseMenu {
         gridBox.setAlignment(Pos.CENTER);
         gridBox.getChildren().addAll(displayCourse, table);
 
-        primaryStage.setTitle("Tableview with button column");
+        primaryStage.setTitle("Course Menu");
         Scene scene = new Scene(gridBox); //object to return
 
         //set table
@@ -109,18 +108,28 @@ public class CourseMenu {
         backButtonBox.getChildren().add(backButton);
         displayCourse.add(backButtonBox,0,0);
 
-        Button viewAllProfessors = new Button("View all Professors");
-        viewAllProfessors.setOnAction(e -> primaryStage.setScene(toViewPost.setupPage(primaryStage,selectedSubject,courseId,courseId,true)));
         //
         HBox viewHB = new HBox(10);
         //=============================================================================
         // Set action for Button to go to
         //=============================================================================
 
-        viewHB.setAlignment(Pos.CENTER);
+        Label starLbl = new Label("Average Rating: ");
+        starLbl.setStyle("-fx-font-weight:bold");
+        viewHB.getChildren().add(starLbl);
+        
+        String stars = this.master.qp.selectAvgOfCourse(courseId);
+        if (stars == null) {
+            stars = "N/A" + "    ";
+        }
+        
+        Label avgStars = new Label(stars + "                                                                                     ");
+        viewHB.getChildren().add(avgStars);
+        
+        Button viewAllProfessors = new Button("View all Professors");
+        viewAllProfessors.setOnAction(e -> primaryStage.setScene(toViewPost.setupPage(primaryStage,selectedSubject,courseId,courseId,true)));
         viewHB.getChildren().add(viewAllProfessors);
-        displayCourse.add(viewHB,14,9);
-
+        displayCourse.add(viewHB,1,1);
         return scene;
 
     }
@@ -170,7 +179,6 @@ public class CourseMenu {
                     date = "N/A";
                     stars = "N/A";
                 }
-
                 tvObservableList.add(new Data(date,rs.getString(6),stars));
                 classes.add(rs.getString(1));
 
@@ -229,53 +237,6 @@ public class CourseMenu {
 
         colBtn.setCellFactory(cellFactory);
         table.getColumns().add(colBtn);
-    }
-
-     public class Data {
-
-        private String datePosted;
-        private String name;
-        private String avgRating;
-
-
-        private Data(String datePosted, String name, String avgRating) {
-            this.datePosted = datePosted;
-            this.name = name;
-            this.avgRating = avgRating;
-        }
-
-        public String getDatePosted() {
-            return datePosted;
-        }
-
-        public void setDatePosted(String dp) {
-            this.datePosted = dp;
-        }
-
-
-        public String getName() {
-            return name;
-        }
-
-        public void setName(String nme) {
-            this.name = nme;
-        }
-
-        public String getAvgRating() {
-            return avgRating;
-
-        }
-
-        public void setAvgRatings(String sr) {
-            this.avgRating = sr;
-        }
-
-
-        @Override
-        public String toString() {
-            return "date posted:" + datePosted + " name: " + name + " stars: " + avgRating;
-        }
-
     }
 
 }

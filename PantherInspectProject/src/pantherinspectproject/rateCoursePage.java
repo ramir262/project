@@ -40,8 +40,6 @@ import javafx.stage.Stage;
  */
 public class RateCoursePage
 {
-    
-     
      PantherInspectProject master;
      ComboBox comboBoxCourse;
      ComboBox comboBoxProfessor;
@@ -76,7 +74,7 @@ public class RateCoursePage
     {
         //setup page navigation
         HomePage toUserHomePage = this.master.getUserHomePage();
-        
+        primaryStage.setTitle("Rate A Course");
         //setup grid
         GridPane grid = new GridPane();
         GridPane ratePage = new GridPane();

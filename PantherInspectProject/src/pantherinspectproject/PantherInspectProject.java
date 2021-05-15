@@ -80,6 +80,7 @@ public class PantherInspectProject extends Application
     public void start(Stage primaryStage)
     {
         this.primaryStage = primaryStage;
+        primaryStage.setTitle("Log In");
         setupPages();
         //get environment variables
 

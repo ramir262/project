@@ -56,7 +56,7 @@ public class DeletePostPage {
         HomePage toHomePage = this.master.getUserHomePage();
         SubmitMenu submit = this.master.getCourseReview();
         
-        primaryStage.setTitle("Delete Post ");
+        primaryStage.setTitle("Delete Post");
         GridPane deletepost = new GridPane();
         deletepost.setAlignment(Pos.CENTER);
         deletepost.setHgap(15);

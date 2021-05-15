@@ -55,7 +55,7 @@ public class HomePage
       SettingsPage settings = this.master.getSettings();
       ProfilePage profile = this.master.getProfilePage();
       
-      primaryStage.setTitle("User Home Page ");
+      primaryStage.setTitle("Home Page");
       GridPane homePage = new GridPane();
       homePage.setAlignment(Pos.CENTER);
       homePage.setHgap(15);

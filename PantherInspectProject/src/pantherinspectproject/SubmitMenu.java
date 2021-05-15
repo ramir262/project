@@ -58,7 +58,7 @@ public class SubmitMenu {
         RateCoursePage toRateCourse = this.master.getRateCoursePage();
         ViewPostPage toViewPosting = this.master.getViewPost();
 
-        primaryStage.setTitle("Successfully Posted ");
+        primaryStage.setTitle("Submission Menu");
         Text title = new Text("Posting Successful");
         title.setFont(Font.font("Tahoma", FontWeight.NORMAL, 20));
 
