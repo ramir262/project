@@ -47,7 +47,7 @@ public class PantherInspectProject extends Application
     SubjectMenu searchCourse;
     ViewPostPage view;
     ProfileSettingsPage profileSetting;
-    SettingsPage settings;
+    SettingsMenu settings;
     ProfilePage profile;
     AccountSettingsPage accountSettings;
     
@@ -400,7 +400,7 @@ public class PantherInspectProject extends Application
         searchCourse = new SubjectMenu(this);
         view = new ViewPostPage(this);
         profileSetting = new ProfileSettingsPage(this);
-        settings = new SettingsPage(this);
+        settings = new SettingsMenu(this);
         profile = new ProfilePage(this);
         accountSettings = new AccountSettingsPage(this);
 
@@ -470,7 +470,7 @@ public class PantherInspectProject extends Application
     public ProfileSettingsPage getProfileSettings() {
         return profileSetting;
     }
-    public SettingsPage getSettings() {
+    public SettingsMenu getSettings() {
         return settings;
     }
     

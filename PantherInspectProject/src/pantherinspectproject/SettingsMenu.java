@@ -18,11 +18,11 @@ import javafx.stage.Stage;
  *
  * @author cindyramirez
  */
-public class SettingsPage 
+public class SettingsMenu 
 {
     
     PantherInspectProject master;
-    public SettingsPage(PantherInspectProject master) {
+    public SettingsMenu(PantherInspectProject master) {
          this.master = master;
     }
     /*
@@ -59,7 +59,7 @@ public class SettingsPage
 
         // 3 buttons for three pages
         // Button to edit profile settings - grad status, year, semester
-        Button profileSettings = new Button("Edit Profile:");
+        Button profileSettings = new Button("Edit Profile");
         HBox profileSettingsHB = new HBox(10);
         profileSettings.setOnAction(e -> primaryStage.setScene(editProfileSetting.setupPage(primaryStage)));
         profileSettingsHB.setAlignment(Pos.BOTTOM_RIGHT);

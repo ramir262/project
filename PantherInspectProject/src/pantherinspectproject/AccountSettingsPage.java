@@ -45,7 +45,7 @@ public class AccountSettingsPage
     public Scene setupPage(Stage primaryStage)
     {
         
-        SettingsPage settingsPage = this.master.getSettings();
+        SettingsMenu settingsPage = this.master.getSettings();
         
         primaryStage.setTitle("Account Settings:  ");
         GridPane accountHome = new GridPane();

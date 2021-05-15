@@ -45,7 +45,7 @@ public class ProfileSettingsPage
     */
     public Scene setupPage(Stage primaryStage)
     {
-        SettingsPage settingsPage = this.master.getSettings();
+        SettingsMenu settingsPage = this.master.getSettings();
         
         primaryStage.setTitle("Edit Profile Settings ");
         GridPane editprofileSettings = new GridPane();

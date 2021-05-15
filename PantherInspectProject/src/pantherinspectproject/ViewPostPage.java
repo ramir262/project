@@ -301,7 +301,6 @@ public class ViewPostPage {
                 //ResultSet (subject, courseNum, cName, pName, stars, creation, edit, reviewId, accountId,courseId)
                 createPost(primaryStage,post,all,rs.getString(9),rs.getString(10),rs.getString(1),rs.getString(2),
                         rs.getString(3),rs.getString(4),rs.getInt(5),rs.getString(8),rs.getString(6),rs.getString(7));
-                System.out.println(rs.getString(10));
             }
         } catch (SQLException ex) {
             Logger.getLogger(PantherInspectProject.class.getName()).log(Level.SEVERE, null, ex);
@@ -401,7 +400,7 @@ public class ViewPostPage {
 
                 // get profile info based on accountId
                 // "Email, Username, Picture, Year, Semester, Graduated";
-                System.out.println(accountId);
+
                 ResultSet accountRs = this.master.qp.selectProfileDisplay(accountId);
                 accountRs.next();
 

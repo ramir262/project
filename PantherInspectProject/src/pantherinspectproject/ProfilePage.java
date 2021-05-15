@@ -52,7 +52,7 @@ public class ProfilePage {
         grid.setGridLinesVisible(false);
         Scene scene = new Scene(grid, 800, 800);
         
-        Button backBtn = new Button("Profile Page");
+        Button backBtn = new Button("Home Page");
         backBtn.setOnAction(e -> primaryStage.setScene(this.master.userHome.setupPage(primaryStage)));
         grid.add(backBtn, 0, 0);
         
