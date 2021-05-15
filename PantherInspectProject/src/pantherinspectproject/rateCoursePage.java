@@ -165,7 +165,7 @@ public class RateCoursePage
              this.courseId = rs.getString(8);
              this.classId = rs.getString(9);
              
-             selectStars(0,rs.getInt(5));
+             selectStars(rs.getInt(5));
              
              // auto fill answers
              ResultSet questionRs = this.master.qp.selectReviewQuestions(edit);
@@ -248,11 +248,9 @@ public class RateCoursePage
 	purpose:
 		highlight stars up to current index if clicked
 	*/
-    private void selectStars(int start, int selectedIdx) {
+    private void selectStars(int selectedIdx) {
             this.starCount = selectedIdx;
-            if (start > selectedIdx) {
-                start = selectedIdx;
-            }
+            
             for (int i=0; i<this.starList.size(); i++) {
                 if (i < selectedIdx) {
                     this.starList.get(i).setStyle("-fx-background-color: #ff0000");
@@ -279,10 +277,7 @@ public class RateCoursePage
         button.setGraphic(view);
         int currentIdx = this.starList.size();
         button.setOnAction((ActionEvent e)-> {
-
-            int start = this.starCount;
-            
-            selectStars(start,currentIdx);
+            selectStars(currentIdx);
         });
     }
 

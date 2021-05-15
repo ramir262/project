@@ -467,13 +467,17 @@ public class ViewPostPage {
                 }
 
                 //display questions and responses
-                ResultSet rs2 = this.master.qp.selectReviewQuestions(reviewId);
-                while(rs2.next()) {
-                    Label quesLbl = new Label(rs2.getString(1));
+                ResultSet quesRs = this.master.qp.selectReviewQuestions(reviewId);
+                while(quesRs.next()) {
+                    Label quesLbl = new Label(quesRs.getString(1));
                     quesLbl.setStyle("-fx-font-weight: bold");
                     post.add(quesLbl,0,i++);
-                    Label resLbl = new Label(rs2.getString(2));
-                    post.add(resLbl,0,i++);
+                    String[] responses = quesRs.getString(2).split("\n");
+                    //String response = quesRs.getString(2);
+                    for (String response : responses) {
+                        Label resLbl = new Label(response);
+                        post.add(resLbl,0,i++);
+                    }
                 }
     }
 
