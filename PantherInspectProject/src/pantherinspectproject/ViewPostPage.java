@@ -359,7 +359,7 @@ public class ViewPostPage {
         btn.setOnAction((ActionEvent event) -> {
 
             // navigate to profile page for user
-            RateCoursePage ratePage = this.master.getRateCoursePage();
+            RateACoursePage ratePage = this.master.getRateCoursePage();
             primaryStage.setScene(ratePage.setupPage(primaryStage,reviewId));
 
         });
