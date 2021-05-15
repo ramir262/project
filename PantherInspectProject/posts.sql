@@ -23,21 +23,12 @@ VALUES
 	(1,1,1,20210325204516);
 
 INSERT INTO
-	Questions (QuestionId, Question)
+	Responses (ReviewId, QuestionId, Response, Edit)
 VALUES
-	(4,"Assignments:");
+	(1,5,"Tough assignments. Learned a lot!",20210325204516);
+
 
 INSERT INTO
 	Responses (ReviewId, QuestionId, Response, Edit)
 VALUES
-	(1,4,"Tough assignments. Learned a lot!",20210325204516);
-
-INSERT INTO
-	Questions (QuestionId, Question)
-VALUES
-	(5,"Exams:");
-
-INSERT INTO
-	Responses (ReviewId, QuestionId, Response, Edit)
-VALUES
-	(1,5,"Class prepared well for the test.",20210325204516);
+	(1,4,"Class prepared well for the test.",20210325204516);

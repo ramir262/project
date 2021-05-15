@@ -89,3 +89,19 @@ INSERT INTO
 	Class (ClassId,CourseId,ProfessorId)
 VALUES
 	(8,4,5);
+INSERT INTO
+	Class (ClassId,CourseId,ProfessorId)
+VALUES
+	(9,1,4);
+INSERT INTO
+	Class (ClassId,CourseId,ProfessorId)
+VALUES
+	(10,1,5);
+INSERT INTO
+	Class (ClassId,CourseId,ProfessorId)
+VALUES
+	(11,3,5);
+INSERT INTO
+	Class (ClassId,CourseId,ProfessorId)
+VALUES
+	(12,3,1);

@@ -108,9 +108,6 @@ public class RateCoursePage
         //create subject box
         createSubjectBox(ratePage, postId);
 
-        //Would Recommend (star rating)
-        System.out.println(System.getProperty("user.dir"));
-        
         try {
             //setup stars
             createStars(ratePage);
@@ -256,7 +253,7 @@ public class RateCoursePage
             if (start > selectedIdx) {
                 start = selectedIdx;
             }
-            for (int i=start; i<this.starList.size(); i++) {
+            for (int i=0; i<this.starList.size(); i++) {
                 if (i < selectedIdx) {
                     this.starList.get(i).setStyle("-fx-background-color: #ff0000");
                 }
