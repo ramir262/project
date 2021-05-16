@@ -221,7 +221,7 @@ public class DeletePostPage {
 
    public ScrollPane addScrollPane(GridPane grid) {
        ScrollPane scroll = new ScrollPane();
-       scroll.setPrefSize(400, 600); // 400, 600
+       //scroll.setPrefSize(400, 600); // 400, 600
        scroll.setContent(grid);
        return scroll;
    }

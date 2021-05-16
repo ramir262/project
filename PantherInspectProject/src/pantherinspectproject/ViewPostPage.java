@@ -475,6 +475,22 @@ public class ViewPostPage {
                     String[] responses = quesRs.getString(2).split("\n");
                     //String response = quesRs.getString(2);
                     for (String response : responses) {
+                        //handle responses with long output
+                        while (response.length() > 80) {
+                            // try to split at space
+                            int next = response.substring(61,response.length()).indexOf(" ");
+                            if (next > -1) {
+                                Label resLbl = new Label(response.substring(0,60+next+1));
+                                post.add(resLbl,0,i++);
+                                response = response.substring(60+next+1,response.length());
+                            }
+                            else {
+                                Label resLbl = new Label(response.substring(0,60)+"-");
+                                post.add(resLbl,0,i++);
+                                response = response.substring(61,response.length());
+                            }
+                            
+                        }
                         Label resLbl = new Label(response);
                         post.add(resLbl,0,i++);
                     }

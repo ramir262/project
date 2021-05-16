@@ -216,7 +216,6 @@ public class CourseMenu {
                     private final Button btn = new Button("Read More");
                     {
                         btn.setOnAction((ActionEvent event) -> {
-                            Data data = getTableView().getItems().get(getIndex());
                             primaryStage.setScene(toViewPost.setupPage(primaryStage,selectedSubject,classes.get(getIndex()),courseId, false));
                         });
                     }
