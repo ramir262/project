@@ -16,6 +16,16 @@
     * e.g. UPLOAD_PATH=C:\someFolder\
 * Open application
 
+## Images
+* SplashScreen.png
+* icon.png
+* star.jpeg
+
+## SQL Files
+* tables.sql
+* courses.sql
+* posts.sql
+
 ## Source Files
 * SignupPage.java
 * AccountSettingsPage.java
