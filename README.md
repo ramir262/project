@@ -1,5 +1,13 @@
 # PantherInspect
 
+## Mebers
+* Cindy Ramirez
+* Matthew Parnham
+* Allison Thompson
+
+## Link
+https://github.com/ramir262/project
+
 ## Description
 PantherInspect gives students the ability to rate a course or view reviews already existing for a course.  A student can easily view an average rating of a course and even filter reviews by star count or professor.  When making a review, a student may select a star count and will be prompted with questions to answer.  Students must create an account to access this service.
 
